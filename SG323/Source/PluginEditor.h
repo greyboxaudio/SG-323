@@ -30,14 +30,21 @@ private:
     juce::Slider predelaySlider;
     juce::Slider decaySlider;
     juce::Slider wetDrySlider;
+    juce::Slider highPassSlider;
+    juce::Slider lowPassSlider;
     juce::ComboBox programBox;
+
     juce::Label predelayLabel;
     juce::Label decayLabel;
     juce::Label wetDryLabel;
+    juce::Label highPassLabel;
+    juce::Label lowPassLabel;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decaySliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> predelaySliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> wetDrySliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highPassSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lowPassSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> programBoxAttachment;
     SG323AudioProcessor& audioProcessor;
 

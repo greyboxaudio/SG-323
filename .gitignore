@@ -2045,3 +2045,4 @@ SG323/JuceLibraryCode/modules/juce_gui_extra/native/juce_win32_HWNDComponent.cpp
 SG323/JuceLibraryCode/modules/juce_gui_extra/native/juce_win32_SystemTrayIcon.cpp
 SG323/JuceLibraryCode/modules/juce_gui_extra/native/juce_win32_WebBrowserComponent.cpp
 SG323/Builds/LinuxMakefile/build/SG323.a
+SG323/Builds/VisualStudio2022/.vs/SG323/FileContentIndex/a0231024-f6bf-4eba-93c0-79d221fff004.vsidx

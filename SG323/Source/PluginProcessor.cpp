@@ -100,6 +100,13 @@ void SG323AudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 	//set up filters
 	lastSampleRate = sampleRate;
 	halfSampleRate = sampleRate * 0.5f;
+	float smoothSlow{ 0.1f };
+	float smoothFast{ 0.001f };
+	wetDrySmooth.reset(sampleRate, smoothFast);
+	predelaySmooth.reset(sampleRate, smoothSlow);
+	decaySmooth.reset(sampleRate, smoothSlow);
+	highPassSmooth.reset(sampleRate, smoothFast);
+	lowPassSmooth.reset(sampleRate, smoothFast);
 	juce::dsp::ProcessSpec spec;
 	spec.sampleRate = sampleRate;
 	spec.maximumBlockSize = samplesPerBlock;
@@ -309,8 +316,8 @@ int rngsus(float randomSample) {
 
 void SG323AudioProcessor::updateFilter()
 {
-	*inputHighPass.state = *juce::dsp::IIR::Coefficients<float>::makeFirstOrderHighPass(lastSampleRate, 14.0f);
-	*inputLowPass.state = *juce::dsp::IIR::Coefficients<float>::makeFirstOrderLowPass(lastSampleRate, halfSampleRate);
+	*inputHighPass.state = *juce::dsp::IIR::Coefficients<float>::makeFirstOrderHighPass(lastSampleRate, nextHighPassValue);
+	*inputLowPass.state = *juce::dsp::IIR::Coefficients<float>::makeFirstOrderLowPass(lastSampleRate, nextLowPassValue);
 	*randomHighPass.state = *juce::dsp::IIR::Coefficients<float>::makeFirstOrderHighPass(lastSampleRate, 106.0f);
 	*randomLowPass.state = *juce::dsp::IIR::Coefficients<float>::makeFirstOrderLowPass(lastSampleRate, 370.0f);
 	*preEmphasis.state = *juce::dsp::IIR::Coefficients<float>::makeHighShelf(lastSampleRate, 4000.0f, 0.5f, 4.0f);
@@ -365,6 +372,13 @@ void SG323AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::
 	juce::dsp::AudioBlock <float> feedbackBlock(mFeedbackBuffer);
 	juce::dsp::AudioBlock <float> outputBlock(mOutputBuffer);
 	juce::dsp::AudioBlock <float> randomBlock(mRandomBuffer);
+	//update filters
+	float highPassValue = *apvts.getRawParameterValue("HPF");
+	highPassSmooth.setTargetValue(highPassValue);
+	nextHighPassValue = highPassSmooth.getNextValue();
+	float lowPassValue = *apvts.getRawParameterValue("LPF");
+	lowPassSmooth.setTargetValue(lowPassValue);
+	nextLowPassValue = lowPassSmooth.getNextValue();
 	updateFilter();
 	//clear buffers
 	monoBuffer.clear(0, 0, bufferSizeTest);
@@ -468,8 +482,10 @@ void SG323AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::
 				feedbackDelayTime += 16384;
 			}
 			adjustableDecay = *apvts.getRawParameterValue("DECAY");
+			decaySmooth.setTargetValue(adjustableDecay);
+			float nextDecayValue = decaySmooth.getNextValue();
 			feedbackDelayTime *= 0.00003125f;
-			feedbackDelayGain = mFeedbackGain * (feedbackDelayGainMult * adjustableDecay);
+			feedbackDelayGain = mFeedbackGain * (feedbackDelayGainMult * nextDecayValue);
 			feedbackOutputSample += fractionalDelay.popSample(0, feedbackDelayTime * lastSampleRate, false) * feedbackDelayGain;
 		}
 		mFeedbackTaps = mFeedbackTaps / 15.0f;
@@ -526,21 +542,23 @@ void SG323AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::
 		float outputDelayGain{};
 		//left output taps
 		adjustablePreDelay = *apvts.getRawParameterValue("PREDELAY");
+		predelaySmooth.setTargetValue(adjustablePreDelay);
+		float nextPreDelayValue = predelaySmooth.getNextValue();
 		//adjustablePreDelay *= 320.0f;
 		for (int d = 0; d < 4; d++)
 		{
-			outputDelayTime = ((mProgramID * outputDelayArray[d]) + outputDelayArray[d + 8] + adjustablePreDelay) * 0.001f;
+			outputDelayTime = ((mProgramID * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
 			outputDelayGain = outputGainArray[d] * outputDelayGainMult;
 			leftOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, false) * outputDelayGain;
 		}
 		//right output taps
 		for (int d = 4; d < 7; d++)
 		{
-			outputDelayTime = ((mProgramID * outputDelayArray[d]) + outputDelayArray[d + 8] + adjustablePreDelay) * 0.001f;
+			outputDelayTime = ((mProgramID * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
 			outputDelayGain = outputGainArray[d] * outputDelayGainMult;
 			rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, false) * outputDelayGain;
 		}
-		outputDelayTime = ((mProgramID * outputDelayArray[7]) + outputDelayArray[7 + 8] + adjustablePreDelay) * 0.001f;
+		outputDelayTime = ((mProgramID * outputDelayArray[7]) + outputDelayArray[7 + 8] + nextPreDelayValue) * 0.001f;
 		outputDelayGain = outputGainArray[7] * outputDelayGainMult;
 		rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, true) * outputDelayGain;
 		mOutputBuffer.setSample(0, i, leftOutputSample);
@@ -558,10 +576,12 @@ void SG323AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::
 	{
 		auto* wetSignal = mOutputBuffer.getReadPointer(channel);
 		auto* drySignal = mInputBuffer.getReadPointer(channel);
-		float wetLevel = *apvts.getRawParameterValue("WETDRY");
-		float dryLevel = 1.0f - *apvts.getRawParameterValue("WETDRY");
+		float mixLevel = *apvts.getRawParameterValue("WETDRY");
+		wetDrySmooth.setTargetValue(mixLevel);
+		float wetLevel = wetDrySmooth.getNextValue();
+		float dryLevel = 1.0f - wetLevel;
 		buffer.copyFromWithRamp(channel, 0, drySignal, bufferSizeTest, dryLevel, dryLevel);
-		buffer.addFromWithRamp(channel, 0, wetSignal, bufferSizeTest, wetLevel, wetLevel);
+		buffer.addFromWithRamp(channel, 0, wetSignal, bufferSizeTest, mixLevel, mixLevel);
 	}
 }
 
@@ -606,6 +626,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
 	parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "PreDelay", 0.0f, 320.0f, 0.0f));
 	parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 1.0f, 1.0f));
 	parameters.push_back(std::make_unique<juce::AudioParameterFloat>("WETDRY", "WetDry", 0.0f, 1.0f, 0.5f));
+	parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HPF", "highPassFilter", 20.0f, 480.0f, 20.0f));
+	parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 3000.0f, 16000.0f, 16000.0f));
 
 	return { parameters.begin(), parameters.end() };
 

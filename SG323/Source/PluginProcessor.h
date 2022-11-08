@@ -81,6 +81,13 @@ private:
     float adjustablePreDelay{};
     float adjustableDecay{ 1.0f };
     float adjustableWetDry{ 0.5f };
+    float nextHighPassValue{ 20.0f };
+    float nextLowPassValue{ 16000.0f };
+    juce::LinearSmoothedValue<float> wetDrySmooth{};
+    juce::LinearSmoothedValue<float> predelaySmooth{};
+    juce::LinearSmoothedValue<float> decaySmooth{};
+    juce::LinearSmoothedValue<float> highPassSmooth{};
+    juce::LinearSmoothedValue<float> lowPassSmooth{};
 
     int programArray[8]{ 3, 2, 0, 1, 5, 4, 6, 7 };
     int preDelayArray[16]{ 3, 2, 0, 1, 5, 4, 6, 7, 11, 10, 8, 9, 13, 12, 14, 15 };

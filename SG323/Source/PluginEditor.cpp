@@ -16,7 +16,6 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor (SG323AudioProcessor& p)
     predelaySlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
     addAndMakeVisible(predelaySlider);
     predelaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "PREDELAY", predelaySlider);
-
     addAndMakeVisible(predelayLabel);
     predelayLabel.setText("PREDLY", juce::dontSendNotification);
     predelayLabel.attachToComponent(&predelaySlider, false);
@@ -25,7 +24,6 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor (SG323AudioProcessor& p)
     decaySlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
     addAndMakeVisible(decaySlider);
     decaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DECAY", decaySlider);
-
     addAndMakeVisible(decayLabel);
     decayLabel.setText("DECAY", juce::dontSendNotification);
     decayLabel.attachToComponent(&decaySlider, false);
@@ -34,11 +32,26 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor (SG323AudioProcessor& p)
     wetDrySlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
     addAndMakeVisible(wetDrySlider);
     wetDrySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "WETDRY", wetDrySlider);
-
     addAndMakeVisible(wetDryLabel);
     wetDryLabel.setText("MIX", juce::dontSendNotification);
     wetDryLabel.attachToComponent(&wetDrySlider, false);
     wetDryLabel.setJustificationType(juce::Justification::centred);
+
+    highPassSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    addAndMakeVisible(highPassSlider);
+    highPassSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HPF", highPassSlider);
+    addAndMakeVisible(highPassLabel);
+    highPassLabel.setText("HPF", juce::dontSendNotification);
+    highPassLabel.attachToComponent(&highPassSlider, false);
+    highPassLabel.setJustificationType(juce::Justification::centred);
+
+    lowPassSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    addAndMakeVisible(lowPassSlider);
+    lowPassSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LPF", lowPassSlider);
+    addAndMakeVisible(lowPassLabel);
+    lowPassLabel.setText("LPF", juce::dontSendNotification);
+    lowPassLabel.attachToComponent(&lowPassSlider, false);
+    lowPassLabel.setJustificationType(juce::Justification::centred);
 
     programBox.addItem("Plate 1", 1);
     programBox.addItem("Plate 2", 2);
@@ -53,7 +66,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor (SG323AudioProcessor& p)
     programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize(250, 350);
+    setSize(400, 350);
 }
 
 SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
@@ -68,16 +81,17 @@ void SG323AudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
-    //g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    //g.drawFittedText ("SG-323", getLocalBounds(), juce::Justification::centred, 1);
 }
 
 void SG323AudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    auto bounds = getLocalBounds();
-    programBox.setBounds(bounds.removeFromTop(100).withSizeKeepingCentre(150, 50));
-    predelaySlider.setBounds(25, 120, 50, 200);
-    decaySlider.setBounds(100, 120, 50, 200);
-    wetDrySlider.setBounds(175, 120, 50, 200);
+    programBox.setBounds(225, 25, 150, 50);
+    highPassSlider.setBounds(25, 120, 50, 200);
+    lowPassSlider.setBounds(100, 120, 50, 200);
+    predelaySlider.setBounds(175, 120, 50, 200);
+    decaySlider.setBounds(250, 120, 50, 200);
+    wetDrySlider.setBounds(325, 120, 50, 200);
 }
