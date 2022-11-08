@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="V1rTQ0" name="SG323" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" version="0.1"
+              addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" version="0.2.0"
               companyName="GreyBoxAudio" companyWebsite="https://github.com/ravettel/SG-323">
   <MAINGROUP id="Ucrzy8" name="SG323">
     <GROUP id="{341A27DF-4097-9037-FBA9-1C6B6574FC28}" name="Source">

@@ -2051,3 +2051,7 @@ Release/SG323_v01b.zip
 Release/SG323_v020.zip
 Release/Windows_x64/SG323.vst3
 Release/Linux_x64/SG323.vst3/Contents/x86_64-linux/SG323.so
+Release/SG323_v010.zip
+Release/SG323_v01c.zip
+*.vsidx
+*.vsidx
