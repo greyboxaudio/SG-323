@@ -318,9 +318,9 @@ void SG323AudioProcessor::updateFilter()
 	*feedBackHighPass.state = *juce::dsp::IIR::Coefficients<float>::makeFirstOrderHighPass(lastSampleRate, 22.0f);
 	*feedBackLowPass.state = *juce::dsp::IIR::Coefficients<float>::makeFirstOrderLowPass(lastSampleRate, 18000.0f);
 	*feedBackDip.state = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(lastSampleRate, 9000.0f, 0.5f, 0.85f);
-	*antiAliasFirstSection.state = juce::dsp::IIR::Coefficients<float>::Coefficients(s1b0, s1b1, s1b2, s1a0, s1a1, s1a2);
-	*antiAliasSecondSection.state = juce::dsp::IIR::Coefficients<float>::Coefficients(s2b0, s2b1, s2b2, s2a0, s2a1, s2a2);
-	*antiAliasThirdSection.state = juce::dsp::IIR::Coefficients<float>::Coefficients(s3b0, s3b1, s3b2, s3a0, s3a1, s3a2);
+	*antiAliasFirstSection.state = juce::dsp::IIR::Coefficients<float>(s1b0, s1b1, s1b2, s1a0, s1a1, s1a2);
+	*antiAliasSecondSection.state = juce::dsp::IIR::Coefficients<float>(s2b0, s2b1, s2b2, s2a0, s2a1, s2a2);
+	*antiAliasThirdSection.state = juce::dsp::IIR::Coefficients<float>(s3b0, s3b1, s3b2, s3a0, s3a1, s3a2);
 }
 
 void SG323AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
@@ -526,7 +526,7 @@ void SG323AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::
 		float outputDelayGain{};
 		//left output taps
 		adjustablePreDelay = *apvts.getRawParameterValue("PREDELAY");
-		adjustablePreDelay *= 320.0f;
+		//adjustablePreDelay *= 320.0f;
 		for (int d = 0; d < 4; d++)
 		{
 			outputDelayTime = ((mProgramID * outputDelayArray[d]) + outputDelayArray[d + 8] + adjustablePreDelay) * 0.001f;
@@ -603,7 +603,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
 
 	parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PROGRAM", "Program",
 		juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon"), 0));
-	parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "PreDelay", 0.0f, 1.0f, 0.0f));
+	parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "PreDelay", 0.0f, 320.0f, 0.0f));
 	parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 1.0f, 1.0f));
 	parameters.push_back(std::make_unique<juce::AudioParameterFloat>("WETDRY", "WetDry", 0.0f, 1.0f, 0.5f));
 

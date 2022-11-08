@@ -41,10 +41,10 @@
  #define JucePlugin_Enable_ARA             0
 #endif
 #ifndef  JucePlugin_Name
- #define JucePlugin_Name                   "SG-323"
+ #define JucePlugin_Name                   "SG323"
 #endif
 #ifndef  JucePlugin_Desc
- #define JucePlugin_Desc                   "Stargate 323"
+ #define JucePlugin_Desc                   "SG323"
 #endif
 #ifndef  JucePlugin_Manufacturer
  #define JucePlugin_Manufacturer           "GreyBoxAudio"
@@ -59,7 +59,7 @@
  #define JucePlugin_ManufacturerCode       0x4d616e75
 #endif
 #ifndef  JucePlugin_PluginCode
- #define JucePlugin_PluginCode             0x4235626a
+ #define JucePlugin_PluginCode             0x56317274
 #endif
 #ifndef  JucePlugin_IsSynth
  #define JucePlugin_IsSynth                0
@@ -92,7 +92,7 @@
  #define JucePlugin_VSTCategory            kPlugCategEffect
 #endif
 #ifndef  JucePlugin_Vst3Category
- #define JucePlugin_Vst3Category           "Fx|Reverb"
+ #define JucePlugin_Vst3Category           "Fx"
 #endif
 #ifndef  JucePlugin_AUMainType
  #define JucePlugin_AUMainType             'aufx'
@@ -122,7 +122,7 @@
  #define JucePlugin_AAXProductId           JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_AAXCategory
- #define JucePlugin_AAXCategory            8
+ #define JucePlugin_AAXCategory            0
 #endif
 #ifndef  JucePlugin_AAXDisableBypass
  #define JucePlugin_AAXDisableBypass       0
@@ -137,7 +137,7 @@
  #define JucePlugin_IAASubType             JucePlugin_PluginCode
 #endif
 #ifndef  JucePlugin_IAAName
- #define JucePlugin_IAAName                "GreyBoxAudio: SG-323"
+ #define JucePlugin_IAAName                "GreyBoxAudio: SG323"
 #endif
 #ifndef  JucePlugin_VSTNumMidiInputs
  #define JucePlugin_VSTNumMidiInputs       16
@@ -155,7 +155,7 @@
  #define JucePlugin_ARAFactoryID           "com.GreyBoxAudio.SG323.factory"
 #endif
 #ifndef  JucePlugin_ARADocumentArchiveID
- #define JucePlugin_ARADocumentArchiveID   "com.GreyBoxAudio.SG323.aradocumentarchive.1.0.0"
+ #define JucePlugin_ARADocumentArchiveID   "com.GreyBoxAudio.SG323.aradocumentarchive.0.1"
 #endif
 #ifndef  JucePlugin_ARACompatibleArchiveIDs
  #define JucePlugin_ARACompatibleArchiveIDs  ""
