@@ -2046,3 +2046,8 @@ SG323/JuceLibraryCode/modules/juce_gui_extra/native/juce_win32_SystemTrayIcon.cp
 SG323/JuceLibraryCode/modules/juce_gui_extra/native/juce_win32_WebBrowserComponent.cpp
 SG323/Builds/LinuxMakefile/build/SG323.a
 SG323/Builds/VisualStudio2022/.vs/SG323/FileContentIndex/a0231024-f6bf-4eba-93c0-79d221fff004.vsidx
+Release/SG323_v01a.zip
+Release/SG323_v01b.zip
+Release/SG323_v020.zip
+Release/Windows_x64/SG323.vst3
+Release/Linux_x64/SG323.vst3/Contents/x86_64-linux/SG323.so

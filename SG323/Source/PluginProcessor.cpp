@@ -506,8 +506,7 @@ void SG323AudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::
 		if (modClockOut == modRateCeiling)
 		{
 			modRateCount = rateLevel | (program << 4);
-			float modClockOutScaled = U71[modRateCount] * modScale;
-			modClockOut = modClockOutScaled;
+			modClockOut = static_cast<int>(U71[modRateCount] * modScale);
 		}
 		modCarry = modClockOut + 1;
 		if (modCarry >= modRateCeiling)
@@ -602,12 +601,20 @@ void SG323AudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+	auto state = apvts.copyState();
+	std::unique_ptr<juce::XmlElement> xml(state.createXml());
+	copyXmlToBinary(*xml, destData);
 }
 
 void SG323AudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+	std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+	if (xmlState.get() != nullptr)
+		if (xmlState->hasTagName(apvts.state.getType()))
+			apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
 //==============================================================================
@@ -630,5 +637,4 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
 	parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 3000.0f, 16000.0f, 16000.0f));
 
 	return { parameters.begin(), parameters.end() };
-
 }
