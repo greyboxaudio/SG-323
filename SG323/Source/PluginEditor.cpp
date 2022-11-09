@@ -10,8 +10,8 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-SG323AudioProcessorEditor::SG323AudioProcessorEditor (SG323AudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
+    : AudioProcessorEditor(&p), audioProcessor(p)
 {
     predelaySlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
     addAndMakeVisible(predelaySlider);
@@ -74,13 +74,13 @@ SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
 }
 
 //==============================================================================
-void SG323AudioProcessorEditor::paint (juce::Graphics& g)
+void SG323AudioProcessorEditor::paint(juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
+    g.setColour(juce::Colours::white);
+    g.setFont(15.0f);
     //g.drawFittedText ("SG-323", getLocalBounds(), juce::Justification::centred, 1);
 }
 
@@ -88,6 +88,7 @@ void SG323AudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    juce::Rectangle<int> bounds = getLocalBounds();
     programBox.setBounds(225, 25, 150, 50);
     highPassSlider.setBounds(25, 120, 50, 200);
     lowPassSlider.setBounds(100, 120, 50, 200);

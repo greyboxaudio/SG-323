@@ -14,14 +14,14 @@
 //==============================================================================
 /**
 */
-class SG323AudioProcessorEditor  : public juce::AudioProcessorEditor
+class SG323AudioProcessorEditor : public juce::AudioProcessorEditor
 {
 public:
-    SG323AudioProcessorEditor (SG323AudioProcessor&);
+    SG323AudioProcessorEditor(SG323AudioProcessor&);
     ~SG323AudioProcessorEditor() override;
 
     //==============================================================================
-    void paint (juce::Graphics&) override;
+    void paint(juce::Graphics&) override;
     void resized() override;
 
 private:
@@ -48,5 +48,5 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> programBoxAttachment;
     SG323AudioProcessor& audioProcessor;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SG323AudioProcessorEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SG323AudioProcessorEditor)
 };
