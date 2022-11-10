@@ -2055,3 +2055,5 @@ Release/SG323_v010.zip
 Release/SG323_v01c.zip
 *.vsidx
 *.vsidx
+Release/Windows_x64/SG323_020.vst3
+SG323/Builds/VisualStudio2022/.vs/SG323/v17/ipch/AutoPCH/363aeea42867ddfe/PLUGINPROCESSOR.ipch

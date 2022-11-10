@@ -353,7 +353,6 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
 
     //read program selection from the UI
     int programId = *apvts.getRawParameterValue("PROGRAM");
-    uint8_t program = programArray[programId];
     //prepare audio buffers
     monoBuffer.setSize(1, bufferSize);
     feedbackBuffer.setSize(1, bufferSize);
@@ -423,12 +422,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
     {
         fractionalDelay.pushSample(0, data[i]);
         // calculate base address factors
-        uint8_t decayTime = decayTimeArray[7];
-        unsigned short gainBaseAddr = (decayTime << 5) | (program << 8);
-        uint8_t preDelay_high = preDelay >> 3;
-        uint8_t preDelay_low = preDelay << 5;
-        preDelay_low = preDelay_low >> 5;
-        unsigned short delayBaseAddr = (preDelay_low << 6) | (program << 9) | (preDelay_high << 12);
+        uint8_t decayTime = 7;
+        unsigned short gainBaseAddr = (decayTime << 5) | (programId << 8);
+        unsigned short delayBaseAddr = programId << 6;
         // calculate write tap (=test tap)
         int rowInput = nROW;
         int columnInput = nCOLUMN;
@@ -444,16 +440,16 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
         float feedbackDelayGain{};
         for (int d = 0; d < 15; d++)
         {
-            rowInput = U79[delayModAddress + d] + nROW;
-            columnInput = U69[delayAddress + d * 2] + nCOLUMN;
+            rowInput = delayModData[delayModAddress + d] + nROW;
+            columnInput = delayData[delayAddress + d * 2] + nCOLUMN;
             delayTaps[1 + d] = calculateAddress(rowInput, columnInput);
-            uint8_t gainModContOut = U76[gainModContAddress + d];
+            uint8_t gainModContOut = gainModControlData[gainModContAddress + d];
             uint8_t nGainModEnable = gainModContOut >> 3;
             gainModContOut = gainModContOut << 5;
             gainModContOut = gainModContOut >> 5;
             unsigned short gainModAddress = gainModContOut | gainModBaseAddr;
-            uint8_t gainModOut = U77[gainModAddress];
-            uint8_t gainOut = U78[gainAddress + d] << 1;
+            uint8_t gainModOut = gainModData[gainModAddress];
+            uint8_t gainOut = gainData[gainAddress + d] << 1;
             if (gainModOut < gainOut && nGainModEnable == 0)
             {
                 gainCeiling[1 + d] = gainModOut;
@@ -462,7 +458,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             {
                 gainCeiling[1 + d] = gainOut;
             }
-            uint8_t nGSN = U78[gainAddress + d] >> 7;
+            uint8_t nGSN = gainData[gainAddress + d] >> 7;
             signMod[1 + d] = nGSN;
             long readPosition = delayTaps[1 + d];
             float feedbackGain{};
@@ -504,8 +500,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
         modClockOut = modClockOut + 1;
         if (modClockOut == modRateCeiling)
         {
-            uint8_t modRateCount = rateLevel | (program << 4);
-            modClockOut = static_cast<int>(U71[modRateCount] * modScale);
+            uint8_t modRateCount = rateLevel | (programId << 4);
+            modClockOut = static_cast<int>(modRateCountData[modRateCount] * modScale);
         }
         uint8_t modCarry = modClockOut + 1;
         if (modCarry >= modRateCeiling)
