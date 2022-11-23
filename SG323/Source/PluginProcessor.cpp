@@ -384,6 +384,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
     //sum input channels together
     monoBuffer.copyFrom(0, 0, buffer, 0, 0, bufferSize);
     monoBuffer.addFrom(0, 0, buffer, 1, 0, bufferSize);
+    gainModule.setGainLinear(0.5f);
+    gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
     //copy & filter random Sample buffer
     randomBuffer.clear(0, 0, bufferSize);
     randomBuffer.copyFrom(0, 0, monoBuffer, 0, 0, bufferSize);
@@ -410,13 +412,18 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
     gainModule.setGainLinear(s3gain);
     gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
     antiAliasThirdSection.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
+    //pre-scale input to create 12dB of headroom before clipping
+    gainModule.setGainLinear(0.25f);
+    gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
     //quantize samples to 16bit
     for (int i = 0; i < bufferSize; ++i)
     {
-        float trim = 0.5f;
-        float sampleRounded = monoBuffer.getSample(0, i) * trim;
+        float sampleRounded = monoBuffer.getSample(0, i);
         monoBuffer.setSample(0, i, roundBits(sampleRounded));
     }
+    //scale 16bit signal level back up
+    gainModule.setGainLinear(4.0f);
+    gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
     //calculate the delay taps
     for (int i = 0; i < bufferSize; i++)
     {
