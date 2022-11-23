@@ -254,16 +254,16 @@ int calculateAddress(unsigned short rowInput, unsigned short columnInput)
 {
     // calculate address row
     unsigned short result = rowInput;
-    uint8_t bit6 = result << 1;
+    unsigned char bit6 = result << 1;
     bit6 = bit6 >> 7;
-    uint8_t MSB = result;
+    unsigned char MSB = result;
     MSB = MSB >> 7;
-    uint8_t delayCarryOut = result >> 8;
-    uint8_t rowDelay = result << 2;
+    unsigned char delayCarryOut = result >> 8;
+    unsigned char rowDelay = result << 2;
     rowDelay = (rowDelay >> 1) | bit6 | (MSB << 7);
     // calculate address column
     result = columnInput + delayCarryOut;
-    uint8_t columnDelay = result << 2;
+    unsigned char columnDelay = result << 2;
     columnDelay = columnDelay >> 2;
     return ((rowDelay)+(columnDelay * 256));
 }
@@ -412,24 +412,24 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
     gainModule.setGainLinear(s3gain);
     gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
     antiAliasThirdSection.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    //pre-scale input to create 12dB of headroom before clipping
-    gainModule.setGainLinear(0.25f);
-    gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    //quantize samples to 16bit
-    for (int i = 0; i < bufferSize; ++i)
-    {
-        float sampleRounded = monoBuffer.getSample(0, i);
-        monoBuffer.setSample(0, i, roundBits(sampleRounded));
-    }
-    //scale 16bit signal level back up
-    gainModule.setGainLinear(4.0f);
-    gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
+    // //pre-scale input to create 12dB of headroom before clipping
+    // gainModule.setGainLinear(0.25f);
+    // gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
+    // //quantize samples to 16bit
+    // for (int i = 0; i < bufferSize; ++i)
+    // {
+    //     float sampleRounded = monoBuffer.getSample(0, i);
+    //     monoBuffer.setSample(0, i, roundBits(sampleRounded));
+    // }
+    // //scale 16bit signal level back up
+    // gainModule.setGainLinear(4.0f);
+    // gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
     //calculate the delay taps
     for (int i = 0; i < bufferSize; i++)
     {
         fractionalDelay.pushSample(0, data[i]);
         // calculate base address factors
-        uint8_t decayTime = 7;
+        unsigned char decayTime = 7;
         unsigned short gainBaseAddr = (decayTime << 5) | (programId << 8);
         unsigned short delayBaseAddr = programId << 6;
         // calculate write tap (=test tap)
@@ -450,13 +450,13 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             rowInput = delayModData[delayModAddress + d] + nROW;
             columnInput = delayData[delayAddress + d * 2] + nCOLUMN;
             delayTaps[1 + d] = calculateAddress(rowInput, columnInput);
-            uint8_t gainModContOut = gainModControlData[gainModContAddress + d];
-            uint8_t nGainModEnable = gainModContOut >> 3;
+            unsigned char gainModContOut = gainModControlData[gainModContAddress + d];
+            unsigned char nGainModEnable = gainModContOut >> 3;
             gainModContOut = gainModContOut << 5;
             gainModContOut = gainModContOut >> 5;
             unsigned short gainModAddress = gainModContOut | gainModBaseAddr;
-            uint8_t gainModOut = gainModData[gainModAddress];
-            uint8_t gainOut = gainData[gainAddress + d] << 1;
+            unsigned char gainModOut = gainModData[gainModAddress];
+            unsigned char gainOut = gainData[gainAddress + d] << 1;
             if (gainModOut < gainOut && nGainModEnable == 0)
             {
                 gainCeiling[1 + d] = gainModOut;
@@ -465,7 +465,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             {
                 gainCeiling[1 + d] = gainOut;
             }
-            uint8_t nGSN = gainData[gainAddress + d] >> 7;
+            unsigned char nGSN = gainData[gainAddress + d] >> 7;
             signMod[1 + d] = nGSN;
             long readPosition = delayTaps[1 + d];
             float feedbackGain{};
@@ -502,15 +502,15 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
         float randomSampleMult = 8.0f;
         randomSample *= randomSampleMult;
         //calculate rateLVL value
-        uint8_t rateLevel = rngsus(randomSample);
+        unsigned char rateLevel = rngsus(randomSample);
         // mod rate counter
         modClockOut = modClockOut + 1;
         if (modClockOut == modRateCeiling)
         {
-            uint8_t modRateCount = rateLevel | (programId << 4);
+            unsigned char modRateCount = rateLevel | (programId << 4);
             modClockOut = static_cast<int>(modRateCountData[modRateCount] * modScale);
         }
-        uint8_t modCarry = modClockOut + 1;
+        unsigned char modCarry = modClockOut + 1;
         if (modCarry >= modRateCeiling)
         {
             MCCK = 1;
@@ -532,7 +532,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             gainModContBaseAddr = (modCount >> 6) << 5;
             gainModBaseAddr = modCount << 7;
             gainModBaseAddr = gainModBaseAddr >> 4;
-            uint8_t delayModCount = modCount >> 6;
+            unsigned char delayModCount = modCount >> 6;
             delayModBaseAddr = delayModCount << 5;
         }
         //calculate output taps
