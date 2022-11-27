@@ -491,6 +491,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             feedbackDelayGain = feedbackGain * (feedbackDelayGainMult * nextDecayValue);
             feedbackOutputSample += fractionalDelay.popSample(0, feedbackDelayTime * lastSampleRate, false) * feedbackDelayGain;
         }
+        feedbackOutputSample *= 0.06666667f;
         feedbackBuffer.setSample(0, i, feedbackOutputSample);
         //process random sample
         float randomSample = randomBuffer.getSample(0, i);
