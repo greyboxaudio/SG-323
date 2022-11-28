@@ -27,13 +27,14 @@ public:
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
+    juce::ComboBox programBox;
     juce::Slider predelaySlider;
     juce::Slider decaySlider;
     juce::Slider wetDrySlider;
     juce::Slider highPassSlider;
     juce::Slider lowPassSlider;
     juce::Slider inputGainSlider;
-    juce::ComboBox programBox;
+    juce::Slider feedbackSlider;
 
     juce::Label predelayLabel;
     juce::Label decayLabel;
@@ -42,13 +43,14 @@ private:
     juce::Label lowPassLabel;
     juce::Label inputGainLabel;
 
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> programBoxAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decaySliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> predelaySliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> wetDrySliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highPassSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lowPassSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainSliderAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> programBoxAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> feedbackSliderAttachment;
     SG323AudioProcessor& audioProcessor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SG323AudioProcessorEditor)

@@ -67,6 +67,11 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     wetDryLabel.attachToComponent(&wetDrySlider, false);
     wetDryLabel.setJustificationType(juce::Justification::centred);
 
+    feedbackSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    feedbackSlider.setTextBoxIsEditable(false);
+    addAndMakeVisible(feedbackSlider);
+    feedbackSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "FDBK", feedbackSlider);
+
     programBox.addItem("Plate 1", 1);
     programBox.addItem("Plate 2", 2);
     programBox.addItem("Chamber", 3);
@@ -80,7 +85,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize(475, 350);
+    setSize(550, 350);
 }
 
 SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
@@ -95,7 +100,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
 
     g.setColour(juce::Colours::white);
     g.setFont(15.0f);
-    g.drawFittedText ("v0.4.0", getLocalBounds(), juce::Justification::bottomRight, 1);
+    g.drawFittedText ("v0.4.1", getLocalBounds(), juce::Justification::bottomRight, 1);
 }
 
 void SG323AudioProcessorEditor::resized()
@@ -110,4 +115,5 @@ void SG323AudioProcessorEditor::resized()
     predelaySlider.setBounds(250, 120, 50, 200);
     decaySlider.setBounds(325, 120, 50, 200);
     wetDrySlider.setBounds(400, 120, 50, 200);
+    feedbackSlider.setBounds(475, 120, 50, 200);
 }

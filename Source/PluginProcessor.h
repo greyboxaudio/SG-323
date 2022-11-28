@@ -92,8 +92,8 @@ private:
     float outputGainArray[8]{ -0.996f, 0.996f, 0.622f, 0.378f, 0.378f, 0.622f, 0.966f, -0.966f };
     float outputDelayArray[16]{ 10.5f, 7.0f, 3.5f, 0.0f, 19.0f, 13.0f, 7.0f, 1.0f, 11.5f, 8.0f, 4.5f, 1.0f, 20.0f, 14.0f, 8.0f, 2.0f };
     unsigned long delayTaps[24];
-    unsigned char gainCeiling[24];
-    signed char signMod[24];
+    unsigned int gainCeiling[24];
+    signed int signMod[24];
     int initSampleRateCount{};
     float lastSampleRate{};
     float adjustablePreDelay{};
@@ -103,11 +103,11 @@ private:
     float nextHighPassValue{ 20.0f };
     float nextLowPassValue{ 16000.0f };
     int writeAddress{ 16383 };
-    unsigned char nROW{ 255 };
-    unsigned char nCOLUMN{ 255 };
+    unsigned int nROW{ 255 };
+    unsigned int nCOLUMN{ 255 };
     unsigned int modRateCeiling{ 16 };
     float modScale{ 1.0f };
-    unsigned char MCCK{};
+    unsigned int MCCK{};
     unsigned int modClockOut{};
     unsigned int modCount{};
     unsigned int gainModContBaseAddr{};
