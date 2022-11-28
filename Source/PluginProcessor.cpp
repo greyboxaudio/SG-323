@@ -99,12 +99,13 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     //set up filters
     lastSampleRate = sampleRate;
     float smoothSlow{ 0.1f };
-    float smoothFast{ 0.001f };
-    wetDrySmooth.reset(sampleRate, smoothFast);
-    predelaySmooth.reset(sampleRate, smoothSlow);
-    decaySmooth.reset(sampleRate, smoothSlow);
+    float smoothFast{ 0.0005f };
+    inputGainSmooth.reset(sampleRate, smoothFast);
     highPassSmooth.reset(sampleRate, smoothFast);
     lowPassSmooth.reset(sampleRate, smoothFast);
+    predelaySmooth.reset(sampleRate, smoothSlow);
+    decaySmooth.reset(sampleRate, smoothSlow);
+    wetDrySmooth.reset(sampleRate, smoothFast);
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
@@ -360,9 +361,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
     }
     //set up dsp elements
     juce::dsp::AudioBlock <float> monoBlock(monoBuffer);
+    juce::dsp::AudioBlock <float> randomBlock(randomBuffer);
     juce::dsp::AudioBlock <float> feedbackBlock(feedbackBuffer);
     juce::dsp::AudioBlock <float> outputBlock(outputBuffer);
-    juce::dsp::AudioBlock <float> randomBlock(randomBuffer);
     //update filters
     float highPassValue = *apvts.getRawParameterValue("HPF");
     highPassSmooth.setTargetValue(highPassValue);
@@ -378,7 +379,11 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
     //sum input channels together
     monoBuffer.copyFrom(0, 0, buffer, 0, 0, bufferSize);
     monoBuffer.addFrom(0, 0, buffer, 1, 0, bufferSize);
-    gainModule.setGainLinear(0.5f);
+    //apply input gain
+    float inputGainValue = *apvts.getRawParameterValue("INPUT");
+    inputGainSmooth.setTargetValue(inputGainValue * 0.5f);
+    nextInputGainValue = inputGainSmooth.getNextValue();
+    gainModule.setGainLinear(nextInputGainValue);
     gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
     //copy & filter random Sample buffer
     randomBuffer.clear(0, 0, bufferSize);
@@ -630,6 +635,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("WETDRY", "WetDry", 0.0f, 1.0f, 0.5f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HPF", "highPassFilter", 20.0f, 480.0f, 20.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 3000.0f, 16000.0f, 16000.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "inputGain", 0.0f, 2.0f, 1.0f));
 
     return { parameters.begin(), parameters.end() };
 }

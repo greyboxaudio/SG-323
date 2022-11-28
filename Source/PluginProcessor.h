@@ -61,16 +61,19 @@ public:
 
 private:
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
+    juce::AudioBuffer<float> inputBuffer;
+    juce::AudioBuffer<float> monoBuffer;
     juce::AudioBuffer<float> randomBuffer;
     juce::AudioBuffer<float> feedbackBuffer;
     juce::AudioBuffer<float> outputBuffer;
-    juce::AudioBuffer<float> inputBuffer;
-    juce::AudioBuffer<float> monoBuffer;
-    juce::LinearSmoothedValue<float> wetDrySmooth{};
-    juce::LinearSmoothedValue<float> predelaySmooth{};
-    juce::LinearSmoothedValue<float> decaySmooth{};
+
+    juce::LinearSmoothedValue<float> inputGainSmooth{};
     juce::LinearSmoothedValue<float> highPassSmooth{};
     juce::LinearSmoothedValue<float> lowPassSmooth{};
+    juce::LinearSmoothedValue<float> predelaySmooth{};
+    juce::LinearSmoothedValue<float> decaySmooth{};
+    juce::LinearSmoothedValue<float> wetDrySmooth{};
+ 
     juce::dsp::Gain<float> gainModule;
     juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Linear> fractionalDelay;
     juce::dsp::ProcessorDuplicator <juce::dsp::IIR::Filter <float>, juce::dsp::IIR::Coefficients <float>> inputHighPass;
@@ -91,13 +94,12 @@ private:
     unsigned long delayTaps[24];
     unsigned char gainCeiling[24];
     signed char signMod[24];
-    unsigned int modClockOut{};
-    unsigned int modCount{};
     int initSampleRateCount{};
     float lastSampleRate{};
     float adjustablePreDelay{};
     float adjustableDecay{ 1.0f };
     float adjustableWetDry{ 0.5f };
+    float nextInputGainValue{ 1.0f };
     float nextHighPassValue{ 20.0f };
     float nextLowPassValue{ 16000.0f };
     int writeAddress{ 16383 };
@@ -106,6 +108,8 @@ private:
     unsigned int modRateCeiling{ 16 };
     float modScale{ 1.0f };
     unsigned char MCCK{};
+    unsigned int modClockOut{};
+    unsigned int modCount{};
     unsigned int gainModContBaseAddr{};
     unsigned int gainModBaseAddr{};
     unsigned int delayModBaseAddr{};
