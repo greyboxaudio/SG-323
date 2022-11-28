@@ -91,8 +91,8 @@ private:
     unsigned long delayTaps[24];
     unsigned char gainCeiling[24];
     signed char signMod[24];
-    unsigned short modClockOut{};
-    unsigned short modCount{};
+    unsigned int modClockOut{};
+    unsigned int modCount{};
     int initSampleRateCount{};
     float lastSampleRate{};
     float adjustablePreDelay{};
@@ -100,15 +100,15 @@ private:
     float adjustableWetDry{ 0.5f };
     float nextHighPassValue{ 20.0f };
     float nextLowPassValue{ 16000.0f };
-    short writeAddress{ 16383 };
+    int writeAddress{ 16383 };
     unsigned char nROW{ 255 };
     unsigned char nCOLUMN{ 255 };
-    unsigned short modRateCeiling{ 16 };
+    unsigned int modRateCeiling{ 16 };
     float modScale{ 1.0f };
     unsigned char MCCK{};
-    unsigned short gainModContBaseAddr{};
-    unsigned short gainModBaseAddr{};
-    unsigned short delayModBaseAddr{};
+    unsigned int gainModContBaseAddr{};
+    unsigned int gainModBaseAddr{};
+    unsigned int delayModBaseAddr{};
 
     float s1a0{ 1.0f };
     float s1a1{ 1.0f };

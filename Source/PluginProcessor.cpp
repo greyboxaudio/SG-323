@@ -250,28 +250,22 @@ bool SG323AudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) con
 }
 #endif
 
-int calculateAddress(unsigned short rowInput, unsigned short columnInput)
+int calculateAddress(unsigned int rowInput, unsigned int columnInput)
 {
     // calculate address row
-    unsigned short result = rowInput;
-    unsigned char bit6 = result << 1;
-    bit6 = bit6 >> 7;
-    unsigned char MSB = result;
-    MSB = MSB >> 7;
-    unsigned char delayCarryOut = result >> 8;
-    unsigned char rowDelay = result << 2;
-    rowDelay = (rowDelay >> 1) | bit6 | (MSB << 7);
+    unsigned int bit6 = (rowInput & 64) >> 6;
+    unsigned int MSB = (rowInput & 128) >> 7;    
+    unsigned int delayCarryOut = rowInput >> 8;
+    unsigned int rowDelay = ((rowInput << 1) & 126) | bit6 | (MSB << 7);
     // calculate address column
-    result = columnInput + delayCarryOut;
-    unsigned char columnDelay = result << 2;
-    columnDelay = columnDelay >> 2;
-    return ((rowDelay)+(columnDelay * 256));
+    unsigned int columnDelay = (columnInput + delayCarryOut) & 63;
+    return ((rowDelay) + (columnDelay * 256));
 }
 
-int countWriteAddress(short writeAddress)
+int countWriteAddress(int writeAddress)
 {
     // advance write address & wraparound if < 0
-    short writeAddressIncr = writeAddress - 1;
+    int writeAddressIncr = writeAddress - 1;
     if (writeAddressIncr < 0)
     {
         writeAddressIncr = 16383;
@@ -281,7 +275,7 @@ int countWriteAddress(short writeAddress)
 
 float roundBits(float inputSample)
 {
-    short roundedSample = inputSample * 32768;
+    int roundedSample = inputSample * 32768;
     float outputSample = roundedSample * 0.000030518;
     return (outputSample);
 }
@@ -430,18 +424,18 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
         fractionalDelay.pushSample(0, data[i]);
         // calculate base address factors
         unsigned char decayTime = 7;
-        unsigned short gainBaseAddr = (decayTime << 5) | (programId << 8);
-        unsigned short delayBaseAddr = programId << 6;
+        unsigned int gainBaseAddr = (decayTime << 5) | (programId << 8);
+        unsigned int delayBaseAddr = programId << 6;
         // calculate write tap (=test tap)
         int rowInput = nROW;
         int columnInput = nCOLUMN;
         long writePosition = static_cast<int>(calculateAddress(rowInput, columnInput));
         // calculate feedback taps
-        unsigned short delayModAddress = delayModBaseAddr + 7;
-        unsigned short delayAddress = delayBaseAddr + 16;
-        unsigned short gainModContAddress = gainModContBaseAddr + 8;
-        unsigned short gainAddress = gainBaseAddr + 8;
-        float feedbackDelayGainMult = -0.6f;
+        unsigned int delayModAddress = delayModBaseAddr + 7;
+        unsigned int delayAddress = delayBaseAddr + 16;
+        unsigned int gainModContAddress = gainModContBaseAddr + 8;
+        unsigned int gainAddress = gainBaseAddr + 8;
+        float feedbackDelayGainMult = -0.3f;
         float feedbackOutputSample{};
         float feedbackDelayTime{};
         float feedbackDelayGain{};
@@ -454,7 +448,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             unsigned char nGainModEnable = gainModContOut >> 3;
             gainModContOut = gainModContOut << 5;
             gainModContOut = gainModContOut >> 5;
-            unsigned short gainModAddress = gainModContOut | gainModBaseAddr;
+            unsigned int gainModAddress = gainModContOut | gainModBaseAddr;
             unsigned char gainModOut = gainModData[gainModAddress];
             unsigned char gainOut = gainData[gainAddress + d] << 1;
             if (gainModOut < gainOut && nGainModEnable == 0)
@@ -491,7 +485,6 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             feedbackDelayGain = feedbackGain * (feedbackDelayGainMult * nextDecayValue);
             feedbackOutputSample += fractionalDelay.popSample(0, feedbackDelayTime * lastSampleRate, false) * feedbackDelayGain;
         }
-        feedbackOutputSample *= 0.06666667f;
         feedbackBuffer.setSample(0, i, feedbackOutputSample);
         //process random sample
         float randomSample = randomBuffer.getSample(0, i);
@@ -531,13 +524,12 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
                 modCount = 0;
             }
             gainModContBaseAddr = (modCount >> 6) << 5;
-            gainModBaseAddr = modCount << 7;
-            gainModBaseAddr = gainModBaseAddr >> 4;
+            gainModBaseAddr = (modCount & 511) << 3;
             unsigned char delayModCount = modCount >> 6;
             delayModBaseAddr = delayModCount << 5;
         }
         //calculate output taps
-        float outputDelayGainMult = 0.75f;
+        float outputDelayGainMult = 0.5f;
         float leftOutputSample{};
         float rightOutputSample{};
         float outputDelayTime{};
