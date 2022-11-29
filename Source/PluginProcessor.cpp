@@ -346,7 +346,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     auto bufferSize = buffer.getNumSamples();
     // read program selection from the UI
     int programId = *apvts.getRawParameterValue("PROGRAM");
-    //read debug slider
+    // read debug slider
     float debugValue = *apvts.getRawParameterValue("DEBUG");
     // prepare audio buffers
     monoBuffer.setSize(1, bufferSize);
@@ -401,16 +401,30 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     feedBackDip.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
     // sum input buffer & feedback buffer together
     monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
+    // round samples to 16bit values
+    bool bitReduceButtonState = *apvts.getRawParameterValue("BITREDUCE");
+    if (bitReduceButtonState == true)
+    {
+        for (int i = 0; i < bufferSize; ++i)
+        {
+            float sampleRounded = monoBuffer.getSample(0, i);
+            monoBuffer.setSample(0, i, roundBits(sampleRounded));
+        }
+    }
     // generate white noise
-    float noiseLevel = 0.000125f;
-    float noiseLevelHalf = 0.0000625f;
+    float noiseLevel = 0.00012f;
+    float noiseLevelHalf = 0.00006f;
     for (int sample = 0; sample < bufferSize; ++sample)
     {
         float noiseSample = (random.nextFloat() * noiseLevel) - noiseLevelHalf;
         noiseBuffer.setSample(0, sample, noiseSample);
     }
-    //sum input buffer & noise buffer together
-    monoBuffer.addFrom(0, 0, noiseBuffer, 0, 0, bufferSize);
+    // sum input buffer & noise buffer together
+    bool noiseButtonState = *apvts.getRawParameterValue("NOISE");
+    if (noiseButtonState == true)
+    {
+        monoBuffer.addFrom(0, 0, noiseBuffer, 0, 0, bufferSize);
+    }
     // apply anti-aliasing filter
     gainModule.setGainLinear(s1gain);
     gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
@@ -421,20 +435,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     gainModule.setGainLinear(s3gain);
     gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     antiAliasThirdSection.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
-    // //pre-scale input to create 12dB of headroom before clipping
-    // gainModule.setGainLinear(0.25f);
-    // gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    // //quantize samples to 16bit
-    // for (int i = 0; i < bufferSize; ++i)
-    // {
-    //     float sampleRounded = monoBuffer.getSample(0, i);
-    //     monoBuffer.setSample(0, i, roundBits(sampleRounded));
-    // }
-    // //scale 16bit signal level back up
-    // gainModule.setGainLinear(4.0f);
-    // gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
+    // calculate & process the delay taps
     auto *data = monoBuffer.getReadPointer(0);
-    // calculate the delay taps
     for (int i = 0; i < bufferSize; i++)
     {
         fractionalDelay.pushSample(0, data[i]);
@@ -506,7 +508,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             randomSample *= -0.33f;
         }
         // scale randomSample by a certain amount
-        float randomSampleMult = 8.0f * debugValue;
+        float randomSampleMult = 8.0f;
+        //float randomSampleMult = 8.0f * debugValue;
         randomSample *= randomSampleMult;
         // calculate rateLVL value
         unsigned int rateLevel = rngsus(randomSample);
@@ -643,5 +646,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 3000.0f, 16000.0f, 16000.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "inputGain", 0.0f, 2.0f, 1.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DEBUG", "debug", 0.0f, 2.0f, 1.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "noise", true));
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("BITREDUCE", "bitreduce", true));
     return {parameters.begin(), parameters.end()};
 }

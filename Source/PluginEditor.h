@@ -35,6 +35,8 @@ private:
     juce::Slider lowPassSlider;
     juce::Slider inputGainSlider;
     juce::Slider debugSlider;
+    juce::ToggleButton noiseButton;
+    juce::ToggleButton bitReduceButton;
 
     juce::Label predelayLabel;
     juce::Label decayLabel;
@@ -51,6 +53,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lowPassSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> debugSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> noiseButtonAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> bitReduceButtonAttachment;
     SG323AudioProcessor& audioProcessor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SG323AudioProcessorEditor)

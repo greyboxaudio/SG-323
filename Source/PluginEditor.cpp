@@ -69,8 +69,17 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
 
     debugSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
     debugSlider.setTextBoxIsEditable(false);
-    addAndMakeVisible(debugSlider);
+    //addAndMakeVisible(debugSlider);
     debugSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DEBUG", debugSlider);
+
+    noiseButton.setButtonText("Noise");
+    addAndMakeVisible(noiseButton);
+    noiseButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "NOISE", noiseButton);
+
+    bitReduceButton.setButtonText("16bit");
+    addAndMakeVisible(bitReduceButton);
+    bitReduceButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "BITREDUCE", bitReduceButton);
+
 
     programBox.addItem("Plate 1", 1);
     programBox.addItem("Plate 2", 2);
@@ -85,7 +94,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize(550, 350);
+    setSize(475, 350);
+    //setSize(550, 350);
 }
 
 SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
@@ -100,7 +110,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
 
     g.setColour(juce::Colours::white);
     g.setFont(15.0f);
-    g.drawFittedText ("v0.4.1", getLocalBounds(), juce::Justification::bottomRight, 1);
+    g.drawFittedText ("v0.5.0", getLocalBounds(), juce::Justification::bottomRight, 1);
 }
 
 void SG323AudioProcessorEditor::resized()
@@ -108,6 +118,8 @@ void SG323AudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     juce::Rectangle<int> bounds = getLocalBounds();
+    noiseButton.setBounds(25,25,100,50);
+    bitReduceButton.setBounds(100,25,100,50);
     programBox.setBounds(300, 25, 150, 50);
     inputGainSlider.setBounds(25, 120, 50, 200);
     highPassSlider.setBounds(100, 120, 50, 200);
