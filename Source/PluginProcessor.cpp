@@ -402,10 +402,11 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     // sum input buffer & feedback buffer together
     monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
     // generate white noise
-    float noiseLevel = 0.001f * debugValue;
+    float noiseLevel = 0.000125f;
+    float noiseLevelHalf = 0.0000625f;
     for (int sample = 0; sample < bufferSize; ++sample)
     {
-        float noiseSample = (random.nextFloat() * noiseLevel) - (noiseLevel * 0.5f);
+        float noiseSample = (random.nextFloat() * noiseLevel) - noiseLevelHalf;
         noiseBuffer.setSample(0, sample, noiseSample);
     }
     //sum input buffer & noise buffer together
@@ -505,7 +506,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             randomSample *= -0.33f;
         }
         // scale randomSample by a certain amount
-        float randomSampleMult = 8.0f;
+        float randomSampleMult = 8.0f * debugValue;
         randomSample *= randomSampleMult;
         // calculate rateLVL value
         unsigned int rateLevel = rngsus(randomSample);
@@ -641,6 +642,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HPF", "highPassFilter", 20.0f, 480.0f, 20.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 3000.0f, 16000.0f, 16000.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "inputGain", 0.0f, 2.0f, 1.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DEBUG", "debug", 0.1f, 1.0f, 0.5f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DEBUG", "debug", 0.0f, 2.0f, 1.0f));
     return {parameters.begin(), parameters.end()};
 }
