@@ -9,4 +9,6 @@ Special thanks:
 Dr. Albert Gräf and his team at the Computer Music Research Group http://www.musikinformatik.uni-mainz.de/e_ag.php  
 Joshua Krosenbrink https://www.electroacousticlabs.com/  
 Xenakios https://xenakios.wordpress.com/  
+William Light https://github.com/wrl  
+Florian Mrugalla https://github.com/Mrugalla  
 Joshua Hodge and the whole Audio Programmer Community https://www.theaudioprogrammer.com/  
