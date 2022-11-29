@@ -67,10 +67,10 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     wetDryLabel.attachToComponent(&wetDrySlider, false);
     wetDryLabel.setJustificationType(juce::Justification::centred);
 
-    feedbackSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
-    feedbackSlider.setTextBoxIsEditable(false);
-    addAndMakeVisible(feedbackSlider);
-    feedbackSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "FDBK", feedbackSlider);
+    debugSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    debugSlider.setTextBoxIsEditable(false);
+    addAndMakeVisible(debugSlider);
+    debugSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DEBUG", debugSlider);
 
     programBox.addItem("Plate 1", 1);
     programBox.addItem("Plate 2", 2);
@@ -115,5 +115,5 @@ void SG323AudioProcessorEditor::resized()
     predelaySlider.setBounds(250, 120, 50, 200);
     decaySlider.setBounds(325, 120, 50, 200);
     wetDrySlider.setBounds(400, 120, 50, 200);
-    feedbackSlider.setBounds(475, 120, 50, 200);
+    debugSlider.setBounds(475, 120, 50, 200);
 }

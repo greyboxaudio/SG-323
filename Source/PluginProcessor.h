@@ -66,6 +66,9 @@ private:
     juce::AudioBuffer<float> randomBuffer;
     juce::AudioBuffer<float> feedbackBuffer;
     juce::AudioBuffer<float> outputBuffer;
+    juce::AudioBuffer<float> noiseBuffer;
+
+    juce::Random random;
 
     juce::LinearSmoothedValue<float> inputGainSmooth{};
     juce::LinearSmoothedValue<float> highPassSmooth{};

@@ -34,7 +34,7 @@ private:
     juce::Slider highPassSlider;
     juce::Slider lowPassSlider;
     juce::Slider inputGainSlider;
-    juce::Slider feedbackSlider;
+    juce::Slider debugSlider;
 
     juce::Label predelayLabel;
     juce::Label decayLabel;
@@ -50,7 +50,7 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highPassSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lowPassSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainSliderAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> feedbackSliderAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> debugSliderAttachment;
     SG323AudioProcessor& audioProcessor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SG323AudioProcessorEditor)

@@ -13,13 +13,14 @@
 SG323AudioProcessor::SG323AudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
     : AudioProcessor(BusesProperties()
-#if ! JucePlugin_IsMidiEffect
-#if ! JucePlugin_IsSynth
-        .withInput("Input", juce::AudioChannelSet::stereo(), true)
+#if !JucePlugin_IsMidiEffect
+#if !JucePlugin_IsSynth
+                         .withInput("Input", juce::AudioChannelSet::stereo(), true)
 #endif
-        .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+                         .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-    ), apvts(*this, nullptr, "Parameters", createParameters())
+                         ),
+      apvts(*this, nullptr, "Parameters", createParameters())
 #endif
 {
 }
@@ -68,7 +69,7 @@ double SG323AudioProcessor::getTailLengthSeconds() const
 
 int SG323AudioProcessor::getNumPrograms()
 {
-    return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
+    return 1; // NB: some hosts don't cope very well if you tell them there are 0 programs,
     // so this should be at least 1, even if you're not really implementing programs.
 }
 
@@ -86,7 +87,7 @@ const juce::String SG323AudioProcessor::getProgramName(int index)
     return {};
 }
 
-void SG323AudioProcessor::changeProgramName(int index, const juce::String& newName)
+void SG323AudioProcessor::changeProgramName(int index, const juce::String &newName)
 {
 }
 
@@ -96,10 +97,10 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     auto delayBufferSize = sampleRate * 0.512;
-    //set up filters
+    // set up filters
     lastSampleRate = sampleRate;
-    float smoothSlow{ 0.1f };
-    float smoothFast{ 0.0005f };
+    float smoothSlow{0.1f};
+    float smoothFast{0.0005f};
     inputGainSmooth.reset(sampleRate, smoothFast);
     highPassSmooth.reset(sampleRate, smoothFast);
     lowPassSmooth.reset(sampleRate, smoothFast);
@@ -226,7 +227,7 @@ void SG323AudioProcessor::releaseResources()
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool SG323AudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const
+bool SG323AudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const
 {
 #if JucePlugin_IsMidiEffect
     juce::ignoreUnused(layouts);
@@ -236,12 +237,11 @@ bool SG323AudioProcessor::isBusesLayoutSupported(const BusesLayout& layouts) con
     // In this template code we only support mono or stereo.
     // Some plugin hosts, such as certain GarageBand versions, will only
     // load plugins that support stereo bus layouts.
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-        && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono() && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
-    // This checks if the input layout matches the output layout
-#if ! JucePlugin_IsSynth
+        // This checks if the input layout matches the output layout
+#if !JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
 #endif
@@ -255,7 +255,7 @@ int calculateAddress(unsigned int rowInput, unsigned int columnInput)
 {
     // calculate address row
     unsigned int bit6 = (rowInput & 64) >> 6;
-    unsigned int MSB = (rowInput & 128) >> 7;    
+    unsigned int MSB = (rowInput & 128) >> 7;
     unsigned int delayCarryOut = rowInput >> 8;
     unsigned int rowDelay = ((rowInput << 1) & 126) | bit6 | (MSB << 7);
     // calculate address column
@@ -281,7 +281,8 @@ float roundBits(float inputSample)
     return (outputSample);
 }
 
-int rngsus(float randomSample) {
+int rngsus(float randomSample)
+{
     int rateLevel{};
     int num1{};
     int num2{};
@@ -304,7 +305,7 @@ int rngsus(float randomSample) {
         num4 = 8;
     }
     rateLevel = num1 + num2 + num3 + num4;
-    return(rateLevel);
+    return (rateLevel);
 }
 
 void SG323AudioProcessor::updateFilter()
@@ -323,12 +324,11 @@ void SG323AudioProcessor::updateFilter()
     *antiAliasThirdSection.state = juce::dsp::IIR::Coefficients<float>(s3b0, s3b1, s3b2, s3a0, s3a1, s3a2);
 }
 
-void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
@@ -337,7 +337,6 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
     // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
-
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
     // Make sure to reset the state if your inner loop is processing
@@ -345,13 +344,15 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
     auto bufferSize = buffer.getNumSamples();
-
-    //read program selection from the UI
+    // read program selection from the UI
     int programId = *apvts.getRawParameterValue("PROGRAM");
-    //prepare audio buffers
+    //read debug slider
+    float debugValue = *apvts.getRawParameterValue("DEBUG");
+    // prepare audio buffers
     monoBuffer.setSize(1, bufferSize);
     feedbackBuffer.setSize(1, bufferSize);
     randomBuffer.setSize(1, bufferSize);
+    noiseBuffer.setSize(1, bufferSize);
     inputBuffer.setSize(totalNumInputChannels, bufferSize);
     outputBuffer.setSize(totalNumOutputChannels, bufferSize);
     if (initSampleRateCount == 0)
@@ -359,12 +360,12 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
         feedbackBuffer.clear(0, 0, buffer.getNumSamples());
         initSampleRateCount = 1;
     }
-    //set up dsp elements
-    juce::dsp::AudioBlock <float> monoBlock(monoBuffer);
-    juce::dsp::AudioBlock <float> randomBlock(randomBuffer);
-    juce::dsp::AudioBlock <float> feedbackBlock(feedbackBuffer);
-    juce::dsp::AudioBlock <float> outputBlock(outputBuffer);
-    //update filters
+    // set up dsp elements
+    juce::dsp::AudioBlock<float> monoBlock(monoBuffer);
+    juce::dsp::AudioBlock<float> randomBlock(randomBuffer);
+    juce::dsp::AudioBlock<float> feedbackBlock(feedbackBuffer);
+    juce::dsp::AudioBlock<float> outputBlock(outputBuffer);
+    // update filters
     float highPassValue = *apvts.getRawParameterValue("HPF");
     highPassSmooth.setTargetValue(highPassValue);
     nextHighPassValue = highPassSmooth.getNextValue();
@@ -372,45 +373,53 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
     lowPassSmooth.setTargetValue(lowPassValue);
     nextLowPassValue = lowPassSmooth.getNextValue();
     updateFilter();
-    //clear buffers
+    // clear buffers
     monoBuffer.clear(0, 0, bufferSize);
     for (auto i = 0; i < totalNumOutputChannels; ++i)
         outputBuffer.clear(i, 0, bufferSize);
-    //sum input channels together
+    // sum input channels together
     monoBuffer.copyFrom(0, 0, buffer, 0, 0, bufferSize);
     monoBuffer.addFrom(0, 0, buffer, 1, 0, bufferSize);
-    //apply input gain
+    // apply input gain
     float inputGainValue = *apvts.getRawParameterValue("INPUT");
     inputGainSmooth.setTargetValue(inputGainValue * 0.5f);
     nextInputGainValue = inputGainSmooth.getNextValue();
     gainModule.setGainLinear(nextInputGainValue);
-    gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    //copy & filter random Sample buffer
+    gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+    // copy & filter random Sample buffer
     randomBuffer.clear(0, 0, bufferSize);
     randomBuffer.copyFrom(0, 0, monoBuffer, 0, 0, bufferSize);
-    randomHighPass.process(juce::dsp::ProcessContextReplacing <float>(randomBlock));
-    randomLowPass.process(juce::dsp::ProcessContextReplacing <float>(randomBlock));
-    //pre-process input buffer
-    preEmphasis.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    inputHighPass.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    inputLowPass.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    //pre-process feedback buffer
-    feedBackHighPass.process(juce::dsp::ProcessContextReplacing <float>(feedbackBlock));
-    feedBackLowPass.process(juce::dsp::ProcessContextReplacing <float>(feedbackBlock));
-    feedBackDip.process(juce::dsp::ProcessContextReplacing <float>(feedbackBlock));
-    //sum input buffer & feedback buffer together
+    randomHighPass.process(juce::dsp::ProcessContextReplacing<float>(randomBlock));
+    randomLowPass.process(juce::dsp::ProcessContextReplacing<float>(randomBlock));
+    // pre-process input buffer
+    preEmphasis.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+    inputHighPass.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+    inputLowPass.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+    // pre-process feedback buffer
+    feedBackHighPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
+    feedBackLowPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
+    feedBackDip.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
+    // sum input buffer & feedback buffer together
     monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
-    auto* data = monoBuffer.getReadPointer(0);
-    //apply anti-aliasing filter
+    // generate white noise
+    float noiseLevel = 0.001f * debugValue;
+    for (int sample = 0; sample < bufferSize; ++sample)
+    {
+        float noiseSample = (random.nextFloat() * noiseLevel) - (noiseLevel * 0.5f);
+        noiseBuffer.setSample(0, sample, noiseSample);
+    }
+    //sum input buffer & noise buffer together
+    monoBuffer.addFrom(0, 0, noiseBuffer, 0, 0, bufferSize);
+    // apply anti-aliasing filter
     gainModule.setGainLinear(s1gain);
-    gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    antiAliasFirstSection.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
+    gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+    antiAliasFirstSection.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     gainModule.setGainLinear(s2gain);
-    gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    antiAliasSecondSection.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
+    gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+    antiAliasSecondSection.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     gainModule.setGainLinear(s3gain);
-    gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    antiAliasThirdSection.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
+    gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+    antiAliasThirdSection.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     // //pre-scale input to create 12dB of headroom before clipping
     // gainModule.setGainLinear(0.25f);
     // gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
@@ -423,7 +432,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
     // //scale 16bit signal level back up
     // gainModule.setGainLinear(4.0f);
     // gainModule.process(juce::dsp::ProcessContextReplacing <float>(monoBlock));
-    //calculate the delay taps
+    auto *data = monoBuffer.getReadPointer(0);
+    // calculate the delay taps
     for (int i = 0; i < bufferSize; i++)
     {
         fractionalDelay.pushSample(0, data[i]);
@@ -440,8 +450,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
         unsigned int delayAddress = delayBaseAddr + 16;
         unsigned int gainModContAddress = gainModContBaseAddr + 8;
         unsigned int gainAddress = gainBaseAddr + 8;
-        float feedbackMod = *apvts.getRawParameterValue("FDBK");
-        float feedbackDelayGainMult = feedbackMod * -1.0f;
+        float feedbackDelayGainMult = -0.29f;
         float feedbackOutputSample{};
         float feedbackDelayTime{};
         float feedbackDelayGain{};
@@ -489,16 +498,16 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             feedbackOutputSample += fractionalDelay.popSample(0, feedbackDelayTime * lastSampleRate, false) * feedbackDelayGain;
         }
         feedbackBuffer.setSample(0, i, feedbackOutputSample);
-        //process random sample
+        // process random sample
         float randomSample = randomBuffer.getSample(0, i);
         if (randomSample < 0)
         {
             randomSample *= -0.33f;
         }
-        //scale randomSample by a certain amount
+        // scale randomSample by a certain amount
         float randomSampleMult = 8.0f;
         randomSample *= randomSampleMult;
-        //calculate rateLVL value
+        // calculate rateLVL value
         unsigned int rateLevel = rngsus(randomSample);
         // mod rate counter
         modClockOut += 1;
@@ -530,13 +539,13 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             gainModBaseAddr = (modCount & 511) << 3;
             delayModBaseAddr = (modCount >> 1) & 4064;
         }
-        //calculate output taps
+        // calculate output taps
         float outputDelayGainMult = 0.5f;
         float leftOutputSample{};
         float rightOutputSample{};
         float outputDelayTime{};
         float outputDelayGain{};
-        //left output taps
+        // left output taps
         adjustablePreDelay = *apvts.getRawParameterValue("PREDELAY");
         predelaySmooth.setTargetValue(adjustablePreDelay);
         float nextPreDelayValue = predelaySmooth.getNextValue();
@@ -546,7 +555,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
             outputDelayGain = outputGainArray[d] * outputDelayGainMult;
             leftOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, false) * outputDelayGain;
         }
-        //right output taps
+        // right output taps
         for (int d = 4; d < 7; d++)
         {
             outputDelayTime = ((programId * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
@@ -559,18 +568,18 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, juce::M
         outputBuffer.setSample(0, i, leftOutputSample);
         outputBuffer.setSample(1, i, rightOutputSample);
     }
-    //apply de-emphasis filter on output taps
-    deEmphasis.process(juce::dsp::ProcessContextReplacing <float>(outputBlock));
-    //copy dry signal to buffer
+    // apply de-emphasis filter on output taps
+    deEmphasis.process(juce::dsp::ProcessContextReplacing<float>(outputBlock));
+    // copy dry signal to buffer
     for (int channel = 0; channel < totalNumInputChannels; channel++)
     {
         inputBuffer.copyFrom(channel, 0, buffer, channel, 0, bufferSize);
     }
-    //write output taps to main buffer
+    // write output taps to main buffer
     for (int channel = 0; channel < totalNumOutputChannels; ++channel)
     {
-        auto* wetSignal = outputBuffer.getReadPointer(channel);
-        auto* drySignal = inputBuffer.getReadPointer(channel);
+        auto *wetSignal = outputBuffer.getReadPointer(channel);
+        auto *drySignal = inputBuffer.getReadPointer(channel);
         float mixLevel = *apvts.getRawParameterValue("WETDRY");
         wetDrySmooth.setTargetValue(mixLevel);
         float wetLevel = wetDrySmooth.getNextValue();
@@ -586,13 +595,13 @@ bool SG323AudioProcessor::hasEditor() const
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* SG323AudioProcessor::createEditor()
+juce::AudioProcessorEditor *SG323AudioProcessor::createEditor()
 {
     return new SG323AudioProcessorEditor(*this);
 }
 
 //==============================================================================
-void SG323AudioProcessor::getStateInformation(juce::MemoryBlock& destData)
+void SG323AudioProcessor::getStateInformation(juce::MemoryBlock &destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
@@ -602,7 +611,7 @@ void SG323AudioProcessor::getStateInformation(juce::MemoryBlock& destData)
     copyXmlToBinary(*xml, destData);
 }
 
-void SG323AudioProcessor::setStateInformation(const void* data, int sizeInBytes)
+void SG323AudioProcessor::setStateInformation(const void *data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -615,7 +624,7 @@ void SG323AudioProcessor::setStateInformation(const void* data, int sizeInBytes)
 
 //==============================================================================
 // This creates new instances of the plugin..
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+juce::AudioProcessor *JUCE_CALLTYPE createPluginFilter()
 {
     return new SG323AudioProcessor();
 }
@@ -625,13 +634,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
 
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PROGRAM", "Program",
-        juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon"), 0));
+                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon"), 0));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "PreDelay", 0.0f, 320.0f, 0.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 1.0f, 1.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("WETDRY", "WetDry", 0.0f, 1.0f, 0.5f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HPF", "highPassFilter", 20.0f, 480.0f, 20.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 3000.0f, 16000.0f, 16000.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "inputGain", 0.0f, 2.0f, 1.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("FDBK", "feedback", 0.25f, 0.35f, 0.3f));
-    return { parameters.begin(), parameters.end() };
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DEBUG", "debug", 0.1f, 1.0f, 0.5f));
+    return {parameters.begin(), parameters.end()};
 }
