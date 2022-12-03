@@ -14,7 +14,7 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 # `project()` command. `project()` sets up some helpful variables that describe source/binary
 # directories, and the current project version. This is a standard CMake command.
 
-project(SG323 VERSION 0.5.0)
+project(SG323 VERSION 0.5.1)
 
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
@@ -25,6 +25,7 @@ project(SG323 VERSION 0.5.0)
 #find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
 # or
 add_subdirectory(JUCE)                    # If you've put JUCE in a subdirectory called JUCE
+add_subdirectory(clap-juce-extensions EXCLUDE_FROM_ALL)
 
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
 # system. This setup should be done before calling `juce_add_plugin`.
@@ -55,6 +56,12 @@ juce_add_plugin(SG323
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
     FORMATS VST3                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "SG-323")        # The name of the final executable, which can differ from the target name
+
+    clap_juce_extensions_plugin(
+    TARGET SG323
+    CLAP_ID "com.greyboxaudio.sg-323"
+    CLAP_FEATURES audio-effect reverb stereo
+)
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
@@ -109,6 +116,7 @@ target_link_libraries(SG323
         # AudioPluginData           # If we'd created a binary data target, we'd link to it here
         juce::juce_audio_utils
         juce::juce_dsp
+        clap_juce_extensions
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
