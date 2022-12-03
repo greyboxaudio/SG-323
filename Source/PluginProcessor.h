@@ -96,12 +96,10 @@ private:
     float outputDelayArray[16]{ 10.5f, 7.0f, 3.5f, 0.0f, 19.0f, 13.0f, 7.0f, 1.0f, 11.5f, 8.0f, 4.5f, 1.0f, 20.0f, 14.0f, 8.0f, 2.0f };
     unsigned long delayTaps[24];
     unsigned int gainCeiling[24];
-    signed int signMod[24];
     int initSampleRateCount{};
     float lastSampleRate{};
     float adjustablePreDelay{};
     float adjustableDecay{ 1.0f };
-    float adjustableWetDry{ 0.5f };
     float nextInputGainValue{ 1.0f };
     float nextHighPassValue{ 20.0f };
     float nextLowPassValue{ 16000.0f };

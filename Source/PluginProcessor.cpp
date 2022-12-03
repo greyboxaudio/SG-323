@@ -576,8 +576,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             randomSample *= -0.33f;
         }
         // scale randomSample by a certain amount
-        // float randomSampleMult = 8.0f;
-        float randomSampleMult = 8.0f * debugValue;
+        float randomSampleMult = 8.0f;
+        //float randomSampleMult = 8.0f * debugValue;
         randomSample *= randomSampleMult;
         // calculate rateLVL value
         unsigned int rateLevel = rngsus(randomSample);
