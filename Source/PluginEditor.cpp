@@ -110,7 +110,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
 
     g.setColour(juce::Colours::white);
     g.setFont(15.0f);
-    g.drawFittedText ("v0.6.0", getLocalBounds(), juce::Justification::bottomRight, 1);
+    g.drawFittedText ("v0.6.1", getLocalBounds(), juce::Justification::bottomRight, 1);
 }
 
 void SG323AudioProcessorEditor::resized()

@@ -421,6 +421,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     feedbackBuffer.setSize(1, bufferSize);
     randomBuffer.setSize(1, bufferSize);
     noiseBuffer.setSize(1, bufferSize);
+    bitBuffer.setSize(1, bufferSize);
     inputBuffer.setSize(totalNumInputChannels, bufferSize);
     outputBuffer.setSize(totalNumOutputChannels, bufferSize);
     if (initSampleRateCount == 0)
@@ -470,22 +471,24 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     // sum input buffer & feedback buffer together
     monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
     // round samples to 16bit values
+    for (int i = 0; i < bufferSize; ++i)
+    {
+        float sampleRounded = monoBuffer.getSample(0, i);
+        bitBuffer.setSample(0, i, roundBits(sampleRounded));
+    }
+    // replace input buffer with rounded samples
     bool bitReduceButtonState = *apvts.getRawParameterValue("BITREDUCE");
     if (bitReduceButtonState == true)
     {
-        for (int i = 0; i < bufferSize; ++i)
-        {
-            float sampleRounded = monoBuffer.getSample(0, i);
-            monoBuffer.setSample(0, i, roundBits(sampleRounded));
-        }
+        monoBuffer.copyFrom(0, 0, bitBuffer, 0, 0, bufferSize);
     }
     // generate white noise
     float noiseLevel = 0.00012f;
     float noiseLevelHalf = 0.00006f;
-    for (int sample = 0; sample < bufferSize; ++sample)
+    for (int i = 0; i < bufferSize; ++i)
     {
         float noiseSample = (random.nextFloat() * noiseLevel) - noiseLevelHalf;
-        noiseBuffer.setSample(0, sample, noiseSample);
+        noiseBuffer.setSample(0, i, noiseSample);
     }
     // sum input buffer & noise buffer together
     bool noiseButtonState = *apvts.getRawParameterValue("NOISE");
@@ -577,7 +580,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         }
         // scale randomSample by a certain amount
         float randomSampleMult = 8.0f;
-        //float randomSampleMult = 8.0f * debugValue;
+        // float randomSampleMult = 8.0f * debugValue;
         randomSample *= randomSampleMult;
         // calculate rateLVL value
         unsigned int rateLevel = rngsus(randomSample);

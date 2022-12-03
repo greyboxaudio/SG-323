@@ -7,14 +7,15 @@
 # that the installed CMake will be able to understand the following CMakeLists, and ensures that
 # CMake's behaviour is compatible with the named version. This is a standard CMake command, so more
 # information can be found in the CMake docs.
-
 cmake_minimum_required(VERSION 3.16)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Release>:Release>")
+set(CMAKE_CXX_STANDARD 17)
+
 # The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
 # `project()` command. `project()` sets up some helpful variables that describe source/binary
 # directories, and the current project version. This is a standard CMake command.
-
-project(SG323 VERSION 0.6.0)
+project(SG323 VERSION 0.6.1)
 
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
@@ -61,6 +62,7 @@ juce_add_plugin(SG323
     TARGET SG323
     CLAP_ID "com.greyboxaudio.sg-323"
     CLAP_FEATURES audio-effect reverb stereo
+    CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES 64
 )
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated

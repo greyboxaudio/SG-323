@@ -67,6 +67,7 @@ private:
     juce::AudioBuffer<float> feedbackBuffer;
     juce::AudioBuffer<float> outputBuffer;
     juce::AudioBuffer<float> noiseBuffer;
+    juce::AudioBuffer<float> bitBuffer;
 
     juce::Random random;
 
