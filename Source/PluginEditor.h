@@ -38,6 +38,8 @@ private:
     juce::ToggleButton noiseButton;
     juce::ToggleButton bitReduceButton;
 
+    juce::Label pluginLabel;
+    juce::Label versionLabel;
     juce::Label predelayLabel;
     juce::Label decayLabel;
     juce::Label wetDryLabel;
