@@ -496,6 +496,18 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     {
         monoBuffer.addFrom(0, 0, noiseBuffer, 0, 0, bufferSize);
     }
+    // testbutton
+    bool testButtonState = *apvts.getRawParameterValue("TEST");
+    if (previousButtonState == false && testButtonState == true)
+    {
+        feedbackBuffer.clear(0, 0, bufferSize);
+        monoBuffer.clear(0, 0, bufferSize);
+        monoBuffer.setSample(0, 0, 1.0f);
+        preEmphasis.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+        inputHighPass.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+        inputLowPass.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+    }
+    previousButtonState = testButtonState;
     // apply anti-aliasing filter
     gainModule.setGainLinear(s1gain);
     gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
@@ -719,5 +731,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DEBUG", "debug", 0.0f, 2.0f, 1.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "noise", true));
     parameters.push_back(std::make_unique<juce::AudioParameterBool>("BITREDUCE", "bitreduce", true));
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("TEST", "test", false));
     return {parameters.begin(), parameters.end()};
 }

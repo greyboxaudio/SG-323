@@ -15,7 +15,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
 {
 
   pluginLabel.setText("SG-323", juce::dontSendNotification);
-  //pluginLabel.setFont(juce::Font (16.0f * (getHeight()/800), juce::Font::bold));
+  // pluginLabel.setFont(juce::Font (16.0f * (getHeight()/800), juce::Font::bold));
   addAndMakeVisible(pluginLabel);
   versionLabel.setText("v0.6.1", juce::dontSendNotification);
   addAndMakeVisible(versionLabel);
@@ -80,6 +80,10 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   bitReduceButton.setButtonText("16bit");
   addAndMakeVisible(bitReduceButton);
   bitReduceButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "BITREDUCE", bitReduceButton);
+
+  testButton.setButtonText("Test");
+  addAndMakeVisible(testButton);
+  testButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "TEST", testButton);
 
   programBox.addItem("Plate 1", 1);
   programBox.addItem("Plate 2", 2);
@@ -168,6 +172,7 @@ void SG323AudioProcessorEditor::resized()
   juce::Array<FlexItem> itemArrayBottom;
   itemArrayBottom.add(FlexItem(noiseButton).withMinWidth(120.0f).withMinHeight(30.0f).withMargin(8.0f).withFlex(1));
   itemArrayBottom.add(FlexItem(bitReduceButton).withMinWidth(120.0f).withMinHeight(30.0f).withMargin(8.0f).withFlex(1));
+  itemArrayBottom.add(FlexItem(testButton).withMinWidth(120.0f).withMinHeight(30.0f).withMargin(8.0f).withFlex(1));
   itemArrayBottom.add(FlexItem(versionLabel).withMargin(8.0f).withFlex(1));
   flexboxBottom.items = itemArrayBottom;
   flexboxBottom.performLayout(bounds.toFloat());
