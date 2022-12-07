@@ -70,7 +70,10 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
 
   debugSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
   debugSlider.setTextBoxIsEditable(false);
-  // addAndMakeVisible(debugSlider);
+  addAndMakeVisible(debugSlider);
+  debugLabel.setText("DEBUG", juce::dontSendNotification);
+  debugLabel.setJustificationType(juce::Justification::centred);
+  addAndMakeVisible(debugLabel);
   debugSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DEBUG", debugSlider);
 
   noiseButton.setButtonText("Noise");
@@ -145,6 +148,7 @@ void SG323AudioProcessorEditor::resized()
   itemArrayLabels.add(FlexItem(predelayLabel).withFlex(1));
   itemArrayLabels.add(FlexItem(decayLabel).withFlex(1));
   itemArrayLabels.add(FlexItem(wetDryLabel).withFlex(1));
+  itemArrayLabels.add(FlexItem(debugLabel).withFlex(1));
   flexboxLabels.items = itemArrayLabels;
   flexboxLabels.performLayout(bounds.toFloat());
   // center flexbox
@@ -160,6 +164,7 @@ void SG323AudioProcessorEditor::resized()
   itemArrayCenter.add(FlexItem(predelaySlider).withMinWidth(80.0f).withMinHeight(120.0f).withMargin(8.0f).withFlex(1));
   itemArrayCenter.add(FlexItem(decaySlider).withMinWidth(80.0f).withMinHeight(120.0f).withMargin(8.0f).withFlex(1));
   itemArrayCenter.add(FlexItem(wetDrySlider).withMinWidth(80.0f).withMinHeight(120.0f).withMargin(8.0f).withFlex(1));
+  itemArrayCenter.add(FlexItem(debugSlider).withMinWidth(80.0f).withMinHeight(120.0f).withMargin(8.0f).withFlex(1));
   // debugSlider.setBounds(475, 120, 50, 200);
   flexboxCenter.items = itemArrayCenter;
   flexboxCenter.performLayout(bounds.toFloat());

@@ -47,6 +47,7 @@ private:
     juce::Label highPassLabel;
     juce::Label lowPassLabel;
     juce::Label inputGainLabel;
+    juce::Label debugLabel;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> programBoxAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decaySliderAttachment;

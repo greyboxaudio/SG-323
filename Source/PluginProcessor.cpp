@@ -506,6 +506,15 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         preEmphasis.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
         inputHighPass.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
         inputLowPass.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
+        // writeAddress = 16383;
+        // nROW = 255;
+        // nCOLUMN = 255;
+        // MCCK = 0;
+        // modClockOut = 0;
+        // modCount = 0;
+        // gainModContBaseAddr = 0;
+        // gainModBaseAddr = 0;
+        // delayModBaseAddr = 0;
     }
     previousButtonState = testButtonState;
     // apply anti-aliasing filter
@@ -591,8 +600,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             randomSample *= -0.33f;
         }
         // scale randomSample by a certain amount
-        float randomSampleMult = 8.0f;
-        // float randomSampleMult = 8.0f * debugValue;
+        //float randomSampleMult = 8.0f;
+        float randomSampleMult = 8.0f * debugValue;
         randomSample *= randomSampleMult;
         // calculate rateLVL value
         unsigned int rateLevel = rngsus(randomSample);
