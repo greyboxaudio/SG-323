@@ -37,17 +37,13 @@ private:
     juce::Slider debugSlider;
     juce::ToggleButton noiseButton;
     juce::ToggleButton bitReduceButton;
-    juce::ToggleButton testButton;
 
-    juce::Label pluginLabel;
-    juce::Label versionLabel;
     juce::Label predelayLabel;
     juce::Label decayLabel;
     juce::Label wetDryLabel;
     juce::Label highPassLabel;
     juce::Label lowPassLabel;
     juce::Label inputGainLabel;
-    juce::Label debugLabel;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> programBoxAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decaySliderAttachment;
@@ -59,8 +55,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> debugSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> noiseButtonAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> bitReduceButtonAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> testButtonAttachment;
-
     SG323AudioProcessor& audioProcessor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SG323AudioProcessorEditor)
