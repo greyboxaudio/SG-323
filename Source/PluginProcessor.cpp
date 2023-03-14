@@ -664,7 +664,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         outputDelayTime = ((programId * outputDelayArray[7]) + outputDelayArray[7 + 8] + nextPreDelayValue) * 0.001f;
         outputDelayGain = outputGainArray[7] * outputDelayGainMult;
         rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, true) * outputDelayGain;
+        //always add the left output channel for mono compatibility
         outputBuffer.setSample(0, i, leftOutputSample);
+        //if the track is stereo also add the right channel to the output
         if (totalNumOutputChannels == 2)
         {
             outputBuffer.setSample(1, i, rightOutputSample);

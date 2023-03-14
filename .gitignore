@@ -1,3 +1,4 @@
 /Libs/*
 /build
 .DS_Store
+.vscode/settings.json

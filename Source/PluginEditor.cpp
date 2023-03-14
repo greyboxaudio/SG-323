@@ -17,7 +17,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   pluginLabel.setText("SG-323", juce::dontSendNotification);
   // pluginLabel.setFont(juce::Font (16.0f * (getHeight()/800), juce::Font::bold));
   addAndMakeVisible(pluginLabel);
-  versionLabel.setText("v0.6.3", juce::dontSendNotification);
+  versionLabel.setText("v0.6.3_230314-03", juce::dontSendNotification);
   addAndMakeVisible(versionLabel);
 
   inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
