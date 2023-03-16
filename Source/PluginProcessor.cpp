@@ -552,6 +552,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         float feedbackOutputSample{};
         float feedbackDelayTime{};
         float feedbackDelayGain{};
+        delayTaps[0] = 0;
         for (int d = 0; d < 15; d++)
         {
             rowInput = delayModData[delayModAddress + d] + nROW;
@@ -562,6 +563,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             unsigned int gainModAddress = gainModContOut | gainModBaseAddr;
             unsigned int gainModOut = gainModData[gainModAddress];
             unsigned int gainOut = (gainData[gainAddress + d] << 1) & 255;
+            gainCeiling[0] = 0;
             if (gainModOut < gainOut && nGainModEnable == 0)
             {
                 gainCeiling[1 + d] = gainModOut;
