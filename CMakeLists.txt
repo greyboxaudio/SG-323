@@ -16,7 +16,7 @@ set(HARDENED_RUNTIME_ENABLED)
 # The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
 # `project()` command. `project()` sets up some helpful variables that describe source/binary
 # directories, and the current project version. This is a standard CMake command.
-project(SG323 VERSION 0.6.2)
+project(SG323 VERSION 0.6.3)
 
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
@@ -26,9 +26,9 @@ project(SG323 VERSION 0.6.2)
 #set(JUCE_DIR "~/JUCE/extras/Build/CMake")
 #find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
 # or
-add_subdirectory(Libs/JUCE)                    # If you've put JUCE in a subdirectory called JUCE
-add_subdirectory(Libs/clap-juce-extensions EXCLUDE_FROM_ALL)
-add_subdirectory(Source)
+add_subdirectory(libs/JUCE)                    # If you've put JUCE in a subdirectory called JUCE
+add_subdirectory(libs/clap-juce-extensions EXCLUDE_FROM_ALL)
+add_subdirectory(source)
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
 # system. This setup should be done before calling `juce_add_plugin`.
 
@@ -81,8 +81,8 @@ juce_generate_juce_header(SG323)
 
 target_sources(SG323
     PRIVATE
-        Source/PluginEditor.cpp
-        Source/PluginProcessor.cpp)
+        source/PluginEditor.cpp
+        source/PluginProcessor.cpp)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use
