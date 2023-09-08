@@ -414,8 +414,6 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     auto bufferSize = buffer.getNumSamples();
     // read program selection from the UI
     int programId = *apvts.getRawParameterValue("PROGRAM");
-    // read debug slider
-    float debugValue = *apvts.getRawParameterValue("DEBUG");
     // prepare audio buffers
     monoBuffer.setSize(1, bufferSize);
     feedbackBuffer.setSize(1, bufferSize);
@@ -724,7 +722,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HPF", "highPassFilter", 20.0f, 480.0f, 20.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 3000.0f, 16000.0f, 16000.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "inputGain", 0.0f, 2.0f, 1.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DEBUG", "debug", 0.0f, 2.0f, 1.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "noise", true));
     parameters.push_back(std::make_unique<juce::AudioParameterBool>("BITREDUCE", "bitreduce", true));
     return {parameters.begin(), parameters.end()};

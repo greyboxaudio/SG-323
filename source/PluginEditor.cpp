@@ -120,5 +120,4 @@ void SG323AudioProcessorEditor::resized()
     predelaySlider.setBounds(250, 120, 50, 200);
     decaySlider.setBounds(325, 120, 50, 200);
     wetDrySlider.setBounds(400, 120, 50, 200);
-    //debugSlider.setBounds(475, 120, 50, 200);
 }

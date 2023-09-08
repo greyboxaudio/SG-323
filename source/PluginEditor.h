@@ -34,7 +34,6 @@ private:
     juce::Slider highPassSlider;
     juce::Slider lowPassSlider;
     juce::Slider inputGainSlider;
-    juce::Slider debugSlider;
     juce::ToggleButton noiseButton;
     juce::ToggleButton bitReduceButton;
 
@@ -52,7 +51,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highPassSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lowPassSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainSliderAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> debugSliderAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> noiseButtonAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> bitReduceButtonAttachment;
     SG323AudioProcessor& audioProcessor;
