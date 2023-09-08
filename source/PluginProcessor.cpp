@@ -98,7 +98,7 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     // initialisation that you need..
     auto delayBufferSize = sampleRate * 0.512;
     // set up filters
-    lastSampleRate = sampleRate;
+    lastSampleRate = static_cast<float>(sampleRate);
     float smoothSlow{0.1f};
     float smoothFast{0.0005f};
     inputGainSmooth.reset(sampleRate, smoothFast);
@@ -139,7 +139,7 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     gainModule.reset();
     fractionalDelay.prepare(spec);
     fractionalDelay.reset();
-    fractionalDelay.setMaximumDelayInSamples(delayBufferSize);
+    fractionalDelay.setMaximumDelayInSamples(static_cast<int>(delayBufferSize));
     modScale = lastSampleRate * 0.00003125f;
     modRateCeiling = static_cast<int>(16 * modScale);
     if (lastSampleRate == 44100.0)
@@ -344,8 +344,8 @@ int countWriteAddress(int writeAddress)
 
 float roundBits(float inputSample)
 {
-    int roundedSample = inputSample * 32768;
-    float outputSample = roundedSample * 0.000030518;
+    int roundedSample = static_cast<int>(inputSample * 32768);
+    float outputSample = static_cast<float>(roundedSample * 0.000030518);
     return (outputSample);
 }
 
@@ -561,7 +561,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             }
             int writeIndex = writeAddressArray[writePosition];
             int readIndex = writeAddressArray[readPosition];
-            feedbackDelayTime = writeIndex - readIndex;
+            feedbackDelayTime = static_cast<float>(writeIndex - readIndex);
             if (feedbackDelayTime < 1)
             {
                 feedbackDelayTime += 16384;
