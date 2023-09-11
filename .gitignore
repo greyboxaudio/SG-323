@@ -1,3 +1,4 @@
 /build
+/libs/aax*
 .DS_Store
 .vscode/settings.json
