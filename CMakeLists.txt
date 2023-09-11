@@ -33,7 +33,7 @@ add_subdirectory(source)
 # system. This setup should be done before calling `juce_add_plugin`.
 
 # juce_set_vst2_sdk_path(...)
-juce_set_aax_sdk_path(C:/aax-sdk-2-5-1)
+juce_set_aax_sdk_path(libs/aax-sdk-2-5-1)
 
 # `juce_add_plugin` adds a static library target with the name passed as the first argument
 # (AudioPluginExample here). This target is a normal CMake target, but has a lot of extra properties set
