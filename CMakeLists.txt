@@ -25,8 +25,8 @@ project(SG323 VERSION 0.6.3)
 #set(JUCE_DIR "~/JUCE/extras/Build/CMake")
 #find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
 # or
-add_subdirectory(Libs/JUCE)                    # If you've put JUCE in a subdirectory called JUCE
-add_subdirectory(Libs/clap-juce-extensions EXCLUDE_FROM_ALL)
+add_subdirectory(libs/JUCE)                    # If you've put JUCE in a subdirectory called JUCE
+add_subdirectory(libs/clap-juce-extensions EXCLUDE_FROM_ALL)
 add_subdirectory(Source)
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
 # system. This setup should be done before calling `juce_add_plugin`.
