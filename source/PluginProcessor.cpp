@@ -466,12 +466,12 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     preEmphasis.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     inputHighPass.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     inputLowPass.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
-    // pre-process feedback buffer
-    feedBackHighPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
-    feedBackLowPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
-    feedBackDip.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
-    // sum input buffer & feedback buffer together
-    monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
+    // mitigation for looped playback
+    if (lastBufferSize == bufferSize)
+    {
+        // sum input buffer & feedback buffer together
+        monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
+    }
     // round samples to 16bit values
     for (int i = 0; i < bufferSize; ++i)
     {
@@ -668,6 +668,12 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         buffer.copyFromWithRamp(channel, 0, drySignal, bufferSize, dryLevel, dryLevel);
         buffer.addFromWithRamp(channel, 0, wetSignal, bufferSize, mixLevel, mixLevel);
     }
+    // pre-process feedback buffer
+    feedBackHighPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
+    feedBackLowPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
+    feedBackDip.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
+    // set lastBufferSize variable
+    lastBufferSize = bufferSize;
 }
 
 //==============================================================================
