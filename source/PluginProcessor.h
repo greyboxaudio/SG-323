@@ -115,7 +115,8 @@ private:
     unsigned int gainModContBaseAddr{};
     unsigned int gainModBaseAddr{};
     unsigned int delayModBaseAddr{};
-
+    unsigned int lastBufferSize{};
+    
     float s1a0{ 1.0f };
     float s1a1{ 1.0f };
     float s1a2{ 1.0f };
