@@ -3,3 +3,4 @@
 .DS_Store
 /source/.vs
 /source/out
+.vscode/settings.json
