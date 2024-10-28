@@ -50,7 +50,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-void calculateAddressRow(unsigned int result)
+inline void calculateAddressRow(unsigned int result)
 {
   __uint8_t bit6 = result << 1;
   bit6 = bit6 >> 7;
@@ -60,7 +60,7 @@ void calculateAddressRow(unsigned int result)
   rowDelay = result << 2;
   rowDelay = (rowDelay >> 1) | bit6 | (MSB << 7);
 }
-void calculateAddressColumn(unsigned int result, unsigned int rowDelay)
+inline void calculateAddressColumn(unsigned int result, unsigned int rowDelay)
 {
   __uint8_t colDelay = result << 2;
   colDelay = colDelay >> 2;
@@ -122,6 +122,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	HAL_GPIO_TogglePin(STATUS_GPIO_Port, STATUS_Pin);
     // calculate base address factors
     gainBaseAddr = (decayTime << 5) | (program << 8);
     preDelay_high = preDelay >> 3;
@@ -359,6 +360,9 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(STATUS_GPIO_Port, STATUS_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
@@ -366,6 +370,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : STATUS_Pin */
+  GPIO_InitStruct.Pin = STATUS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(STATUS_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LD2_Pin */
   GPIO_InitStruct.Pin = LD2_Pin;
