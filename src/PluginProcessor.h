@@ -69,6 +69,10 @@ private:
     juce::AudioBuffer<float> noiseBuffer;
     juce::AudioBuffer<float> bitBuffer;
 
+    juce::AbstractFifo abstractFifo { 1024 };
+    int start1, size1, start2, size2;
+    juce::AudioBuffer<float> fifoBuffer;
+
     juce::Random random;
 
     juce::LinearSmoothedValue<float> inputGainSmooth{};

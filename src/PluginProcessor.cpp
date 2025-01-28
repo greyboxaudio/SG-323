@@ -420,17 +420,17 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     randomBuffer.setSize(1, bufferSize);
     noiseBuffer.setSize(1, bufferSize);
     bitBuffer.setSize(1, bufferSize);
+    fifoBuffer.setSize(1, 1024);
     inputBuffer.setSize(totalNumInputChannels, bufferSize);
     outputBuffer.setSize(totalNumOutputChannels, bufferSize);
     if (initSampleRateCount == 0)
     {
-        feedbackBuffer.clear(0, 0, buffer.getNumSamples());
+        fifoBuffer.clear(0,0,1024);
         initSampleRateCount = 1;
     }
     // set up dsp elements
     juce::dsp::AudioBlock<float> monoBlock(monoBuffer);
     juce::dsp::AudioBlock<float> randomBlock(randomBuffer);
-    juce::dsp::AudioBlock<float> feedbackBlock(feedbackBuffer);
     juce::dsp::AudioBlock<float> outputBlock(outputBuffer);
     // update filters
     float highPassValue = *apvts.getRawParameterValue("HPF");
@@ -442,6 +442,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     updateFilter();
     // clear buffers
     monoBuffer.clear(0, 0, bufferSize);
+    feedbackBuffer.clear(0, 0, bufferSize);
     for (auto i = 0; i < totalNumOutputChannels; ++i)
         outputBuffer.clear(i, 0, bufferSize);
     // add left channel to monoBuffer
@@ -450,6 +451,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     if (totalNumInputChannels == 2)
     {
         monoBuffer.addFrom(0, 0, buffer, 1, 0, bufferSize);
+        gainModule.setGainLinear(0.5);
+        gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     }
     // apply input gain
     float inputGainValue = *apvts.getRawParameterValue("INPUT");
@@ -466,12 +469,19 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     preEmphasis.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     inputHighPass.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     inputLowPass.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
-    // pre-process feedback buffer
-    feedBackHighPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
-    feedBackLowPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
-    feedBackDip.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
+
     // sum input buffer & feedback buffer together
-    monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
+    abstractFifo.prepareToRead(bufferSize, start1, size1, start2, size2);
+    if (size1 > 0){
+        monoBuffer.addFrom(0, 0, fifoBuffer, 0, start1, size1);
+    }
+    if (size2 > 0){
+        monoBuffer.addFrom(0, size1, fifoBuffer, 0, start2, size2);
+    }
+    abstractFifo.finishedRead (size1 + size2);
+
+    //monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
+
     // round samples to 16bit values
     for (int i = 0; i < bufferSize; ++i)
     {
@@ -649,6 +659,22 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             outputBuffer.setSample(1, i, rightOutputSample);
         }
     }
+    // pre-process feedback buffer
+    juce::dsp::AudioBlock<float> feedbackBlock(feedbackBuffer);
+    feedBackHighPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
+    feedBackLowPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
+    feedBackDip.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
+
+    //write feedbackbuffer to fifo
+    abstractFifo.prepareToWrite(bufferSize, start1, size1, start2, size2);
+    if (size1 > 0){
+        fifoBuffer.copyFrom(0, start1, feedbackBuffer, 0, 0, size1);
+    }
+    if (size2 > 0){
+        fifoBuffer.copyFrom(0, start2, feedbackBuffer, 0, size1, size2);
+    }
+    abstractFifo.finishedWrite(size1 + size2);
+
     // apply de-emphasis filter on output taps
     deEmphasis.process(juce::dsp::ProcessContextReplacing<float>(outputBlock));
     // copy dry signal to buffer
