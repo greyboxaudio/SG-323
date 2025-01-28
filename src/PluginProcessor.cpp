@@ -142,150 +142,46 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     fractionalDelay.setMaximumDelayInSamples(static_cast<int>(delayBufferSize));
     modScale = lastSampleRate * 0.00003125f;
     modRateCeiling = static_cast<int>(16 * modScale);
-    if (lastSampleRate == 44100.0)
-    {
-        s1b0 = 1.0f;
-        s1b1 = 1.90522038936614990234375f;
-        s1b2 = 1.0f;
-        s1a0 = 1.0f;
-        s1a1 = 0.113113962113857269287109375f;
-        s1a2 = 0.2475278675556182861328125f;
-        s1gain = 4.11164379119873046875f;
-        s2b0 = 1.0f;
-        s2b1 = 1.5828626155853271484375f;
-        s2b2 = 1.0f;
-        s2a0 = 1.0f;
-        s2a1 = 0.984495639801025390625f;
-        s2a2 = 0.83664333820343017578125f;
-        s2gain = 0.059467144310474395751953125f;
-        s3b0 = 1.0f;
-        s3b1 = 1.0f;
-        s3b2 = 1.0f;
-        s3a0 = 1.0f;
-        s3a1 = 1.0f;
-        s3a2 = 1.0f;
-        s3gain = 1.0f;
-    }
+    int IIR_sr{0};
     if (lastSampleRate == 48000.0)
     {
-        s1b0 = 1.0f;
-        s1b1 = 1.8612835407257080078125f;
-        s1b2 = 1.0f;
-        s1a0 = 1.0f;
-        s1a1 = -0.130796849727630615234375f;
-        s1a2 = 0.24818171560764312744140625f;
-        s1gain = 3.414981365203857421875f;
-        s2b0 = 1.0f;
-        s2b1 = 1.411991119384765625f;
-        s2b2 = 1.0f;
-        s2a0 = 1.0f;
-        s2a1 = 0.696326076984405517578125f;
-        s2a2 = 0.822547435760498046875f;
-        s2gain = 0.055754669010639190673828125f;
-        s3b0 = 1.0f;
-        s3b1 = 1.0f;
-        s3b2 = 1.0f;
-        s3a0 = 1.0f;
-        s3a1 = 1.0f;
-        s3a2 = 1.0f;
-        s3gain = 1.0f;
+        IIR_sr = 1;
     }
     if (lastSampleRate == 88200.0)
     {
-        s1b0 = 1.0f;
-        s1b1 = -0.58004856109619140625f;
-        s1b2 = 1.0f;
-        s1a0 = 1.0f;
-        s1a1 = -0.923202693462371826171875f;
-        s1a2 = 0.916133344173431396484375f;
-        s1gain = 0.2694600522518157958984375f;
-        s2b0 = 1.0f;
-        s2b1 = 0.08588655292987823486328125f;
-        s2b2 = 1.0f;
-        s2a0 = 1.0f;
-        s2a1 = -1.07733333110809326171875f;
-        s2a2 = 0.646832168102264404296875f;
-        s2gain = 0.2730248272418975830078125f;
-        s3b0 = 1.0f;
-        s3b1 = 1.0f;
-        s3b2 = 0.0f;
-        s3a0 = 1.0f;
-        s3a1 = -0.628660261631011962890625f;
-        s3a2 = 0.0f;
-        s3gain = 0.4818284213542938232421875f;
+        IIR_sr = 2;
     }
     if (lastSampleRate == 96000.0)
     {
-        s1b0 = 1.0f;
-        s1b1 = -0.76027047634124755859375f;
-        s1b2 = 1.0f;
-        s1a0 = 1.0f;
-        s1a1 = -1.0675833225250244140625f;
-        s1a2 = 0.9202744960784912109375f;
-        s1gain = 0.2650414407253265380859375f;
-        s2b0 = 1.0f;
-        s2b1 = -0.11717616021633148193359375f;
-        s2b2 = 1.0f;
-        s2a0 = 1.0f;
-        s2a1 = -1.18077456951141357421875f;
-        s2a2 = 0.666537106037139892578125f;
-        s2gain = 0.2579968273639678955078125f;
-        s3b0 = 1.0f;
-        s3b1 = 1.0f;
-        s3b2 = 0.0f;
-        s3a0 = 1.0f;
-        s3a1 = -0.658414900302886962890625f;
-        s3a2 = 0.0f;
-        s3gain = 0.443220615386962890625f;
+        IIR_sr = 3;
     }
     if (lastSampleRate == 176400.0)
     {
-        s1b0 = 1.0f;
-        s1b1 = -1.54628479480743408203125f;
-        s1b2 = 1.0f;
-        s1a0 = 1.0f;
-        s1a1 = -1.6765534877777099609375f;
-        s1a2 = 0.884586334228515625f;
-        s1gain = 0.720990002155303955078125f;
-        s2b0 = 1.0f;
-        s2b1 = -0.4132978618144989013671875f;
-        s2b2 = 1.0f;
-        s2a0 = 1.0f;
-        s2a1 = -1.6431548595428466796875f;
-        s2a2 = 0.710412919521331787109375f;
-        s2gain = 0.634496867656707763671875f;
-        s3b0 = 1.0f;
-        s3b1 = -1.6599013805389404296875f;
-        s3b2 = 1.0f;
-        s3a0 = 1.0f;
-        s3a1 = -1.70081329345703125f;
-        s3a2 = 0.97606408596038818359375f;
-        s3gain = 0.03064520843327045440673828125f;
+        IIR_sr = 4;
     }
     if (lastSampleRate == 192000.0)
     {
-        s1b0 = 1.0f;
-        s1b1 = -1.6128079891204833984375f;
-        s1b2 = 1.0f;
-        s1a0 = 1.0f;
-        s1a1 = -1.71632373332977294921875f;
-        s1a2 = 0.89294111728668212890625f;
-        s1gain = 0.717278301715850830078125f;
-        s2b0 = 1.0f;
-        s2b1 = -0.579393446445465087890625f;
-        s2b2 = 1.0f;
-        s2a0 = 1.0f;
-        s2a1 = -1.67372310161590576171875f;
-        s2a2 = 0.7309210300445556640625f;
-        s2gain = 0.602680981159210205078125f;
-        s3b0 = 1.0f;
-        s3b1 = -1.7111232280731201171875f;
-        s3b2 = 1.0f;
-        s3a0 = 1.0f;
-        s3a1 = -1.7444097995758056640625f;
-        s3a2 = 0.977822601795196533203125f;
-        s3gain = 0.0305950343608856201171875f;
+        IIR_sr = 5;
     }
+    int IIR_base = IIR_sr * 18;
+    s1b0 = ellipticCoefficients[IIR_base];
+    s1b1 = ellipticCoefficients[IIR_base + 1];
+    s1b2 = ellipticCoefficients[IIR_base + 2];
+    s1a0 = ellipticCoefficients[IIR_base + 3];
+    s1a1 = ellipticCoefficients[IIR_base + 4];
+    s1a2 = ellipticCoefficients[IIR_base + 5];
+    s2b0 = ellipticCoefficients[IIR_base + 6];
+    s2b1 = ellipticCoefficients[IIR_base + 7];
+    s2b2 = ellipticCoefficients[IIR_base + 8];
+    s2a0 = ellipticCoefficients[IIR_base + 9];
+    s2a1 = ellipticCoefficients[IIR_base + 10];
+    s2a2 = ellipticCoefficients[IIR_base + 11];
+    s3b0 = ellipticCoefficients[IIR_base + 12];
+    s3b1 = ellipticCoefficients[IIR_base + 13];
+    s3b2 = ellipticCoefficients[IIR_base + 14];
+    s3a0 = ellipticCoefficients[IIR_base + 15];
+    s3a1 = ellipticCoefficients[IIR_base + 16];
+    s3a2 = ellipticCoefficients[IIR_base + 17];
 }
 
 void SG323AudioProcessor::releaseResources()
@@ -425,7 +321,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     outputBuffer.setSize(totalNumOutputChannels, bufferSize);
     if (initSampleRateCount == 0)
     {
-        fifoBuffer.clear(0,0,1024);
+        fifoBuffer.clear(0, 0, 1024);
         initSampleRateCount = 1;
     }
     // set up dsp elements
@@ -447,7 +343,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         outputBuffer.clear(i, 0, bufferSize);
     // add left channel to monoBuffer
     monoBuffer.copyFrom(0, 0, buffer, 0, 0, bufferSize);
-    //add right channel to monoBuffer when running in stereo
+    // add right channel to monoBuffer when running in stereo
     if (totalNumInputChannels == 2)
     {
         monoBuffer.addFrom(0, 0, buffer, 1, 0, bufferSize);
@@ -472,15 +368,17 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
 
     // sum input buffer & feedback buffer together
     abstractFifo.prepareToRead(bufferSize, start1, size1, start2, size2);
-    if (size1 > 0){
+    if (size1 > 0)
+    {
         monoBuffer.addFrom(0, 0, fifoBuffer, 0, start1, size1);
     }
-    if (size2 > 0){
+    if (size2 > 0)
+    {
         monoBuffer.addFrom(0, size1, fifoBuffer, 0, start2, size2);
     }
-    abstractFifo.finishedRead (size1 + size2);
+    abstractFifo.finishedRead(size1 + size2);
 
-    //monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
+    // monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
 
     // round samples to 16bit values
     for (int i = 0; i < bufferSize; ++i)
@@ -509,14 +407,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         monoBuffer.addFrom(0, 0, noiseBuffer, 0, 0, bufferSize);
     }
     // apply anti-aliasing filter
-    gainModule.setGainLinear(s1gain);
-    gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     antiAliasFirstSection.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
-    gainModule.setGainLinear(s2gain);
-    gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     antiAliasSecondSection.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
-    gainModule.setGainLinear(s3gain);
-    gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     antiAliasThirdSection.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     // calculate & process the delay taps
     auto *data = monoBuffer.getReadPointer(0);
@@ -651,9 +543,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         outputDelayTime = ((programId * outputDelayArray[7]) + outputDelayArray[7 + 8] + nextPreDelayValue) * 0.001f;
         outputDelayGain = outputGainArray[7] * outputDelayGainMult;
         rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, true) * outputDelayGain;
-        //add left channel to outputBuffer
+        // add left channel to outputBuffer
         outputBuffer.setSample(0, i, leftOutputSample);
-        //add right channel to outputBuffer when running in stereo
+        // add right channel to outputBuffer when running in stereo
         if (totalNumOutputChannels == 2)
         {
             outputBuffer.setSample(1, i, rightOutputSample);
@@ -665,12 +557,14 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     feedBackLowPass.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
     feedBackDip.process(juce::dsp::ProcessContextReplacing<float>(feedbackBlock));
 
-    //write feedbackbuffer to fifo
+    // write feedbackbuffer to fifo
     abstractFifo.prepareToWrite(bufferSize, start1, size1, start2, size2);
-    if (size1 > 0){
+    if (size1 > 0)
+    {
         fifoBuffer.copyFrom(0, start1, feedbackBuffer, 0, 0, size1);
     }
-    if (size2 > 0){
+    if (size2 > 0)
+    {
         fifoBuffer.copyFrom(0, start2, feedbackBuffer, 0, size1, size2);
     }
     abstractFifo.finishedWrite(size1 + size2);
