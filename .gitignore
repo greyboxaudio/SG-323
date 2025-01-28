@@ -4,3 +4,6 @@
 /source/.vs
 /source/out
 .vscode/settings.json
+/sg323_stm32/Drivers
+/sg323_stm32/Debug
+/sg323_stm32/.settings
