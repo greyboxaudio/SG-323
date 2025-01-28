@@ -7,3 +7,5 @@
 /sg323_stm32/Drivers
 /sg323_stm32/Debug
 /sg323_stm32/.settings
+sg323_build_macos_debug.sh
+sg323_build_macos_release.sh
