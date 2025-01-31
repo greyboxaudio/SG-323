@@ -7,7 +7,7 @@
 # that the installed CMake will be able to understand the following CMakeLists, and ensures that
 # CMake's behaviour is compatible with the named version. This is a standard CMake command, so more
 # information can be found in the CMake docs.
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.22)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment target")
@@ -33,7 +33,7 @@ add_subdirectory(src)
 # system. This setup should be done before calling `juce_add_plugin`.
 
 # juce_set_vst2_sdk_path(...)
-# juce_set_aax_sdk_path(...)
+# juce_set_aax_sdk_path(libs/JUCE/modules/juce_audio_plugin_client/AAX/SDK)
 
 # `juce_add_plugin` adds a static library target with the name passed as the first argument
 # (AudioPluginExample here). This target is a normal CMake target, but has a lot of extra properties set
@@ -52,11 +52,13 @@ juce_add_plugin(SG323
     IS_MIDI_EFFECT FALSE                 # Is this plugin a MIDI effect?
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE    # Does the editor need keyboard focus?
     VST3_CATEGORIES Reverb
+    DISABLE_AAX_MULTI_MONO TRUE
+    AAX_CATEGORY Reverb
     COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
     PLUGIN_MANUFACTURER_CODE Gbox               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE S323                         # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS VST3 AAX                 # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "SG-323")        # The name of the final executable, which can differ from the target name
 
     clap_juce_extensions_plugin(
