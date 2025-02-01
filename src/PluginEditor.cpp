@@ -13,59 +13,71 @@
 SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     : AudioProcessorEditor(&p), audioProcessor(p)
 {
-    inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     inputGainSlider.setTextBoxIsEditable(false);
+    inputGainSlider.setLookAndFeel (&blueKnob);
     addAndMakeVisible(inputGainSlider);
     inputGainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "INPUT", inputGainSlider);
     addAndMakeVisible(inputGainLabel);
-    inputGainLabel.setText("INPUT", juce::dontSendNotification);
+    inputGainLabel.setText("input", juce::dontSendNotification);
     inputGainLabel.attachToComponent(&inputGainSlider, false);
-    inputGainLabel.setJustificationType(juce::Justification::centred);
+    inputGainLabel.setJustificationType(juce::Justification::centredTop);
 
-    highPassSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    highPassSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    highPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     highPassSlider.setTextBoxIsEditable(false);
+    highPassSlider.setLookAndFeel (&whiteKnob);
     addAndMakeVisible(highPassSlider);
     highPassSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HPF", highPassSlider);
     addAndMakeVisible(highPassLabel);
-    highPassLabel.setText("HPF", juce::dontSendNotification);
+    highPassLabel.setText("LF decay", juce::dontSendNotification);
     highPassLabel.attachToComponent(&highPassSlider, false);
-    highPassLabel.setJustificationType(juce::Justification::centred);
+    highPassLabel.setJustificationType(juce::Justification::centredTop);
 
-    lowPassSlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    lowPassSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    lowPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     lowPassSlider.setTextBoxIsEditable(false);
+    lowPassSlider.setLookAndFeel (&whiteKnob);
     addAndMakeVisible(lowPassSlider);
     lowPassSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LPF", lowPassSlider);
     addAndMakeVisible(lowPassLabel);
-    lowPassLabel.setText("LPF", juce::dontSendNotification);
+    lowPassLabel.setText("HF decay", juce::dontSendNotification);
     lowPassLabel.attachToComponent(&lowPassSlider, false);
-    lowPassLabel.setJustificationType(juce::Justification::centred);
+    lowPassLabel.setJustificationType(juce::Justification::centredTop);
 
-    predelaySlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    predelaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     predelaySlider.setTextBoxIsEditable(false);
+    predelaySlider.setLookAndFeel (&redKnob);
     addAndMakeVisible(predelaySlider);
     predelaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "PREDELAY", predelaySlider);
     addAndMakeVisible(predelayLabel);
-    predelayLabel.setText("PREDLY", juce::dontSendNotification);
+    predelayLabel.setText("pre delay", juce::dontSendNotification);
     predelayLabel.attachToComponent(&predelaySlider, false);
-    predelayLabel.setJustificationType(juce::Justification::centred);
+    predelayLabel.setJustificationType(juce::Justification::centredTop);
 
-    decaySlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    decaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     decaySlider.setTextBoxIsEditable(false);
+    decaySlider.setLookAndFeel (&redKnob);
     addAndMakeVisible(decaySlider);
     decaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DECAY", decaySlider);
     addAndMakeVisible(decayLabel);
-    decayLabel.setText("DECAY", juce::dontSendNotification);
+    decayLabel.setText("decay time", juce::dontSendNotification);
     decayLabel.attachToComponent(&decaySlider, false);
-    decayLabel.setJustificationType(juce::Justification::centred);
+    decayLabel.setJustificationType(juce::Justification::centredTop);
 
-    wetDrySlider.setSliderStyle(juce::Slider::SliderStyle::LinearBarVertical);
+    wetDrySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    wetDrySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     wetDrySlider.setTextBoxIsEditable(false);
+    wetDrySlider.setLookAndFeel (&blueKnob);
     addAndMakeVisible(wetDrySlider);
     wetDrySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "WETDRY", wetDrySlider);
     addAndMakeVisible(wetDryLabel);
-    wetDryLabel.setText("MIX", juce::dontSendNotification);
+    wetDryLabel.setText("mix", juce::dontSendNotification);
     wetDryLabel.attachToComponent(&wetDrySlider, false);
-    wetDryLabel.setJustificationType(juce::Justification::centred);
+    wetDryLabel.setJustificationType(juce::Justification::centredTop);
 
     noiseButton.setButtonText("Noise");
     addAndMakeVisible(noiseButton);
@@ -83,12 +95,12 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     programBox.addItem("Large Hall", 6);
     programBox.addItem("Cathedral", 7);
     programBox.addItem("Canyon", 8);
-    programBox.setJustificationType(juce::Justification::centred);
+    programBox.setJustificationType(juce::Justification::centredTop);
     addAndMakeVisible(programBox);
     programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize(475, 350);
+    setSize(720, 240);
 }
 
 SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
@@ -99,25 +111,34 @@ SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
 void SG323AudioProcessorEditor::paint(juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+    g.fillAll(juce::Colour (89,89,89));
 
     g.setColour(juce::Colours::white);
-    g.setFont(15.0f);
-    g.drawFittedText ("v0.7.0 " __DATE__ " " __TIME__, getLocalBounds(), juce::Justification::bottomRight, 1);
+    g.setFont(14.0f);
+    //companyLogo = juce::ImageCache::getFromMemory("greybox-audio-cat-bw.png",);
+    //g.drawImage(companyLogo,0,0,300,251,0,0,300,251);
+    const auto svg = juce::Drawable::createFromImageData (BinaryData::greyboxaudiocatbw_svg, BinaryData::greyboxaudiocatbw_svgSize);
+    svg->draw(g, 1.0);
+    g.drawFittedText ("v0.7.0 " __DATE__ " " __TIME__, getLocalBounds(), juce::Justification::topRight, 1);
 }
 
 void SG323AudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    juce::Rectangle<int> bounds = getLocalBounds();
+    setResizable (true, true);
+    auto area = getLocalBounds();
+    auto areaHeight = area.getHeight() * 0.5f;
+    auto areaWidth = area.getWidth() * 0.166666666f;
+    auto areaBottom = area.removeFromBottom(area.getHeight() * 0.5f);
     noiseButton.setBounds(25,25,100,50);
     bitReduceButton.setBounds(100,25,100,50);
     programBox.setBounds(300, 25, 150, 50);
-    inputGainSlider.setBounds(25, 120, 50, 200);
-    highPassSlider.setBounds(100, 120, 50, 200);
-    lowPassSlider.setBounds(175, 120, 50, 200);
-    predelaySlider.setBounds(250, 120, 50, 200);
-    decaySlider.setBounds(325, 120, 50, 200);
-    wetDrySlider.setBounds(400, 120, 50, 200);
+    
+    inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
+    highPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
+    lowPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
+    predelaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
+    decaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
+    wetDrySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
 }

@@ -29,6 +29,8 @@ project(SG323 VERSION 0.7.0)
 add_subdirectory(libs/JUCE)                    # If you've put JUCE in a subdirectory called JUCE
 add_subdirectory(libs/clap-juce-extensions EXCLUDE_FROM_ALL)
 add_subdirectory(src)
+#add_subdirectory(assets)
+
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
 # system. This setup should be done before calling `juce_add_plugin`.
 
@@ -58,7 +60,7 @@ juce_add_plugin(SG323
     PLUGIN_MANUFACTURER_CODE Gbox               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE S323                         # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3 AAX                 # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS VST3 AAX Standalone                 # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "SG-323")        # The name of the final executable, which can differ from the target name
 
     clap_juce_extensions_plugin(
@@ -107,7 +109,10 @@ target_compile_definitions(SG323
 # static library. These source files can be of any kind (wav data, images, fonts, icons etc.).
 # Conversion to binary-data will happen when your target is built.
 
-# juce_add_binary_data(AudioPluginData SOURCES ...)
+juce_add_binary_data(AudioPluginData SOURCES 
+    greybox-audio-cat-bw.svg
+    greybox-audio-cat-bw.png
+)
 
 # `target_link_libraries` links libraries and JUCE modules to other libraries or executables. Here,
 # we're linking our executable target to the `juce::juce_audio_utils` module. Inter-module
@@ -117,7 +122,7 @@ target_compile_definitions(SG323
 
 target_link_libraries(SG323
     PRIVATE
-        # AudioPluginData           # If we'd created a binary data target, we'd link to it here
+        AudioPluginData           # If we'd created a binary data target, we'd link to it here
         juce::juce_audio_utils
         juce::juce_dsp
         clap_juce_extensions

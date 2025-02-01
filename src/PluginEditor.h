@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "style.h"
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
@@ -27,6 +28,10 @@ public:
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
+    juce::Image companyLogo;
+    BlueKnob blueKnob;
+    RedKnob redKnob;
+    WhiteKnob whiteKnob;
     juce::ComboBox programBox;
     juce::Slider predelaySlider;
     juce::Slider decaySlider;
