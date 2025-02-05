@@ -387,7 +387,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         bitBuffer.setSample(0, i, roundBits(sampleRounded));
     }
     // replace input buffer with rounded samples
-    bool bitReduceButtonState = *apvts.getRawParameterValue("BITREDUCE");
+    //bool bitReduceButtonState = *apvts.getRawParameterValue("BITREDUCE");
     if (bitReduceButtonState == true)
     {
         monoBuffer.copyFrom(0, 0, bitBuffer, 0, 0, bufferSize);
@@ -401,7 +401,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         noiseBuffer.setSample(0, i, noiseSample);
     }
     // sum input buffer & noise buffer together
-    bool noiseButtonState = *apvts.getRawParameterValue("NOISE");
+    //bool noiseButtonState = *apvts.getRawParameterValue("NOISE");
     if (noiseButtonState == true)
     {
         monoBuffer.addFrom(0, 0, noiseBuffer, 0, 0, bufferSize);

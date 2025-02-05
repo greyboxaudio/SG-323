@@ -46,6 +46,17 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     lowPassLabel.attachToComponent(&lowPassSlider, false);
     lowPassLabel.setJustificationType(juce::Justification::centredTop);
 
+    wetDrySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+    wetDrySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+    wetDrySlider.setTextBoxIsEditable(false);
+    wetDrySlider.setLookAndFeel (&blueKnob);
+    addAndMakeVisible(wetDrySlider);
+    wetDrySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "WETDRY", wetDrySlider);
+    addAndMakeVisible(wetDryLabel);
+    wetDryLabel.setText("mix", juce::dontSendNotification);
+    wetDryLabel.attachToComponent(&wetDrySlider, false);
+    wetDryLabel.setJustificationType(juce::Justification::centredTop);
+
     predelaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
     predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
     predelaySlider.setTextBoxIsEditable(false);
@@ -68,23 +79,14 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     decayLabel.attachToComponent(&decaySlider, false);
     decayLabel.setJustificationType(juce::Justification::centredTop);
 
-    wetDrySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    wetDrySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-    wetDrySlider.setTextBoxIsEditable(false);
-    wetDrySlider.setLookAndFeel (&blueKnob);
-    addAndMakeVisible(wetDrySlider);
-    wetDrySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "WETDRY", wetDrySlider);
-    addAndMakeVisible(wetDryLabel);
-    wetDryLabel.setText("mix", juce::dontSendNotification);
-    wetDryLabel.attachToComponent(&wetDrySlider, false);
-    wetDryLabel.setJustificationType(juce::Justification::centredTop);
+    //addAndMakeVisible(svg);
 
     noiseButton.setButtonText("Noise");
-    addAndMakeVisible(noiseButton);
+    //addAndMakeVisible(noiseButton);
     noiseButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "NOISE", noiseButton);
 
     bitReduceButton.setButtonText("16bit");
-    addAndMakeVisible(bitReduceButton);
+    //addAndMakeVisible(bitReduceButton);
     bitReduceButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "BITREDUCE", bitReduceButton);
 
     programBox.addItem("Plate 1", 1);
@@ -117,8 +119,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
     g.setFont(14.0f);
     //companyLogo = juce::ImageCache::getFromMemory("greybox-audio-cat-bw.png",);
     //g.drawImage(companyLogo,0,0,300,251,0,0,300,251);
-    const auto svg = juce::Drawable::createFromImageData (BinaryData::greyboxaudiocatbw_svg, BinaryData::greyboxaudiocatbw_svgSize);
-    svg->draw(g, 1.0);
+    //svg->draw(g, 1.0);
     g.drawFittedText ("v0.7.0 " __DATE__ " " __TIME__, getLocalBounds(), juce::Justification::topRight, 1);
 }
 
@@ -131,14 +132,15 @@ void SG323AudioProcessorEditor::resized()
     auto areaHeight = area.getHeight() * 0.5f;
     auto areaWidth = area.getWidth() * 0.166666666f;
     auto areaBottom = area.removeFromBottom(area.getHeight() * 0.5f);
-    noiseButton.setBounds(25,25,100,50);
-    bitReduceButton.setBounds(100,25,100,50);
+    //noiseButton.setBounds(25,25,100,50);
+    //bitReduceButton.setBounds(100,25,100,50);
     programBox.setBounds(300, 25, 150, 50);
+    //svg.setBounds(400, 25, 150, 50);
     
     inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
     highPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
     lowPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
+    wetDrySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
     predelaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
     decaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
-    wetDrySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
 }
