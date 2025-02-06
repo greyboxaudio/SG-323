@@ -77,7 +77,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     addAndMakeVisible(decayLabel);
     decayLabel.setText("decay time", juce::dontSendNotification);
     decayLabel.attachToComponent(&decaySlider, false);
-    decayLabel.setJustificationType(juce::Justification::centredTop);
+    decayLabel.setJustificationType(juce::Justification::centred);
 
     //addAndMakeVisible(svg);
 
@@ -114,13 +114,28 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll(juce::Colour (89,89,89));
+    
+    auto graphicsArea = getBounds();
+    auto graphicsAreaWidth = graphicsArea.getWidth();
+    auto graphicsAreaHeight = graphicsArea.getHeight();
 
     g.setColour(juce::Colours::white);
-    g.setFont(14.0f);
-    //companyLogo = juce::ImageCache::getFromMemory("greybox-audio-cat-bw.png",);
-    //g.drawImage(companyLogo,0,0,300,251,0,0,300,251);
-    //svg->draw(g, 1.0);
+    g.setFont(14.0f * (graphicsAreaHeight * 0.00416667f));
     g.drawFittedText ("v0.7.0 " __DATE__ " " __TIME__, getLocalBounds(), juce::Justification::topRight, 1);
+
+    g.setColour (juce::Colours::orange);
+    juce::Rectangle<int> imageArea (juce::Point<int> (0, 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), static_cast<int>(graphicsAreaHeight * 0.4f)));
+    juce::Rectangle<int> textArea (juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.66666667f), static_cast<int>(graphicsAreaHeight * 0.4f)));
+    juce::Rectangle<int> boxArea (juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 1.0f), static_cast<int>(graphicsAreaHeight * 0.4f)));
+    g.drawRect (imageArea,2);
+    g.drawRect (textArea,2);
+    g.drawRect (boxArea,2);
+    /*
+    companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png,BinaryData::greyboxaudiocatbw_pngSize);
+    g.drawImageWithin(companyLogo,0,0,static_cast<int>(graphicsAreaWidth * 0.166666666f),static_cast<int>(graphicsAreaHeight * 0.4),1,false);
+
+    g.drawText("LEO MINOR",graphicsArea.removeFromLeft(graphicsAreaWidth * 0.333333333333f),Justification::left);
+    */
 }
 
 void SG323AudioProcessorEditor::resized()
@@ -130,11 +145,11 @@ void SG323AudioProcessorEditor::resized()
     setResizable (true, true);
     auto area = getLocalBounds();
     auto areaHeight = area.getHeight() * 0.5f;
-    auto areaWidth = area.getWidth() * 0.166666666f;
+    auto areaWidth = area.getWidth() * 0.16666667f;
     auto areaBottom = area.removeFromBottom(area.getHeight() * 0.5f);
     //noiseButton.setBounds(25,25,100,50);
     //bitReduceButton.setBounds(100,25,100,50);
-    programBox.setBounds(300, 25, 150, 50);
+    programBox.setBounds(area.removeFromRight(area.getWidth() * 0.33333334f));
     //svg.setBounds(400, 25, 150, 50);
     
     inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
