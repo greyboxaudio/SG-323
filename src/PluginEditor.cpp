@@ -143,6 +143,10 @@ void SG323AudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     setResizable (true, true);
+    setResizeLimits(720,240,1440,480);
+    const float ratio = 3.0f;
+	  getConstrainer ()->setFixedAspectRatio (ratio);
+
     auto area = getLocalBounds();
     auto areaHeight = area.getHeight() * 0.5f;
     auto areaWidth = area.getWidth() * 0.16666667f;
