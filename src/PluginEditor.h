@@ -29,10 +29,11 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     juce::Image companyLogo;
-    //std::unique_ptr<Drawable> svg = juce::Drawable::createFromImageData (BinaryData::greyboxaudiocatbw_svg, BinaryData::greyboxaudiocatbw_svgSize);
     BlueKnob blueKnob;
     RedKnob redKnob;
     WhiteKnob whiteKnob;
+    RedBox redBox;
+
     juce::ComboBox programBox;
     juce::Slider predelaySlider;
     juce::Slider decaySlider;

@@ -97,7 +97,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     programBox.addItem("Large Hall", 6);
     programBox.addItem("Cathedral", 7);
     programBox.addItem("Canyon", 8);
-    programBox.setJustificationType(juce::Justification::centredTop);
+    programBox.setLookAndFeel (&redBox);
     addAndMakeVisible(programBox);
     programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
     // Make sure that before the constructor has finished, you've set the
@@ -124,18 +124,19 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
     g.drawFittedText ("v0.7.0 " __DATE__ " " __TIME__, getLocalBounds(), juce::Justification::topRight, 1);
 
     g.setColour (juce::Colours::orange);
-    juce::Rectangle<int> imageArea (juce::Point<int> (0, 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), static_cast<int>(graphicsAreaHeight * 0.4f)));
-    juce::Rectangle<int> textArea (juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.66666667f), static_cast<int>(graphicsAreaHeight * 0.4f)));
-    juce::Rectangle<int> boxArea (juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 1.0f), static_cast<int>(graphicsAreaHeight * 0.4f)));
-    g.drawRect (imageArea,2);
-    g.drawRect (textArea,2);
-    g.drawRect (boxArea,2);
-    /*
+    juce::Rectangle<int> imageArea (juce::Point<int> (0, 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), static_cast<int>(graphicsAreaHeight * 0.33333333f)));
+    juce::Rectangle<int> textArea (juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.66666667f), static_cast<int>(graphicsAreaHeight * 0.33333333f)));
+    juce::Rectangle<int> boxArea (juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 1.0f), static_cast<int>(graphicsAreaHeight * 0.33333333f)));
+    //g.drawRect (imageArea,2);
+    //g.drawRect (textArea,2);
+    //g.drawRect (boxArea,2);
+    
+    g.setColour(juce::Colours::white);
+    g.setFont(22.0f * (graphicsAreaHeight * 0.00416667f));
     companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png,BinaryData::greyboxaudiocatbw_pngSize);
-    g.drawImageWithin(companyLogo,0,0,static_cast<int>(graphicsAreaWidth * 0.166666666f),static_cast<int>(graphicsAreaHeight * 0.4),1,false);
-
-    g.drawText("LEO MINOR",graphicsArea.removeFromLeft(graphicsAreaWidth * 0.333333333333f),Justification::left);
-    */
+    g.drawImageWithin (companyLogo,4,4,static_cast<int>(graphicsAreaWidth * 0.16666667f),static_cast<int>(graphicsAreaHeight * 0.33333333f),1,false);
+    g.drawText("LEO MINOR",textArea.removeFromTop(textArea.getHeight()*0.5f),Justification::bottomLeft);
+    g.drawText("323 DIGITAL REVERBERATOR",textArea,Justification::topLeft);
 }
 
 void SG323AudioProcessorEditor::resized()
@@ -150,11 +151,15 @@ void SG323AudioProcessorEditor::resized()
     auto area = getLocalBounds();
     auto areaHeight = area.getHeight() * 0.5f;
     auto areaWidth = area.getWidth() * 0.16666667f;
-    auto areaBottom = area.removeFromBottom(area.getHeight() * 0.5f);
+    auto areaBottom = area.removeFromBottom(areaHeight);
     //noiseButton.setBounds(25,25,100,50);
     //bitReduceButton.setBounds(100,25,100,50);
-    programBox.setBounds(area.removeFromRight(area.getWidth() * 0.33333334f));
-    //svg.setBounds(400, 25, 150, 50);
+    auto programBoxArea = area.removeFromRight(area.getWidth() * 0.5f);
+    programBoxArea.removeFromTop(area.getHeight() * 0.13333333f);
+    programBoxArea.removeFromBottom(area.getHeight() * 0.5f);
+    programBoxArea.removeFromLeft(area.getWidth() * 0.16666667f);
+    programBoxArea.removeFromRight(area.getWidth() * 0.16666667f);
+    programBox.setBounds(programBoxArea);
     
     inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
     highPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
