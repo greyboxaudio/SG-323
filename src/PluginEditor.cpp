@@ -121,7 +121,8 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
 
     g.setColour(juce::Colours::white);
     g.setFont(14.0f * (graphicsAreaHeight * 0.00416667f));
-    g.drawFittedText ("v0.7.0 " __DATE__ " " __TIME__, getLocalBounds(), juce::Justification::topRight, 1);
+    //g.drawFittedText ("v0.7.0 " __DATE__ " " __TIME__, getLocalBounds(), juce::Justification::topRight, 1);
+    g.drawFittedText ("www.greyboxaudio.com | v0.8.0 ", getLocalBounds(), juce::Justification::topRight, 1);
 
     g.setColour (juce::Colours::orange);
     juce::Rectangle<int> imageArea (juce::Point<int> (0, 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), static_cast<int>(graphicsAreaHeight * 0.33333333f)));
@@ -136,7 +137,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
     companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png,BinaryData::greyboxaudiocatbw_pngSize);
     g.drawImageWithin (companyLogo,4,4,static_cast<int>(graphicsAreaWidth * 0.16666667f),static_cast<int>(graphicsAreaHeight * 0.33333333f),1,false);
     g.drawText("LEO MINOR",textArea.removeFromTop(textArea.getHeight()*0.5f),Justification::bottomLeft);
-    g.drawText("323 DIGITAL REVERBERATOR",textArea,Justification::topLeft);
+    g.drawText("SG-323 DIGITAL REVERBERATOR",textArea,Justification::topLeft);
 }
 
 void SG323AudioProcessorEditor::resized()
