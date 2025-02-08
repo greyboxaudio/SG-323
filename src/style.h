@@ -14,7 +14,7 @@ public:
         auto cornerSize = box.findParentComponentOfClass<ChoicePropertyComponent>() != nullptr ? 0.0f : 3.0f;
         Rectangle<int> boxBounds(0, 0, width, height);
 
-        g.setColour(juce::Colour(0,0,0));
+        g.setColour(juce::Colour(24,24,24));
         g.fillRoundedRectangle(boxBounds.toFloat(), cornerSize);
 
         g.setColour(box.findColour(ComboBox::outlineColourId));
@@ -32,6 +32,7 @@ public:
     void drawLabel(juce::Graphics &g, juce::Label &label) override
     {
         g.setColour(juce::Colour(255,0,0));
+        g.setFont(24.0f);
         g.drawText(label.getText(), label.getLocalBounds(), juce::Justification::centred);
     }
 };

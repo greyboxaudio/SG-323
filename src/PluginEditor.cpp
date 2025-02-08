@@ -113,7 +113,7 @@ SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
 void SG323AudioProcessorEditor::paint(juce::Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll(juce::Colour (89,89,89));
+    g.fillAll(juce::Colour (70,74,70));
     
     auto graphicsArea = getBounds();
     auto graphicsAreaWidth = graphicsArea.getWidth();
@@ -132,7 +132,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
     //g.drawRect (boxArea,2);
     
     g.setColour(juce::Colours::white);
-    g.setFont(22.0f * (graphicsAreaHeight * 0.00416667f));
+    g.setFont(24.0f * (graphicsAreaHeight * 0.00416667f));
     companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png,BinaryData::greyboxaudiocatbw_pngSize);
     g.drawImageWithin (companyLogo,4,4,static_cast<int>(graphicsAreaWidth * 0.16666667f),static_cast<int>(graphicsAreaHeight * 0.33333333f),1,false);
     g.drawText("LEO MINOR",textArea.removeFromTop(textArea.getHeight()*0.5f),Justification::bottomLeft);
@@ -155,10 +155,10 @@ void SG323AudioProcessorEditor::resized()
     //noiseButton.setBounds(25,25,100,50);
     //bitReduceButton.setBounds(100,25,100,50);
     auto programBoxArea = area.removeFromRight(area.getWidth() * 0.5f);
-    programBoxArea.removeFromTop(area.getHeight() * 0.13333333f);
-    programBoxArea.removeFromBottom(area.getHeight() * 0.5f);
-    programBoxArea.removeFromLeft(area.getWidth() * 0.16666667f);
-    programBoxArea.removeFromRight(area.getWidth() * 0.16666667f);
+    programBoxArea.removeFromTop(area.getHeight() * 0.25f);
+    programBoxArea.removeFromBottom(area.getHeight() * 0.4f);
+    programBoxArea.removeFromLeft(area.getWidth() * 0.41666667f);
+    programBoxArea.removeFromRight(area.getWidth() * 0.08333333);
     programBox.setBounds(programBoxArea);
     
     inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
