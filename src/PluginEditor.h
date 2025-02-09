@@ -15,7 +15,8 @@
 //==============================================================================
 /**
 */
-class SG323AudioProcessorEditor : public juce::AudioProcessorEditor
+class SG323AudioProcessorEditor : public juce::AudioProcessorEditor,
+                                  public juce::Button::Listener
 {
 public:
     SG323AudioProcessorEditor(SG323AudioProcessor&);
@@ -25,10 +26,15 @@ public:
     void paint(juce::Graphics&) override;
     void resized() override;
 
+    void buttonClicked (Button*) override;
+
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     float menuBarHeight = 0.1f;
+    float editorScale = 1.0f;
+    int defaultHeight = 280;
+    int defaultWidth = 720;
     
     juce::Image companyLogo;
     BlueKnob blueKnob;
@@ -45,6 +51,7 @@ private:
     juce::Slider inputGainSlider;
     juce::ToggleButton noiseButton;
     juce::ToggleButton bitReduceButton;
+    juce::TextButton button;
 
     juce::Label predelayLabel;
     juce::Label decayLabel;
