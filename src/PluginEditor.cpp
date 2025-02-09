@@ -102,7 +102,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor& p)
     programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize(720, 240);
+    setSize(720, 280);
 }
 
 SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
@@ -115,27 +115,35 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll(juce::Colour (70,74,70));
     
-    auto graphicsArea = getBounds();
+    float menuBarHeight = 0.1f;
+    auto graphicsArea = getLocalBounds();
+    juce::Rectangle<int> headerArea (juce::Point<int> (graphicsArea.getX(), graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight(), graphicsArea.getBottom() * menuBarHeight));
+    graphicsArea.removeFromTop(graphicsArea.getHeight()*menuBarHeight);
     auto graphicsAreaWidth = graphicsArea.getWidth();
     auto graphicsAreaHeight = graphicsArea.getHeight();
-
-    g.setColour(juce::Colours::white);
-    g.setFont(14.0f * (graphicsAreaHeight * 0.00416667f));
-    //g.drawFittedText ("v0.7.0 " __DATE__ " " __TIME__, getLocalBounds(), juce::Justification::topRight, 1);
-    g.drawFittedText ("www.greyboxaudio.com | v0.8.0 ", getLocalBounds(), juce::Justification::topRight, 1);
-
+    juce::Rectangle<int> imageArea (juce::Point<int> (graphicsArea.getX(), graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight() * 0.16666667f, graphicsArea.getBottom()* 0.4f));
+    juce::Rectangle<int> textArea (juce::Point<int> (graphicsArea.getRight() * 0.16666667f, graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight() * 0.66666667f, graphicsArea.getBottom() * 0.4f));
+    juce::Rectangle<int> boxArea (juce::Point<int> (graphicsArea.getRight() * 0.66666667f, graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight() * 1.0f, graphicsArea.getBottom() * 0.4f));
+    
+    //draw rectangles for visual debugging
+    g.setColour(juce::Colours::green);
+    g.drawRect (headerArea,2);
+    g.setColour (juce::Colours::purple);
+    g.drawRect (graphicsArea,4);
+    g.setColour (juce::Colours::red);
+    g.drawRect (imageArea,2);
     g.setColour (juce::Colours::orange);
-    juce::Rectangle<int> imageArea (juce::Point<int> (0, 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), static_cast<int>(graphicsAreaHeight * 0.33333333f)));
-    juce::Rectangle<int> textArea (juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.66666667f), static_cast<int>(graphicsAreaHeight * 0.33333333f)));
-    juce::Rectangle<int> boxArea (juce::Point<int> (static_cast<int>(graphicsAreaWidth * 0.16666667f), 0),juce::Point<int> (static_cast<int>(graphicsAreaWidth * 1.0f), static_cast<int>(graphicsAreaHeight * 0.33333333f)));
-    //g.drawRect (imageArea,2);
-    //g.drawRect (textArea,2);
-    //g.drawRect (boxArea,2);
+    g.drawRect (textArea,2);
+    g.setColour (juce::Colours::yellow);
+    g.drawRect (boxArea,2);
     
     g.setColour(juce::Colours::white);
+    g.setFont(14.0f * (graphicsAreaHeight * 0.00416667f));
+    g.drawFittedText ("v0.8.0 " __DATE__ " " __TIME__, getLocalBounds(), juce::Justification::topRight, 1);
+    //g.drawFittedText ("www.greyboxaudio.com | v0.8.0 ", getLocalBounds(), juce::Justification::topRight, 1);
     g.setFont(24.0f * (graphicsAreaHeight * 0.00416667f));
     companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png,BinaryData::greyboxaudiocatbw_pngSize);
-    g.drawImageWithin (companyLogo,4,4,static_cast<int>(graphicsAreaWidth * 0.16666667f),static_cast<int>(graphicsAreaHeight * 0.33333333f),1,false);
+    g.drawImageWithin (companyLogo,imageArea.getX(),imageArea.getY(),imageArea.getWidth(),imageArea.getHeight(),36,false);
     g.drawText("LEO MINOR",textArea.removeFromTop(textArea.getHeight()*0.5f),Justification::bottomLeft);
     g.drawText("SG-323 DIGITAL REVERBERATOR",textArea,Justification::topLeft);
 }
