@@ -28,6 +28,8 @@ public:
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
+    float menuBarHeight = 0.1f;
+    
     juce::Image companyLogo;
     BlueKnob blueKnob;
     RedKnob redKnob;

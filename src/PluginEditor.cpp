@@ -115,17 +115,19 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll(juce::Colour (70,74,70));
     
-    float menuBarHeight = 0.1f;
     auto graphicsArea = getLocalBounds();
     juce::Rectangle<int> headerArea (juce::Point<int> (graphicsArea.getX(), graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight(), graphicsArea.getBottom() * menuBarHeight));
+    g.setColour(juce::Colour (25,25,25));
+    g.fillRect(headerArea);
     graphicsArea.removeFromTop(graphicsArea.getHeight()*menuBarHeight);
     auto graphicsAreaWidth = graphicsArea.getWidth();
     auto graphicsAreaHeight = graphicsArea.getHeight();
     juce::Rectangle<int> imageArea (juce::Point<int> (graphicsArea.getX(), graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight() * 0.16666667f, graphicsArea.getBottom()* 0.4f));
     juce::Rectangle<int> textArea (juce::Point<int> (graphicsArea.getRight() * 0.16666667f, graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight() * 0.66666667f, graphicsArea.getBottom() * 0.4f));
-    juce::Rectangle<int> boxArea (juce::Point<int> (graphicsArea.getRight() * 0.66666667f, graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight() * 1.0f, graphicsArea.getBottom() * 0.4f));
+    //juce::Rectangle<int> boxArea (juce::Point<int> (graphicsArea.getRight() * 0.66666667f, graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight() * 1.0f, graphicsArea.getBottom() * 0.4f));
     
     //draw rectangles for visual debugging
+    /*
     g.setColour(juce::Colours::green);
     g.drawRect (headerArea,2);
     g.setColour (juce::Colours::purple);
@@ -136,6 +138,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics& g)
     g.drawRect (textArea,2);
     g.setColour (juce::Colours::yellow);
     g.drawRect (boxArea,2);
+    */
     
     g.setColour(juce::Colours::white);
     g.setFont(14.0f * (graphicsAreaHeight * 0.00416667f));
@@ -157,19 +160,16 @@ void SG323AudioProcessorEditor::resized()
     const float ratio = 3.0f;
 	  getConstrainer ()->setFixedAspectRatio (ratio);
 
+    auto boxAreaMain = getLocalBounds();
+    boxAreaMain.removeFromTop(boxAreaMain.getHeight()*menuBarHeight);
+    juce::Rectangle<int> boxArea (juce::Point<int> (boxAreaMain.getRight() * 0.70833333f, boxAreaMain.getY()+ boxAreaMain.getHeight() *0.08333333f),juce::Point<int> (boxAreaMain.getRight() * 0.95833333f, boxAreaMain.getY() + boxAreaMain.getHeight() *0.25f));
+
     auto area = getLocalBounds();
     auto areaHeight = area.getHeight() * 0.5f;
     auto areaWidth = area.getWidth() * 0.16666667f;
     auto areaBottom = area.removeFromBottom(areaHeight);
-    //noiseButton.setBounds(25,25,100,50);
-    //bitReduceButton.setBounds(100,25,100,50);
-    auto programBoxArea = area.removeFromRight(area.getWidth() * 0.5f);
-    programBoxArea.removeFromTop(area.getHeight() * 0.25f);
-    programBoxArea.removeFromBottom(area.getHeight() * 0.4f);
-    programBoxArea.removeFromLeft(area.getWidth() * 0.41666667f);
-    programBoxArea.removeFromRight(area.getWidth() * 0.08333333);
-    programBox.setBounds(programBoxArea);
     
+    programBox.setBounds(boxArea);
     inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
     highPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
     lowPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
