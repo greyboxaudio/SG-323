@@ -15,7 +15,7 @@ Download and install Git for Windows. You can leave all the settings at default.
 Download and install CMake. Make sure to check the "Add CMake to the PATH environment variable" during installation. https://cmake.org/download/#latest  
 Download and install Visual Studio 2022 Community and install the "Desktop Development with C++" workload. https://learn.microsoft.com/en-us/cpp/build/vscpp-step-0-installation?view=msvc-170  
 
-Build it:
+Build it:  
 Open a new command prompt or PowerShell window:
 ```
 git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
@@ -41,7 +41,9 @@ cmake --build build --target all --config Release
 
 ### Ubuntu 24.04
 Prerequisites:  
-Open a terminal and install basic development tools as well as dependencies for JUCE `apt install git build-essential cmake libasound2-dev libcurl4-openssl-dev libfontconfig1-dev libfreetype-dev libwebkit2gtk-4.1-dev` (You can find info about the JUCE dependencies on linux here: https://github.com/juce-framework/JUCE/blob/master/docs/Linux%20Dependencies.md)  
+Open a terminal and install basic development tools as well as dependencies for JUCE
+```apt install git build-essential cmake libasound2-dev libcurl4-openssl-dev libfontconfig1-dev libfreetype-dev libwebkit2gtk-4.1-dev```
+(You can find info about the JUCE dependencies on linux here: https://github.com/juce-framework/JUCE/blob/master/docs/Linux%20Dependencies.md)  
 
 Build it:  
 Open a new terminal and run the following commands  
