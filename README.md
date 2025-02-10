@@ -16,13 +16,13 @@ Joshua Hodge and the whole Audio Programmer Community https://www.theaudioprogra
 ## Build It Yourself!
 
 ### Ubuntu 24.04
-...
+```
 apt install git build-essential cmake libasound2-dev libcurl4-openssl-dev libfontconfig1-dev libfreetype-dev libwebkit2gtk-4.1-dev
 git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
 cd SG-323/
 cmake -B build
 cmake --build build --target all --config Release
-...
+```
 
 You can find the latest JUCE dependencies on linux here: https://github.com/juce-framework/JUCE/blob/master/docs/Linux%20Dependencies.md
 
