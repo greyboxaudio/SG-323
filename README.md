@@ -17,11 +17,13 @@ Open a new command prompt or PowerShell window:
 ```
 git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
 cs .\SG-323\
+cmake -B build
 cmake --build build --target ALL_BUILD --config Release
 ```
 The compiled plugins will be created in `.\build\SG323_artefacts\Release\` and should be copied to your system folders automatically.  
 
 ### macOS 14
+tbd
 
 ### Ubuntu 24.04
 ```
