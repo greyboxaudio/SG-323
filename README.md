@@ -1,9 +1,9 @@
 # SG-323
-## Ursa Major Stargate 323
-
-// This personal project is in no way affilliated or associated with Ursa Major Inc / Christopher Moore / Seven Woods Audio Inc / AKG
+## Ursa Major Stargate 323 Emulation
 
 This plugin is an authentic emulation of my Ursa Major Stargate 323 Reverb. It is based on over four years of work, which included a detailed analysis of the original circuit logic and filters, as well as eprom data.
+
+This personal project is in no way affilliated or associated with Ursa Major Inc / Christopher Moore / Seven Woods Audio Inc / AKG
 
 ## Build It Yourself!
 
