@@ -52,13 +52,13 @@ juce_add_plugin(SG323
     IS_MIDI_EFFECT FALSE                 # Is this plugin a MIDI effect?
     EDITOR_WANTS_KEYBOARD_FOCUS FALSE    # Does the editor need keyboard focus?
     VST3_CATEGORIES Reverb
-    DISABLE_AAX_MULTI_MONO TRUE
-    AAX_CATEGORY Reverb
+    # DISABLE_AAX_MULTI_MONO TRUE
+    # AAX_CATEGORY Reverb
     COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
     PLUGIN_MANUFACTURER_CODE Gbox               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE S323                         # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3 AAX                 # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS VST3                 # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "SG-323")        # The name of the final executable, which can differ from the target name
 
     clap_juce_extensions_plugin(
