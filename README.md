@@ -42,7 +42,9 @@ cmake --build build --target all --config Release
 ### Ubuntu 24.04
 Prerequisites:  
 Open a terminal and install basic development tools as well as dependencies for JUCE
-```apt install git build-essential cmake libasound2-dev libcurl4-openssl-dev libfontconfig1-dev libfreetype-dev libwebkit2gtk-4.1-dev```
+```
+apt install git build-essential cmake libasound2-dev libcurl4-openssl-dev libfontconfig1-dev libfreetype-dev libwebkit2gtk-4.1-dev
+```
 (You can find info about the JUCE dependencies on linux here: https://github.com/juce-framework/JUCE/blob/master/docs/Linux%20Dependencies.md)  
 
 Build it:  
