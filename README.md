@@ -3,7 +3,7 @@
 
 This plugin is an authentic emulation of my Ursa Major Stargate 323 Reverb. It is based on over four years of work, which included a detailed analysis of the original circuit logic and filters, as well as eprom data.
 
-This personal project is in no way affilliated or associated with Ursa Major Inc / Christopher Moore / Seven Woods Audio Inc / AKG.
+This personal project is in no way affilliated or associated with Ursa Major Inc / Christopher Moore / Seven Woods Audio Inc / AKG.  
 VST® is a registered trademark of Steinberg Media Technologies GmbH.
 
 ## Build It Yourself!
