@@ -23,17 +23,17 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
     editorScale = properties -> getDoubleValue("scalingFactor", 1.0);
   }
 
-  button.setClickingTogglesState(true);
+  resizeButton.setClickingTogglesState(true);
   if (editorScale == 1.0)
   {
-  button.setButtonText("100%");
+  resizeButton.setButtonText("100%");
   }
   else{
-    button.setToggleState(true,true);
-    button.setButtonText("150%");
+    resizeButton.setToggleState(true,true);
+    resizeButton.setButtonText("150%");
   }
-  button.addListener(this);
-  addAndMakeVisible(button);
+  resizeButton.addListener(this);
+  addAndMakeVisible(resizeButton);
 
   noiseButton.setButtonText("Noise");
   // addAndMakeVisible(noiseButton);
@@ -160,7 +160,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setColour (juce::Colours::yellow);
   g.drawRect (boxArea,2);
   */
-
+ 
   g.setColour(juce::Colours::white);
   g.setFont(14.0f * editorScale);
   g.drawFittedText("v0.8.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
@@ -182,7 +182,7 @@ void SG323AudioProcessorEditor::resized()
   }
 
   auto boxAreaMain = getLocalBounds();
-  button.setBounds(0, 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);
+  resizeButton.setBounds(0, 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);
   boxAreaMain.removeFromTop(boxAreaMain.getHeight() * menuBarHeight);
   juce::Rectangle<int> boxArea(juce::Point<int>(boxAreaMain.getRight() * 0.70833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f), juce::Point<int>(boxAreaMain.getRight() * 0.95833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f));
 
@@ -202,16 +202,16 @@ void SG323AudioProcessorEditor::resized()
 
 void SG323AudioProcessorEditor::buttonClicked(Button*)
 {
-  if (button.getToggleState() == true)
+  if (resizeButton.getToggleState() == true)
   {
     editorScale = 1.5f;
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
-    button.setButtonText("150%");
+    resizeButton.setButtonText("150%");
   }
   else
   {
     editorScale = 1.0f;
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
-    button.setButtonText("100%");
+    resizeButton.setButtonText("100%");
   }
 }

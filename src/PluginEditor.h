@@ -51,7 +51,7 @@ private:
     juce::Slider inputGainSlider;
     juce::ToggleButton noiseButton;
     juce::ToggleButton bitReduceButton;
-    juce::TextButton button;
+    juce::TextButton resizeButton;
 
     juce::Label predelayLabel;
     juce::Label decayLabel;
