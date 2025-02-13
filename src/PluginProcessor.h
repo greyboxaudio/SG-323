@@ -81,7 +81,7 @@ private:
     juce::LinearSmoothedValue<float> lowPassSmooth{};
     juce::LinearSmoothedValue<float> predelaySmooth{};
     juce::LinearSmoothedValue<float> decaySmooth{};
-    juce::LinearSmoothedValue<float> wetDrySmooth{};
+    juce::LinearSmoothedValue<float> mixSmooth{};
 
     juce::dsp::Gain<float> gainModule;
     juce::dsp::DelayLine<float, juce::dsp::DelayLineInterpolationTypes::Linear> fractionalDelay;

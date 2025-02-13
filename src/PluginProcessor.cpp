@@ -106,7 +106,7 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     lowPassSmooth.reset(sampleRate, smoothFast);
     predelaySmooth.reset(sampleRate, smoothSlow);
     decaySmooth.reset(sampleRate, smoothSlow);
-    wetDrySmooth.reset(sampleRate, smoothFast);
+    mixSmooth.reset(sampleRate, smoothFast);
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
@@ -581,9 +581,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     {
         auto *wetSignal = outputBuffer.getReadPointer(channel);
         auto *drySignal = inputBuffer.getReadPointer(channel);
-        float mixLevel = *apvts.getRawParameterValue("WETDRY");
-        wetDrySmooth.setTargetValue(mixLevel);
-        float wetLevel = wetDrySmooth.getNextValue();
+        float mixLevel = *apvts.getRawParameterValue("MIX");
+        mixSmooth.setTargetValue(mixLevel);
+        float wetLevel = mixSmooth.getNextValue();
         float dryLevel = 1.0f - wetLevel;
         buffer.copyFromWithRamp(channel, 0, drySignal, bufferSize, dryLevel, dryLevel);
         buffer.addFromWithRamp(channel, 0, wetSignal, bufferSize, mixLevel, mixLevel);
@@ -638,7 +638,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
                                                                       juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon"), 4));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "PreDelay", 0.0f, 320.0f, 0.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 1.0f, 0.5f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("WETDRY", "WetDry", 0.0f, 1.0f, 0.5f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("MIX", "mix", 0.0f, 1.0f, 0.5f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HPF", "highPassFilter", 20.0f, 480.0f, 480.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 3000.0f, 16000.0f, 16000.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "inputGain", 0.0f, 2.0f, 1.0f));

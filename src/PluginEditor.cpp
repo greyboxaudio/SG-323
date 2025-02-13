@@ -23,6 +23,38 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
     editorScale = properties -> getDoubleValue("scalingFactor", 1.0);
   }
 
+  button.setClickingTogglesState(true);
+  if (editorScale == 1.0)
+  {
+  button.setButtonText("100%");
+  }
+  else{
+    button.setToggleState(true,true);
+    button.setButtonText("150%");
+  }
+  button.addListener(this);
+  addAndMakeVisible(button);
+
+  noiseButton.setButtonText("Noise");
+  // addAndMakeVisible(noiseButton);
+  noiseButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "NOISE", noiseButton);
+
+  bitReduceButton.setButtonText("16bit");
+  // addAndMakeVisible(bitReduceButton);
+  bitReduceButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "BITREDUCE", bitReduceButton);
+
+  programBox.addItem("Plate 1", 1);
+  programBox.addItem("Plate 2", 2);
+  programBox.addItem("Chamber", 3);
+  programBox.addItem("Small Hall", 4);
+  programBox.addItem("Hall", 5);
+  programBox.addItem("Large Hall", 6);
+  programBox.addItem("Cathedral", 7);
+  programBox.addItem("Canyon", 8);
+  programBox.setLookAndFeel(&redBox);
+  addAndMakeVisible(programBox);
+  programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
+
   inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
   inputGainSlider.setTextBoxIsEditable(false);
@@ -56,16 +88,16 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   lowPassLabel.attachToComponent(&lowPassSlider, false);
   lowPassLabel.setJustificationType(juce::Justification::centredTop);
 
-  wetDrySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  wetDrySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-  wetDrySlider.setTextBoxIsEditable(false);
-  wetDrySlider.setLookAndFeel(&blueKnob);
-  addAndMakeVisible(wetDrySlider);
-  wetDrySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "WETDRY", wetDrySlider);
-  addAndMakeVisible(wetDryLabel);
-  wetDryLabel.setText("mix", juce::dontSendNotification);
-  wetDryLabel.attachToComponent(&wetDrySlider, false);
-  wetDryLabel.setJustificationType(juce::Justification::centredTop);
+  mixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+  mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
+  mixSlider.setTextBoxIsEditable(false);
+  mixSlider.setLookAndFeel(&blueKnob);
+  addAndMakeVisible(mixSlider);
+  mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "MIX", mixSlider);
+  addAndMakeVisible(mixLabel);
+  mixLabel.setText("mix", juce::dontSendNotification);
+  mixLabel.attachToComponent(&mixSlider, false);
+  mixLabel.setJustificationType(juce::Justification::centredTop);
 
   predelaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
@@ -89,35 +121,6 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   decayLabel.attachToComponent(&decaySlider, false);
   decayLabel.setJustificationType(juce::Justification::centred);
 
-  if (editorScale == 1.0)
-  {
-  button.setButtonText("100%");
-  }
-  else{
-    button.setButtonText("150%");
-  }
-  button.addListener(this);
-  addAndMakeVisible(button);
-
-  noiseButton.setButtonText("Noise");
-  // addAndMakeVisible(noiseButton);
-  noiseButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "NOISE", noiseButton);
-
-  bitReduceButton.setButtonText("16bit");
-  // addAndMakeVisible(bitReduceButton);
-  bitReduceButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "BITREDUCE", bitReduceButton);
-
-  programBox.addItem("Plate 1", 1);
-  programBox.addItem("Plate 2", 2);
-  programBox.addItem("Chamber", 3);
-  programBox.addItem("Small Hall", 4);
-  programBox.addItem("Hall", 5);
-  programBox.addItem("Large Hall", 6);
-  programBox.addItem("Cathedral", 7);
-  programBox.addItem("Canyon", 8);
-  programBox.setLookAndFeel(&redBox);
-  addAndMakeVisible(programBox);
-  programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
   setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
@@ -192,14 +195,14 @@ void SG323AudioProcessorEditor::resized()
   inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   highPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   lowPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
-  wetDrySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
+  mixSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   predelaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   decaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
 }
 
-void SG323AudioProcessorEditor::buttonClicked(Button *)
+void SG323AudioProcessorEditor::buttonClicked(Button*)
 {
-  if (editorScale == 1.0f)
+  if (button.getToggleState() == true)
   {
     editorScale = 1.5f;
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
