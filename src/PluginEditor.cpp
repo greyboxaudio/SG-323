@@ -13,6 +13,16 @@
 SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p)
 {
+  juce::PropertiesFile::Options options;
+  options.applicationName = ProjectInfo::projectName;
+  options.commonToAllUsers = true;
+  options.filenameSuffix = "settings";
+  options.osxLibrarySubFolder = "Application Support";
+  applicationProperties.setStorageParameters(options);
+  if (auto* properties = applicationProperties.getCommonSettings(true)){
+    editorScale = properties -> getDoubleValue("scalingFactor", 1.0);
+  }
+
   inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
   inputGainSlider.setTextBoxIsEditable(false);
@@ -79,7 +89,13 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   decayLabel.attachToComponent(&decaySlider, false);
   decayLabel.setJustificationType(juce::Justification::centred);
 
+  if (editorScale == 1.0)
+  {
   button.setButtonText("100%");
+  }
+  else{
+    button.setButtonText("150%");
+  }
   button.addListener(this);
   addAndMakeVisible(button);
 
@@ -104,7 +120,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
-  setSize(defaultWidth, defaultHeight);
+  setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
 }
 
 SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
@@ -158,6 +174,9 @@ void SG323AudioProcessorEditor::resized()
   // This is generally where you'll want to lay out the positions of any
   // subcomponents in your editor..
   setResizable (false, false);
+  if (auto* properties = applicationProperties.getCommonSettings(true)){
+    properties -> setValue("scalingFactor", editorScale);
+  }
 
   auto boxAreaMain = getLocalBounds();
   button.setBounds(0, 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);

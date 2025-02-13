@@ -32,7 +32,7 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     float menuBarHeight = 0.1f;
-    float editorScale = 1.0f;
+    double editorScale = 1.0;
     int defaultHeight = 280;
     int defaultWidth = 720;
     
@@ -59,6 +59,8 @@ private:
     juce::Label highPassLabel;
     juce::Label lowPassLabel;
     juce::Label inputGainLabel;
+
+    ApplicationProperties applicationProperties;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> programBoxAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decaySliderAttachment;
