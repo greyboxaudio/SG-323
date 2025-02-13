@@ -35,6 +35,12 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   resizeButton.addListener(this);
   addAndMakeVisible(resizeButton);
 
+  vintageButton.setButtonText("Vintage");
+  addAndMakeVisible(vintageButton);
+
+  mixLockButton.setButtonText("Mix Lock");
+  addAndMakeVisible(mixLockButton);
+
   noiseButton.setButtonText("Noise");
   // addAndMakeVisible(noiseButton);
   noiseButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "NOISE", noiseButton);
@@ -56,8 +62,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
 
   inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-  inputGainSlider.setTextBoxIsEditable(false);
+  inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
+  inputGainSlider.setTextBoxIsEditable(true);
   inputGainSlider.setLookAndFeel(&blueKnob);
   addAndMakeVisible(inputGainSlider);
   inputGainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "INPUT", inputGainSlider);
@@ -67,8 +73,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   inputGainLabel.setJustificationType(juce::Justification::centredTop);
 
   highPassSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  highPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-  highPassSlider.setTextBoxIsEditable(false);
+  highPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
+  highPassSlider.setTextBoxIsEditable(true);
   highPassSlider.setLookAndFeel(&whiteKnob);
   addAndMakeVisible(highPassSlider);
   highPassSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HPF", highPassSlider);
@@ -78,8 +84,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   highPassLabel.setJustificationType(juce::Justification::centredTop);
 
   lowPassSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  lowPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-  lowPassSlider.setTextBoxIsEditable(false);
+  lowPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
+  lowPassSlider.setTextBoxIsEditable(true);
   lowPassSlider.setLookAndFeel(&whiteKnob);
   addAndMakeVisible(lowPassSlider);
   lowPassSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LPF", lowPassSlider);
@@ -89,8 +95,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   lowPassLabel.setJustificationType(juce::Justification::centredTop);
 
   mixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-  mixSlider.setTextBoxIsEditable(false);
+  mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
+  mixSlider.setTextBoxIsEditable(true);
   mixSlider.setLookAndFeel(&blueKnob);
   addAndMakeVisible(mixSlider);
   mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "MIX", mixSlider);
@@ -100,8 +106,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   mixLabel.setJustificationType(juce::Justification::centredTop);
 
   predelaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-  predelaySlider.setTextBoxIsEditable(false);
+  predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
+  predelaySlider.setTextBoxIsEditable(true);
   predelaySlider.setLookAndFeel(&redKnob);
   addAndMakeVisible(predelaySlider);
   predelaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "PREDELAY", predelaySlider);
@@ -111,8 +117,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   predelayLabel.setJustificationType(juce::Justification::centredTop);
 
   decaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::NoTextBox, true, 0, 0);
-  decaySlider.setTextBoxIsEditable(false);
+  decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
+  decaySlider.setTextBoxIsEditable(true);
   decaySlider.setLookAndFeel(&redKnob);
   addAndMakeVisible(decaySlider);
   decaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DECAY", decaySlider);
@@ -160,7 +166,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setColour (juce::Colours::yellow);
   g.drawRect (boxArea,2);
   */
- 
+
   g.setColour(juce::Colours::white);
   g.setFont(14.0f * editorScale);
   g.drawFittedText("v0.8.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
@@ -183,6 +189,9 @@ void SG323AudioProcessorEditor::resized()
 
   auto boxAreaMain = getLocalBounds();
   resizeButton.setBounds(0, 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);
+  vintageButton.setBounds(resizeButton.getWidth(), 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);
+  mixLockButton.setBounds(resizeButton.getWidth() * 2, 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);
+
   boxAreaMain.removeFromTop(boxAreaMain.getHeight() * menuBarHeight);
   juce::Rectangle<int> boxArea(juce::Point<int>(boxAreaMain.getRight() * 0.70833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f), juce::Point<int>(boxAreaMain.getRight() * 0.95833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f));
 

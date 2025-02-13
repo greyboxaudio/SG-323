@@ -52,6 +52,8 @@ private:
     juce::ToggleButton noiseButton;
     juce::ToggleButton bitReduceButton;
     juce::TextButton resizeButton;
+    juce::TextButton vintageButton;
+    juce::TextButton mixLockButton;
 
     juce::Label predelayLabel;
     juce::Label decayLabel;
