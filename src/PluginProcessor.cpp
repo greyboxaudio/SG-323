@@ -399,7 +399,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         noiseBuffer.setSample(0, i, noiseSample);
     }
     // sum input buffer & noise buffer together
-    if (vintageButtonState == true)
+    bool noiseButtonState = *apvts.getRawParameterValue("NOISE");
+    if (noiseButtonState == true)
     {
         monoBuffer.addFrom(0, 0, noiseBuffer, 0, 0, bufferSize);
     }
@@ -640,7 +641,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 0.0f, 100.0f, 100.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "inputGain", 0.0f, 2.0f, 1.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterBool>("VINTAGE", "vintage", true));
-    //parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "noise", true));
-    //parameters.push_back(std::make_unique<juce::AudioParameterBool>("BITREDUCE", "bitreduce", true));
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "noise", true));
     return {parameters.begin(), parameters.end()};
 }

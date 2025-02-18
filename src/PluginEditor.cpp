@@ -34,18 +34,21 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
     resizeButton.setButtonText("150%");
   }
   resizeButton.addListener(this);
-  resizeButton.setLookAndFeel(&customButton);
-  customButton.setFontSize(fontSizeRegular * editorScale);
+  resizeButton.setLookAndFeel(&customTextButton);
+  customTextButton.setFontSize(fontSizeRegular * editorScale);
   addAndMakeVisible(resizeButton);
   resizeButton.setClickingTogglesState(true);
 
   vintageButton.setButtonText("Vintage");
-  // vintageButton.setLookAndFeel(&customButton);
-  vintageButton.setColour(juce::TextButton::buttonColourId, headerColour);
-  vintageButton.setColour(juce::TextButton::buttonOnColourId, juce::Colour(255, 0, 0));
+  vintageButton.setLookAndFeel(&customToggleButton);
   addAndMakeVisible(vintageButton);
-  vintageButton.setClickingTogglesState(true);
   vintageButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "VINTAGE", vintageButton);
+
+  noiseButton.setButtonText("Noise");
+  noiseButton.setLookAndFeel(&customToggleButton);
+  addAndMakeVisible(noiseButton);
+  customToggleButton.setFontSize(fontSizeRegular * editorScale);
+  noiseButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "NOISE", noiseButton);
 
   programBox.addItem("Plate 1", 1);
   programBox.addItem("Plate 2", 2);
@@ -55,9 +58,9 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addItem("Large Hall", 6);
   programBox.addItem("Cathedral", 7);
   programBox.addItem("Canyon", 8);
-  redBox.setFontSize(fontSizeLarge * editorScale);
   programBox.setLookAndFeel(&redBox);
   addAndMakeVisible(programBox);
+  redBox.setFontSize(fontSizeLarge * editorScale);
   programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
 
   inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
@@ -188,9 +191,9 @@ void SG323AudioProcessorEditor::resized()
   }
 
   auto boxAreaMain = getLocalBounds();
-  resizeButton.setBounds(0, 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);
-  vintageButton.setBounds(resizeButton.getWidth(), 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);
-
+  resizeButton.setBounds(0, 0, boxAreaMain.getHeight() * menuBarHeight * 3, boxAreaMain.getHeight() * menuBarHeight);
+  vintageButton.setBounds(resizeButton.getWidth(), 0, boxAreaMain.getHeight() * menuBarHeight * 3, boxAreaMain.getHeight() * menuBarHeight);
+  noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMain.getHeight() * menuBarHeight * 3, boxAreaMain.getHeight() * menuBarHeight);
   boxAreaMain.removeFromTop(boxAreaMain.getHeight() * menuBarHeight);
   juce::Rectangle<int> boxArea(juce::Point<int>(boxAreaMain.getRight() * 0.70833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f), juce::Point<int>(boxAreaMain.getRight() * 0.95833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f));
 
@@ -214,7 +217,8 @@ void SG323AudioProcessorEditor::buttonClicked(Button *)
   {
     editorScale = 1.5f;
     redBox.setFontSize(fontSizeLarge * editorScale);
-    customButton.setFontSize(fontSizeRegular * editorScale);
+    customTextButton.setFontSize(fontSizeRegular * editorScale);
+    customToggleButton.setFontSize(fontSizeRegular * editorScale);
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
     resizeButton.setButtonText("150%");
   }
@@ -222,7 +226,8 @@ void SG323AudioProcessorEditor::buttonClicked(Button *)
   {
     editorScale = 1.0f;
     redBox.setFontSize(fontSizeLarge * editorScale);
-    customButton.setFontSize(fontSizeRegular * editorScale);
+    customTextButton.setFontSize(fontSizeRegular * editorScale);
+    customToggleButton.setFontSize(fontSizeRegular * editorScale);
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
     resizeButton.setButtonText("100%");
   }

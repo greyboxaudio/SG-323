@@ -43,7 +43,8 @@ private:
   juce::Colour textColour = juce::Colour(255, 255, 255);
 
   juce::Image companyLogo;
-  CustomButton customButton;
+  CustomTextButton customTextButton;
+  CustomToggleButton customToggleButton;
   BlueKnob blueKnob;
   RedKnob redKnob;
   WhiteKnob whiteKnob;
@@ -57,7 +58,8 @@ private:
   juce::Slider lowPassSlider;
   juce::Slider inputGainSlider;
   juce::TextButton resizeButton;
-  juce::TextButton vintageButton;
+  juce::ToggleButton vintageButton;
+  juce::ToggleButton noiseButton;
 
   juce::Label predelayLabel;
   juce::Label decayLabel;
@@ -76,6 +78,7 @@ private:
   std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lowPassSliderAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainSliderAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> vintageButtonAttachment;
+  std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> noiseButtonAttachment;
   SG323AudioProcessor &audioProcessor;
 
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SG323AudioProcessorEditor)

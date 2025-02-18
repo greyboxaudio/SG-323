@@ -2,13 +2,13 @@
 
 #include <JuceHeader.h>
 
-class CustomButton : public juce::LookAndFeel_V4
+class CustomTextButton : public juce::LookAndFeel_V4
 {
 private:
-    float mButtonFontSize;
+    float mTextButtonFontSize;
 
 public:
-    CustomButton()
+    CustomTextButton()
     {
     }
     void setFontSize(float newSize);
@@ -16,6 +16,26 @@ public:
 
     void drawButtonBackground(juce::Graphics &, juce::Button &, const juce::Colour &backgroundColour,
                               bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+};
+
+class CustomToggleButton : public juce::LookAndFeel_V4
+{
+private:
+    float mToggleButtonFontSize;
+
+public:
+    CustomToggleButton()
+    {
+    }
+    void setFontSize(float newSize);
+    void drawToggleButton(juce::Graphics &, juce::ToggleButton &,
+                          bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+    void drawTickBox(juce::Graphics &, juce::Component &,
+                     float x, float y, float w, float h,
+                     bool ticked, bool isEnabled,
+                     bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+
+    void changeToggleButtonWidthToFitText(juce::ToggleButton &) override;
 };
 
 class RedBox : public juce::LookAndFeel_V4

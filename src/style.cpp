@@ -1,15 +1,15 @@
 #include "style.h"
 
-void CustomButton::setFontSize(float newSize)
+void CustomTextButton::setFontSize(float newSize)
 {
-    mButtonFontSize = newSize;
+    mTextButtonFontSize = newSize;
 }
-Font CustomButton::getTextButtonFont(TextButton &, int buttonHeight)
+Font CustomTextButton::getTextButtonFont(TextButton &, int buttonHeight)
 {
-    return withDefaultMetrics(FontOptions(mButtonFontSize));
+    return withDefaultMetrics(FontOptions(mTextButtonFontSize));
 }
 
-void CustomButton::drawButtonBackground(Graphics &g,
+void CustomTextButton::drawButtonBackground(Graphics &g,
                                         Button &button,
                                         const Colour &backgroundColour,
                                         bool shouldDrawButtonAsHighlighted,
@@ -18,7 +18,7 @@ void CustomButton::drawButtonBackground(Graphics &g,
     auto cornerSize = 6.0f;
     auto bounds = button.getLocalBounds().toFloat().reduced(0.5f, 0.5f);
 
-    auto baseColour = backgroundColour.withMultipliedSaturation(button.hasKeyboardFocus(true) ? 1.3f : 0.9f)
+    auto baseColour = juce::Colour(25, 25, 25).withMultipliedSaturation(button.hasKeyboardFocus(true) ? 1.3f : 0.9f)
                           .withMultipliedAlpha(button.isEnabled() ? 1.0f : 0.5f);
 
     if (shouldDrawButtonAsDown || shouldDrawButtonAsHighlighted)
@@ -52,8 +52,66 @@ void CustomButton::drawButtonBackground(Graphics &g,
         g.fillRoundedRectangle(bounds, cornerSize);
 
         g.setColour(button.findColour(ComboBox::outlineColourId));
-        g.drawRoundedRectangle(bounds, cornerSize, 1.0f);
+        //g.drawRoundedRectangle(bounds, cornerSize, 1.0f);
     }
+}
+
+void CustomToggleButton::setFontSize(float newSize)
+{
+    mToggleButtonFontSize = newSize;
+}
+void CustomToggleButton::drawToggleButton (Graphics& g, ToggleButton& button,
+                                       bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+{
+    auto tickWidth = mToggleButtonFontSize * 1.1f;
+
+    drawTickBox (g, button, 4.0f, ((float) button.getHeight() - tickWidth) * 0.5f,
+                 tickWidth, tickWidth,
+                 button.getToggleState(),
+                 button.isEnabled(),
+                 shouldDrawButtonAsHighlighted,
+                 shouldDrawButtonAsDown);
+
+    g.setColour (button.findColour (ToggleButton::textColourId));
+    g.setFont (mToggleButtonFontSize);
+
+    if (! button.isEnabled())
+        g.setOpacity (0.5f);
+
+    g.drawFittedText (button.getButtonText(),
+                      button.getLocalBounds().withTrimmedLeft (roundToInt (tickWidth) + 10)
+                                             .withTrimmedRight (2),
+                      Justification::centredLeft, 10);
+}
+
+void CustomToggleButton::drawTickBox (Graphics& g, Component& component,
+                                  float x, float y, float w, float h,
+                                  const bool ticked,
+                                  [[maybe_unused]] const bool isEnabled,
+                                  [[maybe_unused]] const bool shouldDrawButtonAsHighlighted,
+                                  [[maybe_unused]] const bool shouldDrawButtonAsDown)
+{
+    Rectangle<float> tickBounds (x, y, w, h);
+
+    g.setColour (component.findColour (ToggleButton::tickDisabledColourId));
+    g.drawRoundedRectangle (tickBounds, 4.0f, 1.0f);
+
+    if (ticked)
+    {
+        g.setColour (component.findColour (ToggleButton::tickColourId));
+        auto tick = getTickShape (0.75f);
+        g.fillPath (tick, tick.getTransformToScaleToFit (tickBounds.reduced (4, 5).toFloat(), false));
+    }
+}
+
+void CustomToggleButton::changeToggleButtonWidthToFitText (ToggleButton& button)
+{
+    auto fontSize = jmin (15.0f, (float) button.getHeight() * 0.75f);
+    auto tickWidth = fontSize * 1.1f;
+
+    Font font (withDefaultMetrics (FontOptions { fontSize }));
+
+    button.setSize (GlyphArrangement::getStringWidthInt (font, button.getButtonText()) + roundToInt (tickWidth) + 14, button.getHeight());
 }
 
 void RedBox::drawComboBox(Graphics &g, int width, int height, bool,
