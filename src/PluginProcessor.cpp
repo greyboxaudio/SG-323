@@ -378,8 +378,6 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     }
     abstractFifo.finishedRead(size1 + size2);
 
-    // monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
-
     // round samples to 16bit values
     for (int i = 0; i < bufferSize; ++i)
     {
@@ -387,8 +385,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         bitBuffer.setSample(0, i, roundBits(sampleRounded));
     }
     // replace input buffer with rounded samples
-    //bool bitReduceButtonState = *apvts.getRawParameterValue("BITREDUCE");
-    if (bitReduceButtonState == true)
+    bool vintageButtonState = *apvts.getRawParameterValue("VINTAGE");
+    if (vintageButtonState == true)
     {
         monoBuffer.copyFrom(0, 0, bitBuffer, 0, 0, bufferSize);
     }
@@ -401,8 +399,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         noiseBuffer.setSample(0, i, noiseSample);
     }
     // sum input buffer & noise buffer together
-    //bool noiseButtonState = *apvts.getRawParameterValue("NOISE");
-    if (noiseButtonState == true)
+    if (vintageButtonState == true)
     {
         monoBuffer.addFrom(0, 0, noiseBuffer, 0, 0, bufferSize);
     }
@@ -642,7 +639,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HPF", "highPassFilter", 0.0f, 100.0f, 100.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 0.0f, 100.0f, 100.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "inputGain", 0.0f, 2.0f, 1.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "noise", true));
-    parameters.push_back(std::make_unique<juce::AudioParameterBool>("BITREDUCE", "bitreduce", true));
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("VINTAGE", "vintage", true));
+    //parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "noise", true));
+    //parameters.push_back(std::make_unique<juce::AudioParameterBool>("BITREDUCE", "bitreduce", true));
     return {parameters.begin(), parameters.end()};
 }

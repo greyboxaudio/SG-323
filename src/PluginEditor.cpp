@@ -19,36 +19,33 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   options.filenameSuffix = "settings";
   options.osxLibrarySubFolder = "Application Support";
   applicationProperties.setStorageParameters(options);
-  if (auto* properties = applicationProperties.getCommonSettings(true)){
-    editorScale = properties -> getDoubleValue("scalingFactor", 1.0);
+  if (auto *properties = applicationProperties.getCommonSettings(true))
+  {
+    editorScale = properties->getDoubleValue("scalingFactor", 1.0);
   }
 
-  resizeButton.setClickingTogglesState(true);
   if (editorScale == 1.0)
   {
-  resizeButton.setButtonText("100%");
+    resizeButton.setButtonText("100%");
   }
-  else{
-    resizeButton.setToggleState(true,true);
+  else
+  {
+    resizeButton.setToggleState(true, true);
     resizeButton.setButtonText("150%");
   }
   resizeButton.addListener(this);
+  resizeButton.setLookAndFeel(&customButton);
+  customButton.setFontSize(fontSizeRegular * editorScale);
   addAndMakeVisible(resizeButton);
+  resizeButton.setClickingTogglesState(true);
 
   vintageButton.setButtonText("Vintage");
+  // vintageButton.setLookAndFeel(&customButton);
+  vintageButton.setColour(juce::TextButton::buttonColourId, headerColour);
+  vintageButton.setColour(juce::TextButton::buttonOnColourId, juce::Colour(255, 0, 0));
   addAndMakeVisible(vintageButton);
-
-  mixLockButton.setButtonText("Mix Lock");
-  addAndMakeVisible(mixLockButton);
-
-  noiseButton.setButtonText("Noise");
-  // addAndMakeVisible(noiseButton);
-  noiseButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "NOISE", noiseButton);
-
-  bitReduceButton.setButtonText("16bit");
-  // addAndMakeVisible(bitReduceButton);
-  bitReduceButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "BITREDUCE", bitReduceButton);
-
+  vintageButton.setClickingTogglesState(true);
+  vintageButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "VINTAGE", vintageButton);
 
   programBox.addItem("Plate 1", 1);
   programBox.addItem("Plate 2", 2);
@@ -142,11 +139,11 @@ SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
 void SG323AudioProcessorEditor::paint(juce::Graphics &g)
 {
   // (Our component is opaque, so we must completely fill the background with a solid colour)
-  g.fillAll(juce::Colour(70, 74, 70));
+  g.fillAll(backgroundColour);
 
   auto graphicsArea = getLocalBounds();
   juce::Rectangle<int> headerArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight(), graphicsArea.getBottom() * menuBarHeight));
-  g.setColour(juce::Colour(25, 25, 25));
+  g.setColour(headerColour);
   g.fillRect(headerArea);
   graphicsArea.removeFromTop(graphicsArea.getHeight() * menuBarHeight);
   auto graphicsAreaWidth = graphicsArea.getWidth();
@@ -170,10 +167,10 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   */
 
   g.setColour(juce::Colours::white);
-  g.setFont(14.0f * editorScale);
+  g.setFont(fontSizeRegular * editorScale);
   g.drawFittedText("v0.8.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
-  //g.drawFittedText ("www.greyboxaudio.com | v0.8.0 ", getLocalBounds(), juce::Justification::topRight, 1);
-  g.setFont(24.0f * editorScale);
+  // g.drawFittedText ("www.greyboxaudio.com | v0.8.0 ", getLocalBounds(), juce::Justification::topRight, 1);
+  g.setFont(fontSizeLarge * editorScale);
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png, BinaryData::greyboxaudiocatbw_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
   g.drawText("LEO MINOR", textArea.removeFromTop(textArea.getHeight() * 0.5f), Justification::bottomLeft);
@@ -184,15 +181,15 @@ void SG323AudioProcessorEditor::resized()
 {
   // This is generally where you'll want to lay out the positions of any
   // subcomponents in your editor..
-  setResizable (false, false);
-  if (auto* properties = applicationProperties.getCommonSettings(true)){
-    properties -> setValue("scalingFactor", editorScale);
+  setResizable(false, false);
+  if (auto *properties = applicationProperties.getCommonSettings(true))
+  {
+    properties->setValue("scalingFactor", editorScale);
   }
 
   auto boxAreaMain = getLocalBounds();
   resizeButton.setBounds(0, 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);
   vintageButton.setBounds(resizeButton.getWidth(), 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);
-  mixLockButton.setBounds(resizeButton.getWidth() * 2, 0, boxAreaMain.getHeight() * menuBarHeight * 2, boxAreaMain.getHeight() * menuBarHeight);
 
   boxAreaMain.removeFromTop(boxAreaMain.getHeight() * menuBarHeight);
   juce::Rectangle<int> boxArea(juce::Point<int>(boxAreaMain.getRight() * 0.70833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f), juce::Point<int>(boxAreaMain.getRight() * 0.95833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f));
@@ -211,12 +208,13 @@ void SG323AudioProcessorEditor::resized()
   decaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
 }
 
-void SG323AudioProcessorEditor::buttonClicked(Button*)
+void SG323AudioProcessorEditor::buttonClicked(Button *)
 {
   if (resizeButton.getToggleState() == true)
   {
     editorScale = 1.5f;
     redBox.setFontSize(fontSizeLarge * editorScale);
+    customButton.setFontSize(fontSizeRegular * editorScale);
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
     resizeButton.setButtonText("150%");
   }
@@ -224,6 +222,7 @@ void SG323AudioProcessorEditor::buttonClicked(Button*)
   {
     editorScale = 1.0f;
     redBox.setFontSize(fontSizeLarge * editorScale);
+    customButton.setFontSize(fontSizeRegular * editorScale);
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
     resizeButton.setButtonText("100%");
   }

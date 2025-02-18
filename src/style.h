@@ -2,6 +2,22 @@
 
 #include <JuceHeader.h>
 
+class CustomButton : public juce::LookAndFeel_V4
+{
+private:
+    float mButtonFontSize;
+
+public:
+    CustomButton()
+    {
+    }
+    void setFontSize(float newSize);
+    juce::Font getTextButtonFont(juce::TextButton &, int buttonHeight) override;
+
+    void drawButtonBackground(juce::Graphics &, juce::Button &, const juce::Colour &backgroundColour,
+                              bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
+};
+
 class RedBox : public juce::LookAndFeel_V4
 {
 private:
