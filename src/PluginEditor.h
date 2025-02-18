@@ -35,6 +35,8 @@ private:
     double editorScale = 1.0;
     int defaultHeight = 280;
     int defaultWidth = 720;
+    float fontSizeLarge = 24.0f;
+    float fontSizeRegular = 16.0f;
     
     juce::Image companyLogo;
     BlueKnob blueKnob;

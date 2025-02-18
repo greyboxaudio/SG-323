@@ -86,7 +86,8 @@ juce_generate_juce_header(SG323)
 target_sources(SG323
     PRIVATE
         src/PluginEditor.cpp
-        src/PluginProcessor.cpp)
+        src/PluginProcessor.cpp
+        src/style.cpp)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use

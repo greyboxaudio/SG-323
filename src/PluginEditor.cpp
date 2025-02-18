@@ -49,6 +49,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   // addAndMakeVisible(bitReduceButton);
   bitReduceButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "BITREDUCE", bitReduceButton);
 
+
   programBox.addItem("Plate 1", 1);
   programBox.addItem("Plate 2", 2);
   programBox.addItem("Chamber", 3);
@@ -57,6 +58,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addItem("Large Hall", 6);
   programBox.addItem("Cathedral", 7);
   programBox.addItem("Canyon", 8);
+  redBox.setFontSize(fontSizeLarge * editorScale);
   programBox.setLookAndFeel(&redBox);
   addAndMakeVisible(programBox);
   programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
@@ -214,12 +216,14 @@ void SG323AudioProcessorEditor::buttonClicked(Button*)
   if (resizeButton.getToggleState() == true)
   {
     editorScale = 1.5f;
+    redBox.setFontSize(fontSizeLarge * editorScale);
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
     resizeButton.setButtonText("150%");
   }
   else
   {
     editorScale = 1.0f;
+    redBox.setFontSize(fontSizeLarge * editorScale);
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
     resizeButton.setButtonText("100%");
   }
