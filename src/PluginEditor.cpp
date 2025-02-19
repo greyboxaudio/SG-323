@@ -76,7 +76,6 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   inputGainLabel.attachToComponent(&inputGainSlider, false);
   inputGainLabel.setJustificationType(juce::Justification::centredTop);
   inputGainLabel.setLookAndFeel(&customKnobLabel);
-  
 
   highPassSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   highPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);

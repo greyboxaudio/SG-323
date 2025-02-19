@@ -10,16 +10,15 @@ Font CustomTextButton::getTextButtonFont(TextButton &, int buttonHeight)
 }
 
 void CustomTextButton::drawButtonBackground(Graphics &g,
-                                        Button &button,
-                                        const Colour &backgroundColour,
-                                        bool shouldDrawButtonAsHighlighted,
-                                        bool shouldDrawButtonAsDown)
+                                            Button &button,
+                                            const Colour &backgroundColour,
+                                            bool shouldDrawButtonAsHighlighted,
+                                            bool shouldDrawButtonAsDown)
 {
     auto cornerSize = 6.0f;
     auto bounds = button.getLocalBounds().toFloat().reduced(0.5f, 0.5f);
 
-    auto baseColour = juce::Colour(25, 25, 25).withMultipliedSaturation(button.hasKeyboardFocus(true) ? 1.3f : 0.9f)
-                          .withMultipliedAlpha(button.isEnabled() ? 1.0f : 0.5f);
+    auto baseColour = juce::Colour(25, 25, 25).withMultipliedSaturation(button.hasKeyboardFocus(true) ? 1.3f : 0.9f).withMultipliedAlpha(button.isEnabled() ? 1.0f : 0.5f);
 
     if (shouldDrawButtonAsDown || shouldDrawButtonAsHighlighted)
         baseColour = baseColour.contrasting(shouldDrawButtonAsDown ? 0.2f : 0.05f);
@@ -52,7 +51,7 @@ void CustomTextButton::drawButtonBackground(Graphics &g,
         g.fillRoundedRectangle(bounds, cornerSize);
 
         g.setColour(button.findColour(ComboBox::outlineColourId));
-        //g.drawRoundedRectangle(bounds, cornerSize, 1.0f);
+        // g.drawRoundedRectangle(bounds, cornerSize, 1.0f);
     }
 }
 //==============================================================================
@@ -60,58 +59,57 @@ void CustomToggleButton::setFontSize(float newSize)
 {
     mToggleButtonFontSize = newSize;
 }
-void CustomToggleButton::drawToggleButton (Graphics& g, ToggleButton& button,
-                                       bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
+void CustomToggleButton::drawToggleButton(Graphics &g, ToggleButton &button,
+                                          bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown)
 {
     auto tickWidth = mToggleButtonFontSize * 1.1f;
 
-    drawTickBox (g, button, 4.0f, ((float) button.getHeight() - tickWidth) * 0.5f,
-                 tickWidth, tickWidth,
-                 button.getToggleState(),
-                 button.isEnabled(),
-                 shouldDrawButtonAsHighlighted,
-                 shouldDrawButtonAsDown);
+    drawTickBox(g, button, 4.0f, ((float)button.getHeight() - tickWidth) * 0.5f,
+                tickWidth, tickWidth,
+                button.getToggleState(),
+                button.isEnabled(),
+                shouldDrawButtonAsHighlighted,
+                shouldDrawButtonAsDown);
 
-    g.setColour (button.findColour (ToggleButton::textColourId));
-    g.setFont (mToggleButtonFontSize);
+    g.setColour(button.findColour(ToggleButton::textColourId));
+    g.setFont(mToggleButtonFontSize);
 
-    if (! button.isEnabled())
-        g.setOpacity (0.5f);
+    if (!button.isEnabled())
+        g.setOpacity(0.5f);
 
-    g.drawFittedText (button.getButtonText(),
-                      button.getLocalBounds().withTrimmedLeft (roundToInt (tickWidth) + 10)
-                                             .withTrimmedRight (2),
-                      Justification::centredLeft, 10);
+    g.drawFittedText(button.getButtonText(),
+                     button.getLocalBounds().withTrimmedLeft(roundToInt(tickWidth) + 10).withTrimmedRight(2),
+                     Justification::centredLeft, 10);
 }
 
-void CustomToggleButton::drawTickBox (Graphics& g, Component& component,
-                                  float x, float y, float w, float h,
-                                  const bool ticked,
-                                  [[maybe_unused]] const bool isEnabled,
-                                  [[maybe_unused]] const bool shouldDrawButtonAsHighlighted,
-                                  [[maybe_unused]] const bool shouldDrawButtonAsDown)
+void CustomToggleButton::drawTickBox(Graphics &g, Component &component,
+                                     float x, float y, float w, float h,
+                                     const bool ticked,
+                                     [[maybe_unused]] const bool isEnabled,
+                                     [[maybe_unused]] const bool shouldDrawButtonAsHighlighted,
+                                     [[maybe_unused]] const bool shouldDrawButtonAsDown)
 {
-    Rectangle<float> tickBounds (x, y, w, h);
+    Rectangle<float> tickBounds(x, y, w, h);
 
-    g.setColour (component.findColour (ToggleButton::tickDisabledColourId));
-    g.drawRoundedRectangle (tickBounds, 4.0f, 1.0f);
+    g.setColour(component.findColour(ToggleButton::tickDisabledColourId));
+    g.drawRoundedRectangle(tickBounds, 4.0f, 1.0f);
 
     if (ticked)
     {
-        g.setColour (component.findColour (ToggleButton::tickColourId));
-        auto tick = getTickShape (0.75f);
-        g.fillPath (tick, tick.getTransformToScaleToFit (tickBounds.reduced (4, 5).toFloat(), false));
+        g.setColour(component.findColour(ToggleButton::tickColourId));
+        auto tick = getTickShape(0.75f);
+        g.fillPath(tick, tick.getTransformToScaleToFit(tickBounds.reduced(4, 5).toFloat(), false));
     }
 }
 
-void CustomToggleButton::changeToggleButtonWidthToFitText (ToggleButton& button)
+void CustomToggleButton::changeToggleButtonWidthToFitText(ToggleButton &button)
 {
-    auto fontSize = jmin (15.0f, (float) button.getHeight() * 0.75f);
+    auto fontSize = jmin(15.0f, (float)button.getHeight() * 0.75f);
     auto tickWidth = fontSize * 1.1f;
 
-    Font font (withDefaultMetrics (FontOptions { fontSize }));
+    Font font(withDefaultMetrics(FontOptions{fontSize}));
 
-    button.setSize (GlyphArrangement::getStringWidthInt (font, button.getButtonText()) + roundToInt (tickWidth) + 14, button.getHeight());
+    button.setSize(GlyphArrangement::getStringWidthInt(font, button.getButtonText()) + roundToInt(tickWidth) + 14, button.getHeight());
 }
 //==============================================================================
 void RedBox::drawComboBox(Graphics &g, int width, int height, bool,
@@ -157,40 +155,40 @@ void CustomKnobLabel::setFontSize(float newSize)
 {
     mKnobLabelFontSize = newSize;
 }
-Font CustomKnobLabel::getLabelFont (Label& label)
+Font CustomKnobLabel::getLabelFont(Label &label)
 {
     return withDefaultMetrics(FontOptions(mKnobLabelFontSize));
 }
 
-void CustomKnobLabel::drawLabel (Graphics& g, Label& label)
+void CustomKnobLabel::drawLabel(Graphics &g, Label &label)
 {
-    g.fillAll (label.findColour (Label::backgroundColourId));
+    g.fillAll(label.findColour(Label::backgroundColourId));
 
-    if (! label.isBeingEdited())
+    if (!label.isBeingEdited())
     {
         auto alpha = label.isEnabled() ? 1.0f : 0.5f;
-        const Font font (getLabelFont (label));
+        const Font font(getLabelFont(label));
 
-        g.setColour (Colours::white.withMultipliedAlpha (alpha));
-        g.setFont (font);
+        g.setColour(Colours::white.withMultipliedAlpha(alpha));
+        g.setFont(font);
 
-        auto textArea = getLabelBorderSize (label).subtractedFrom (label.getLocalBounds());
+        auto textArea = getLabelBorderSize(label).subtractedFrom(label.getLocalBounds());
 
-        g.drawFittedText (label.getText(), textArea, label.getJustificationType(),
-                          jmax (1, (int) ((float) textArea.getHeight() / font.getHeight())),
-                          label.getMinimumHorizontalScale());
+        g.drawFittedText(label.getText(), textArea, label.getJustificationType(),
+                         jmax(1, (int)((float)textArea.getHeight() / font.getHeight())),
+                         label.getMinimumHorizontalScale());
 
-        g.setColour (label.findColour (Label::outlineColourId).withMultipliedAlpha (alpha));
+        g.setColour(label.findColour(Label::outlineColourId).withMultipliedAlpha(alpha));
     }
     else if (label.isEnabled())
     {
-        g.setColour (label.findColour (Label::outlineColourId));
+        g.setColour(label.findColour(Label::outlineColourId));
     }
 
-    g.drawRect (label.getLocalBounds());
+    g.drawRect(label.getLocalBounds());
 }
 
-BorderSize<int> CustomKnobLabel::getLabelBorderSize (Label& label)
+BorderSize<int> CustomKnobLabel::getLabelBorderSize(Label &label)
 {
     return label.getBorderSize();
 }
