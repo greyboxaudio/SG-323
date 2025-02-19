@@ -39,6 +39,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   addAndMakeVisible(resizeButton);
   resizeButton.setClickingTogglesState(true);
 
+  customToggleButton.setFontSize(fontSizeRegular * editorScale);
+
   vintageButton.setButtonText("Vintage");
   vintageButton.setLookAndFeel(&customToggleButton);
   addAndMakeVisible(vintageButton);
@@ -47,8 +49,11 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   noiseButton.setButtonText("Noise");
   noiseButton.setLookAndFeel(&customToggleButton);
   addAndMakeVisible(noiseButton);
-  customToggleButton.setFontSize(fontSizeRegular * editorScale);
   noiseButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "NOISE", noiseButton);
+
+  mixLockButton.setButtonText("Mix Lock");
+  mixLockButton.setLookAndFeel(&customToggleButton);
+  addAndMakeVisible(mixLockButton);
 
   programBox.addItem("Plate 1", 1);
   programBox.addItem("Plate 2", 2);
@@ -156,16 +161,20 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   juce::Rectangle<int> headerArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight(), graphicsArea.getBottom() * menuBarHeight));
   g.setColour(headerColour);
   g.fillRect(headerArea);
+
+  juce::Rectangle<int> footerArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getBottom()* (1.0f-menuBarHeight)), juce::Point<int>(graphicsArea.getRight(), graphicsArea.getBottom()));
+  //g.fillRect(footerArea);
+  //graphicsArea.removeFromBottom(graphicsArea.getHeight() * menuBarHeight);
+  
   graphicsArea.removeFromTop(graphicsArea.getHeight() * menuBarHeight);
   auto graphicsAreaWidth = graphicsArea.getWidth();
   auto graphicsAreaHeight = graphicsArea.getHeight();
   juce::Rectangle<int> imageArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight() * 0.16666667f, graphicsArea.getBottom() * 0.4f));
   juce::Rectangle<int> textArea(juce::Point<int>(graphicsArea.getRight() * 0.16666667f, graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight() * 0.66666667f, graphicsArea.getBottom() * 0.4f));
-  // juce::Rectangle<int> boxArea (juce::Point<int> (graphicsArea.getRight() * 0.66666667f, graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight() * 1.0f, graphicsArea.getBottom() * 0.4f));
+  juce::Rectangle<int> boxArea (juce::Point<int> (graphicsArea.getRight() * 0.66666667f, graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight() * 1.0f, graphicsArea.getBottom() * 0.4f));
 
   // draw rectangles for visual debugging
-  /*
-  g.setColour(juce::Colours::green);
+  /*g.setColour(juce::Colours::green);
   g.drawRect (headerArea,2);
   g.setColour (juce::Colours::purple);
   g.drawRect (graphicsArea,4);
@@ -175,7 +184,8 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.drawRect (textArea,2);
   g.setColour (juce::Colours::yellow);
   g.drawRect (boxArea,2);
-  */
+  g.setColour (juce::Colours::blue);
+  g.drawRect (footerArea,2);*/
 
   g.setColour(juce::Colours::white);
   g.setFont(fontSizeRegular * editorScale);
@@ -199,9 +209,13 @@ void SG323AudioProcessorEditor::resized()
   }
 
   auto boxAreaMain = getLocalBounds();
-  resizeButton.setBounds(0, 0, boxAreaMain.getHeight() * menuBarHeight * 3, boxAreaMain.getHeight() * menuBarHeight);
-  vintageButton.setBounds(resizeButton.getWidth(), 0, boxAreaMain.getHeight() * menuBarHeight * 3, boxAreaMain.getHeight() * menuBarHeight);
-  noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMain.getHeight() * menuBarHeight * 3, boxAreaMain.getHeight() * menuBarHeight);
+  auto boxAreaMainWidth = boxAreaMain.getWidth();
+  auto boxAreaMainHeight = boxAreaMain.getHeight();
+
+  resizeButton.setBounds(0, 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
+  vintageButton.setBounds(resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
+  noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
+  mixLockButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
   boxAreaMain.removeFromTop(boxAreaMain.getHeight() * menuBarHeight);
   juce::Rectangle<int> boxArea(juce::Point<int>(boxAreaMain.getRight() * 0.70833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f), juce::Point<int>(boxAreaMain.getRight() * 0.95833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f));
 
