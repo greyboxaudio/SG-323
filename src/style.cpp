@@ -1,5 +1,5 @@
 #include "style.h"
-
+//==============================================================================
 void CustomTextButton::setFontSize(float newSize)
 {
     mTextButtonFontSize = newSize;
@@ -55,7 +55,7 @@ void CustomTextButton::drawButtonBackground(Graphics &g,
         //g.drawRoundedRectangle(bounds, cornerSize, 1.0f);
     }
 }
-
+//==============================================================================
 void CustomToggleButton::setFontSize(float newSize)
 {
     mToggleButtonFontSize = newSize;
@@ -113,7 +113,7 @@ void CustomToggleButton::changeToggleButtonWidthToFitText (ToggleButton& button)
 
     button.setSize (GlyphArrangement::getStringWidthInt (font, button.getButtonText()) + roundToInt (tickWidth) + 14, button.getHeight());
 }
-
+//==============================================================================
 void RedBox::drawComboBox(Graphics &g, int width, int height, bool,
                           int, int, int, int, ComboBox &box)
 {
@@ -137,11 +137,11 @@ void RedBox::drawComboBox(Graphics &g, int width, int height, bool,
 }
 void RedBox::setFontSize(float newSize)
 {
-    mLabelFontSize = newSize;
+    mBoxLabelFontSize = newSize;
 }
 Font RedBox::getComboBoxFont(ComboBox &box)
 {
-    return withDefaultMetrics(FontOptions(mLabelFontSize));
+    return withDefaultMetrics(FontOptions(mBoxLabelFontSize));
 }
 void RedBox::positionComboBoxText(ComboBox &box, Label &label)
 {
@@ -152,7 +152,50 @@ void RedBox::positionComboBoxText(ComboBox &box, Label &label)
     label.setColour(juce::Label::textColourId, juce::Colour(255, 0, 0));
     label.setFont(getComboBoxFont(box));
 }
+//==============================================================================
+void CustomKnobLabel::setFontSize(float newSize)
+{
+    mKnobLabelFontSize = newSize;
+}
+Font CustomKnobLabel::getLabelFont (Label& label)
+{
+    return withDefaultMetrics(FontOptions(mKnobLabelFontSize));
+}
 
+void CustomKnobLabel::drawLabel (Graphics& g, Label& label)
+{
+    g.fillAll (label.findColour (Label::backgroundColourId));
+
+    if (! label.isBeingEdited())
+    {
+        auto alpha = label.isEnabled() ? 1.0f : 0.5f;
+        const Font font (getLabelFont (label));
+
+        g.setColour (Colours::white.withMultipliedAlpha (alpha));
+        g.setFont (font);
+
+        auto textArea = getLabelBorderSize (label).subtractedFrom (label.getLocalBounds());
+
+        g.drawFittedText (label.getText(), textArea, label.getJustificationType(),
+                          jmax (1, (int) ((float) textArea.getHeight() / font.getHeight())),
+                          label.getMinimumHorizontalScale());
+
+        g.setColour (label.findColour (Label::outlineColourId).withMultipliedAlpha (alpha));
+    }
+    else if (label.isEnabled())
+    {
+        g.setColour (label.findColour (Label::outlineColourId));
+    }
+
+    g.drawRect (label.getLocalBounds());
+}
+
+BorderSize<int> CustomKnobLabel::getLabelBorderSize (Label& label)
+{
+    return label.getBorderSize();
+}
+
+//==============================================================================
 void BlueKnob::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
                                 const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &)
 {
@@ -182,7 +225,7 @@ void BlueKnob::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int 
     g.setColour(juce::Colours::white);
     g.fillPath(p);
 }
-
+//==============================================================================
 void WhiteKnob::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
                                  const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &)
 {
@@ -212,7 +255,7 @@ void WhiteKnob::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int
     g.setColour(juce::Colours::white);
     g.fillPath(p);
 }
-
+//==============================================================================
 void RedKnob::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
                                const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &)
 {

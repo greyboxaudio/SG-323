@@ -49,6 +49,7 @@ private:
   RedKnob redKnob;
   WhiteKnob whiteKnob;
   RedBox redBox;
+  CustomKnobLabel customKnobLabel;
 
   juce::ComboBox programBox;
   juce::Slider predelaySlider;

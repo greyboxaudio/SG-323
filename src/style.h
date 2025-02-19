@@ -1,7 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-
+//==============================================================================
 class CustomTextButton : public juce::LookAndFeel_V4
 {
 private:
@@ -17,7 +17,7 @@ public:
     void drawButtonBackground(juce::Graphics &, juce::Button &, const juce::Colour &backgroundColour,
                               bool shouldDrawButtonAsHighlighted, bool shouldDrawButtonAsDown) override;
 };
-
+//==============================================================================
 class CustomToggleButton : public juce::LookAndFeel_V4
 {
 private:
@@ -37,11 +37,11 @@ public:
 
     void changeToggleButtonWidthToFitText(juce::ToggleButton &) override;
 };
-
+//==============================================================================
 class RedBox : public juce::LookAndFeel_V4
 {
 private:
-    float mLabelFontSize;
+    float mBoxLabelFontSize;
 
 public:
     RedBox()
@@ -54,7 +54,23 @@ public:
     juce::Font getComboBoxFont(juce::ComboBox &) override;
     void positionComboBoxText(juce::ComboBox &, juce::Label &) override;
 };
+//==============================================================================
+class CustomKnobLabel : public juce::LookAndFeel_V2
+{
+private:
+    float mKnobLabelFontSize;
 
+public:
+    CustomKnobLabel()
+    {
+    }
+
+    void setFontSize(float newSize);
+    void drawLabel(juce::Graphics &, juce::Label &) override;
+    juce::Font getLabelFont(juce::Label &) override;
+    juce::BorderSize<int> getLabelBorderSize(juce::Label &) override;
+};
+//==============================================================================
 class BlueKnob : public juce::LookAndFeel_V4
 {
 public:
@@ -64,7 +80,7 @@ public:
     void drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
                           const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &) override;
 };
-
+//==============================================================================
 class WhiteKnob : public juce::LookAndFeel_V4
 {
 public:
@@ -74,7 +90,7 @@ public:
     void drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
                           const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &) override;
 };
-
+//==============================================================================
 class RedKnob : public juce::LookAndFeel_V4
 {
 public:

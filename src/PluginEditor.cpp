@@ -63,6 +63,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   redBox.setFontSize(fontSizeLarge * editorScale);
   programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
 
+  customKnobLabel.setFontSize(fontSizeRegular * editorScale);
+
   inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
   inputGainSlider.setTextBoxIsEditable(true);
@@ -73,6 +75,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   inputGainLabel.setText("input", juce::dontSendNotification);
   inputGainLabel.attachToComponent(&inputGainSlider, false);
   inputGainLabel.setJustificationType(juce::Justification::centredTop);
+  inputGainLabel.setLookAndFeel(&customKnobLabel);
+  
 
   highPassSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   highPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
@@ -84,6 +88,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   highPassLabel.setText("LF decay", juce::dontSendNotification);
   highPassLabel.attachToComponent(&highPassSlider, false);
   highPassLabel.setJustificationType(juce::Justification::centredTop);
+  highPassLabel.setLookAndFeel(&customKnobLabel);
 
   lowPassSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   lowPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
@@ -95,6 +100,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   lowPassLabel.setText("HF decay", juce::dontSendNotification);
   lowPassLabel.attachToComponent(&lowPassSlider, false);
   lowPassLabel.setJustificationType(juce::Justification::centredTop);
+  lowPassLabel.setLookAndFeel(&customKnobLabel);
 
   mixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
@@ -106,6 +112,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   mixLabel.setText("mix", juce::dontSendNotification);
   mixLabel.attachToComponent(&mixSlider, false);
   mixLabel.setJustificationType(juce::Justification::centredTop);
+  mixLabel.setLookAndFeel(&customKnobLabel);
 
   predelaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
@@ -117,6 +124,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   predelayLabel.setText("pre delay", juce::dontSendNotification);
   predelayLabel.attachToComponent(&predelaySlider, false);
   predelayLabel.setJustificationType(juce::Justification::centredTop);
+  predelayLabel.setLookAndFeel(&customKnobLabel);
 
   decaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
@@ -128,6 +136,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   decayLabel.setText("decay time", juce::dontSendNotification);
   decayLabel.attachToComponent(&decaySlider, false);
   decayLabel.setJustificationType(juce::Justification::centred);
+  decayLabel.setLookAndFeel(&customKnobLabel);
 
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
@@ -219,6 +228,7 @@ void SG323AudioProcessorEditor::buttonClicked(Button *)
     redBox.setFontSize(fontSizeLarge * editorScale);
     customTextButton.setFontSize(fontSizeRegular * editorScale);
     customToggleButton.setFontSize(fontSizeRegular * editorScale);
+    customKnobLabel.setFontSize(fontSizeRegular * editorScale);
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
     resizeButton.setButtonText("150%");
   }
@@ -228,6 +238,7 @@ void SG323AudioProcessorEditor::buttonClicked(Button *)
     redBox.setFontSize(fontSizeLarge * editorScale);
     customTextButton.setFontSize(fontSizeRegular * editorScale);
     customToggleButton.setFontSize(fontSizeRegular * editorScale);
+    customKnobLabel.setFontSize(fontSizeRegular * editorScale);
     setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
     resizeButton.setButtonText("100%");
   }
