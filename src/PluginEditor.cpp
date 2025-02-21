@@ -51,9 +51,9 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   addAndMakeVisible(noiseButton);
   noiseButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "NOISE", noiseButton);
 
-  mixLockButton.setButtonText("Mix Lock");
+  /*mixLockButton.setButtonText("Mix Lock");
   mixLockButton.setLookAndFeel(&customToggleButton);
-  addAndMakeVisible(mixLockButton);
+  addAndMakeVisible(mixLockButton);*/
 
   programBox.addItem("Plate 1", 1);
   programBox.addItem("Plate 2", 2);
@@ -215,7 +215,7 @@ void SG323AudioProcessorEditor::resized()
   resizeButton.setBounds(0, 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
   vintageButton.setBounds(resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
   noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
-  mixLockButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
+  //mixLockButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
   boxAreaMain.removeFromTop(boxAreaMain.getHeight() * menuBarHeight);
   juce::Rectangle<int> boxArea(juce::Point<int>(boxAreaMain.getRight() * 0.70833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f), juce::Point<int>(boxAreaMain.getRight() * 0.95833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f));
 

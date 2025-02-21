@@ -633,7 +633,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
 
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PROGRAM", "Program",
-                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon"), 4));
+                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon"), 3));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "Pre Delay", 0.0f, 320.0f, 0.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 100.0f, 70.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("MIX", "Mix", 0.0f, 100.0f, 50.0f));
