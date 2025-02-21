@@ -82,29 +82,29 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   inputGainLabel.setJustificationType(juce::Justification::centredTop);
   inputGainLabel.setLookAndFeel(&customKnobLabel);
 
-  highPassSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  highPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
-  highPassSlider.setTextBoxIsEditable(true);
-  highPassSlider.setLookAndFeel(&whiteKnob);
-  addAndMakeVisible(highPassSlider);
-  highPassSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HPF", highPassSlider);
-  addAndMakeVisible(highPassLabel);
-  highPassLabel.setText("LF decay", juce::dontSendNotification);
-  highPassLabel.attachToComponent(&highPassSlider, false);
-  highPassLabel.setJustificationType(juce::Justification::centredTop);
-  highPassLabel.setLookAndFeel(&customKnobLabel);
+  lfdecaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+  lfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
+  lfdecaySlider.setTextBoxIsEditable(true);
+  lfdecaySlider.setLookAndFeel(&whiteKnob);
+  addAndMakeVisible(lfdecaySlider);
+  lfdecaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LFDECAY", lfdecaySlider);
+  addAndMakeVisible(lfdecayLabel);
+  lfdecayLabel.setText("LF decay", juce::dontSendNotification);
+  lfdecayLabel.attachToComponent(&lfdecaySlider, false);
+  lfdecayLabel.setJustificationType(juce::Justification::centredTop);
+  lfdecayLabel.setLookAndFeel(&customKnobLabel);
 
-  lowPassSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  lowPassSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
-  lowPassSlider.setTextBoxIsEditable(true);
-  lowPassSlider.setLookAndFeel(&whiteKnob);
-  addAndMakeVisible(lowPassSlider);
-  lowPassSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LPF", lowPassSlider);
-  addAndMakeVisible(lowPassLabel);
-  lowPassLabel.setText("HF decay", juce::dontSendNotification);
-  lowPassLabel.attachToComponent(&lowPassSlider, false);
-  lowPassLabel.setJustificationType(juce::Justification::centredTop);
-  lowPassLabel.setLookAndFeel(&customKnobLabel);
+  hfdecaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
+  hfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
+  hfdecaySlider.setTextBoxIsEditable(true);
+  hfdecaySlider.setLookAndFeel(&whiteKnob);
+  addAndMakeVisible(hfdecaySlider);
+  hfdecaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HFDECAY", hfdecaySlider);
+  addAndMakeVisible(hfdecayLabel);
+  hfdecayLabel.setText("HF decay", juce::dontSendNotification);
+  hfdecayLabel.attachToComponent(&hfdecaySlider, false);
+  hfdecayLabel.setJustificationType(juce::Justification::centredTop);
+  hfdecayLabel.setLookAndFeel(&customKnobLabel);
 
   mixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
@@ -226,8 +226,8 @@ void SG323AudioProcessorEditor::resized()
 
   programBox.setBounds(boxArea);
   inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
-  highPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
-  lowPassSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
+  lfdecaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
+  hfdecaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   mixSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   predelaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   decaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));

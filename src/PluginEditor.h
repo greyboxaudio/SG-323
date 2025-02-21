@@ -13,8 +13,8 @@
 #include "PluginProcessor.h"
 
 //==============================================================================
-/**
- */
+/***/
+
 class SG323AudioProcessorEditor : public juce::AudioProcessorEditor,
                                   public juce::Button::Listener
 {
@@ -55,8 +55,8 @@ private:
   juce::Slider predelaySlider;
   juce::Slider decaySlider;
   juce::Slider mixSlider;
-  juce::Slider highPassSlider;
-  juce::Slider lowPassSlider;
+  juce::Slider lfdecaySlider;
+  juce::Slider hfdecaySlider;
   juce::Slider inputGainSlider;
   juce::TextButton resizeButton;
   juce::ToggleButton vintageButton;
@@ -66,8 +66,8 @@ private:
   juce::Label predelayLabel;
   juce::Label decayLabel;
   juce::Label mixLabel;
-  juce::Label highPassLabel;
-  juce::Label lowPassLabel;
+  juce::Label lfdecayLabel;
+  juce::Label hfdecayLabel;
   juce::Label inputGainLabel;
 
   ApplicationProperties applicationProperties;
@@ -76,8 +76,8 @@ private:
   std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decaySliderAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> predelaySliderAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mixSliderAttachment;
-  std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highPassSliderAttachment;
-  std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lowPassSliderAttachment;
+  std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lfdecaySliderAttachment;
+  std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> hfdecaySliderAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainSliderAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> vintageButtonAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> noiseButtonAttachment;

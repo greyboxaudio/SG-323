@@ -329,11 +329,11 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     juce::dsp::AudioBlock<float> randomBlock(randomBuffer);
     juce::dsp::AudioBlock<float> outputBlock(outputBuffer);
     // update filters
-    float highPassValue = 480.0f - (*apvts.getRawParameterValue("HPF") * 4.6f);
-    highPassSmooth.setTargetValue(highPassValue);
+    float lfdecayValue = *apvts.getRawParameterValue("LFDECAY");
+    highPassSmooth.setTargetValue(lfdecayValue);
     nextHighPassValue = highPassSmooth.getNextValue();
-    float lowPassValue = 3000.0f + (*apvts.getRawParameterValue("LPF") * 130.0f);
-    lowPassSmooth.setTargetValue(lowPassValue);
+    float hfdecayValue = *apvts.getRawParameterValue("HFDECAY");
+    lowPassSmooth.setTargetValue(hfdecayValue);
     nextLowPassValue = lowPassSmooth.getNextValue();
     updateFilter();
     // clear buffers
@@ -634,13 +634,13 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
 
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PROGRAM", "Program",
                                                                       juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon"), 4));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "PreDelay", 0.0f, 320.0f, 0.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "Pre Delay", 0.0f, 320.0f, 0.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 100.0f, 70.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("MIX", "mix", 0.0f, 100.0f, 50.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HPF", "highPassFilter", 0.0f, 100.0f, 100.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 0.0f, 100.0f, 100.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "inputGain", 0.0f, 2.0f, 1.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterBool>("VINTAGE", "vintage", true));
-    parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "noise", true));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("MIX", "Mix", 0.0f, 100.0f, 50.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LFDECAY", "Low Frequency Decay", 20.0f, 480.0f, 20.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HFDECAY", "High Frequency Decay", 3000.0f, 16000.0f, 16000.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "Input Gain", 0.0f, 2.0f, 1.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("VINTAGE", "Vintage", true));
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "Noise", true));
     return {parameters.begin(), parameters.end()};
 }
