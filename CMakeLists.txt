@@ -29,7 +29,6 @@ project(SG323 VERSION 0.8.0)
 add_subdirectory(libs/JUCE)                    # If you've put JUCE in a subdirectory called JUCE
 add_subdirectory(libs/clap-juce-extensions EXCLUDE_FROM_ALL)
 add_subdirectory(src)
-#add_subdirectory(assets)
 
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
 # system. This setup should be done before calling `juce_add_plugin`.
@@ -60,7 +59,7 @@ juce_add_plugin(SG323
     PLUGIN_MANUFACTURER_CODE Gbox               # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE S323                         # A unique four-character plugin id with exactly one upper-case character
                                                 # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3 AAX Standalone                 # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS VST3 AAX                 # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "SG-323")        # The name of the final executable, which can differ from the target name
 
     clap_juce_extensions_plugin(
