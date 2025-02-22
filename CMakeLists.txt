@@ -46,7 +46,8 @@ juce_add_plugin(SG323
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
-    COMPANY_NAME GreyboxAudio                          # Specify the name of the plugin's author
+    COMPANY_NAME "Greybox Audio"         # Specify the name of the plugin's author
+    BUNDLE_ID com.GreyboxAudio.SG323
     IS_SYNTH FALSE                       # Is this a synth or an effect?
     NEEDS_MIDI_INPUT FALSE               # Does the plugin need midi input?
     NEEDS_MIDI_OUTPUT FALSE              # Does the plugin need midi output?
@@ -56,11 +57,11 @@ juce_add_plugin(SG323
     DISABLE_AAX_MULTI_MONO TRUE
     AAX_CATEGORY Reverb
     COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
-    PLUGIN_MANUFACTURER_CODE Gbox               # A four-character manufacturer id with at least one upper-case character
-    PLUGIN_CODE S323                         # A unique four-character plugin id with exactly one upper-case character
-                                                # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3 AAX                # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-    PRODUCT_NAME "SG-323")        # The name of the final executable, which can differ from the target name
+    PLUGIN_MANUFACTURER_CODE Gbox       # A four-character manufacturer id with at least one upper-case character
+    PLUGIN_CODE S323                    # A unique four-character plugin id with exactly one upper-case character
+                                        # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
+    FORMATS VST3 AAX AU                 # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    PRODUCT_NAME "SG-323")              # The name of the final executable, which can differ from the target name
 
     clap_juce_extensions_plugin(
     TARGET SG323
