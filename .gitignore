@@ -9,3 +9,8 @@
 /sg323_stm32/.settings
 sg323_build_macos_debug.sh
 sg323_build_macos_release.sh
+/SG-323.aaxplugin
+/SG-323.clap
+*.zip
+/SG-323.component
+/SG-323.vst3
