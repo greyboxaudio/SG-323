@@ -189,8 +189,8 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
 
   g.setColour(juce::Colours::white);
   g.setFont(fontSizeRegular * editorScale);
-  g.drawFittedText("v0.8.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
-  // g.drawFittedText ("www.greyboxaudio.com | v0.8.0 ", getLocalBounds(), juce::Justification::topRight, 1);
+  //g.drawFittedText("v0.8.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
+  g.drawFittedText ("www.greyboxaudio.com | v1.0.0 ", headerArea, juce::Justification::centredRight, 1);
   g.setFont(fontSizeLarge * editorScale);
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png, BinaryData::greyboxaudiocatbw_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);

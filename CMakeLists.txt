@@ -16,7 +16,7 @@ set(HARDENED_RUNTIME_ENABLED)
 # The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
 # `project()` command. `project()` sets up some helpful variables that describe source/binary
 # directories, and the current project version. This is a standard CMake command.
-project(SG323 VERSION 0.8.0)
+project(SG323 VERSION 1.0.0)
 
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
@@ -110,8 +110,7 @@ target_compile_definitions(SG323
 # Conversion to binary-data will happen when your target is built.
 
 juce_add_binary_data(AudioPluginData SOURCES 
-    greybox-audio-cat-bw.svg
-    greybox-audio-cat-bw.png
+    src/greybox-audio-cat-bw.png
 )
 
 # `target_link_libraries` links libraries and JUCE modules to other libraries or executables. Here,
