@@ -106,7 +106,7 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     lowPassSmooth.reset(sampleRate, smoothFast);
     predelaySmooth.reset(sampleRate, smoothSlow);
     decaySmooth.reset(sampleRate, smoothSlow);
-    wetDrySmooth.reset(sampleRate, smoothFast);
+    mixSmooth.reset(sampleRate, smoothFast);
     juce::dsp::ProcessSpec spec;
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = samplesPerBlock;
@@ -204,7 +204,7 @@ bool SG323AudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) con
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono() && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
-        // This checks if the input layout matches the output layout
+    // This checks if the input layout matches the output layout
 #if !JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
@@ -329,11 +329,11 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     juce::dsp::AudioBlock<float> randomBlock(randomBuffer);
     juce::dsp::AudioBlock<float> outputBlock(outputBuffer);
     // update filters
-    float highPassValue = *apvts.getRawParameterValue("HPF");
-    highPassSmooth.setTargetValue(highPassValue);
+    float lfdecayValue = *apvts.getRawParameterValue("LFDECAY");
+    highPassSmooth.setTargetValue(lfdecayValue);
     nextHighPassValue = highPassSmooth.getNextValue();
-    float lowPassValue = *apvts.getRawParameterValue("LPF");
-    lowPassSmooth.setTargetValue(lowPassValue);
+    float hfdecayValue = *apvts.getRawParameterValue("HFDECAY");
+    lowPassSmooth.setTargetValue(hfdecayValue);
     nextLowPassValue = lowPassSmooth.getNextValue();
     updateFilter();
     // clear buffers
@@ -378,8 +378,6 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     }
     abstractFifo.finishedRead(size1 + size2);
 
-    // monoBuffer.addFrom(0, 0, feedbackBuffer, 0, 0, bufferSize);
-
     // round samples to 16bit values
     for (int i = 0; i < bufferSize; ++i)
     {
@@ -387,8 +385,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         bitBuffer.setSample(0, i, roundBits(sampleRounded));
     }
     // replace input buffer with rounded samples
-    bool bitReduceButtonState = *apvts.getRawParameterValue("BITREDUCE");
-    if (bitReduceButtonState == true)
+    bool vintageButtonState = *apvts.getRawParameterValue("VINTAGE");
+    if (vintageButtonState == true)
     {
         monoBuffer.copyFrom(0, 0, bitBuffer, 0, 0, bufferSize);
     }
@@ -468,7 +466,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             {
                 feedbackDelayTime += 16384;
             }
-            adjustableDecay = *apvts.getRawParameterValue("DECAY");
+            adjustableDecay = *apvts.getRawParameterValue("DECAY") * 0.01f;
             decaySmooth.setTargetValue(adjustableDecay);
             float nextDecayValue = decaySmooth.getNextValue();
             feedbackDelayTime *= 0.00003125f;
@@ -581,9 +579,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     {
         auto *wetSignal = outputBuffer.getReadPointer(channel);
         auto *drySignal = inputBuffer.getReadPointer(channel);
-        float mixLevel = *apvts.getRawParameterValue("WETDRY");
-        wetDrySmooth.setTargetValue(mixLevel);
-        float wetLevel = wetDrySmooth.getNextValue();
+        float mixLevel = *apvts.getRawParameterValue("MIX") * 0.01f;
+        mixSmooth.setTargetValue(mixLevel);
+        float wetLevel = mixSmooth.getNextValue();
         float dryLevel = 1.0f - wetLevel;
         buffer.copyFromWithRamp(channel, 0, drySignal, bufferSize, dryLevel, dryLevel);
         buffer.addFromWithRamp(channel, 0, wetSignal, bufferSize, mixLevel, mixLevel);
@@ -635,14 +633,14 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
 
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PROGRAM", "Program",
-                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon"), 0));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "PreDelay", 0.0f, 320.0f, 0.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 1.0f, 1.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("WETDRY", "WetDry", 0.0f, 1.0f, 0.5f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HPF", "highPassFilter", 20.0f, 480.0f, 20.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LPF", "lowPassFilter", 3000.0f, 16000.0f, 16000.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "inputGain", 0.0f, 2.0f, 1.0f));
-    parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "noise", true));
-    parameters.push_back(std::make_unique<juce::AudioParameterBool>("BITREDUCE", "bitreduce", true));
+                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon"), 3));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "Pre Delay", 0.0f, 320.0f, 0.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 100.0f, 70.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("MIX", "Mix", 0.0f, 100.0f, 50.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LFDECAY", "Low Frequency Decay", 20.0f, 480.0f, 20.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("HFDECAY", "High Frequency Decay", 3000.0f, 16000.0f, 16000.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("INPUT", "Input Gain", 0.0f, 2.0f, 1.0f));
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("VINTAGE", "Vintage", true));
+    parameters.push_back(std::make_unique<juce::AudioParameterBool>("NOISE", "Noise", true));
     return {parameters.begin(), parameters.end()};
 }
