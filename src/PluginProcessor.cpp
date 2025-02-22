@@ -164,24 +164,24 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
         IIR_sr = 5;
     }
     int IIR_base = IIR_sr * 18;
-    s1b0 = ellipticCoefficients[IIR_base];
-    s1b1 = ellipticCoefficients[IIR_base + 1];
-    s1b2 = ellipticCoefficients[IIR_base + 2];
-    s1a0 = ellipticCoefficients[IIR_base + 3];
-    s1a1 = ellipticCoefficients[IIR_base + 4];
-    s1a2 = ellipticCoefficients[IIR_base + 5];
-    s2b0 = ellipticCoefficients[IIR_base + 6];
-    s2b1 = ellipticCoefficients[IIR_base + 7];
-    s2b2 = ellipticCoefficients[IIR_base + 8];
-    s2a0 = ellipticCoefficients[IIR_base + 9];
-    s2a1 = ellipticCoefficients[IIR_base + 10];
-    s2a2 = ellipticCoefficients[IIR_base + 11];
-    s3b0 = ellipticCoefficients[IIR_base + 12];
-    s3b1 = ellipticCoefficients[IIR_base + 13];
-    s3b2 = ellipticCoefficients[IIR_base + 14];
-    s3a0 = ellipticCoefficients[IIR_base + 15];
-    s3a1 = ellipticCoefficients[IIR_base + 16];
-    s3a2 = ellipticCoefficients[IIR_base + 17];
+    s1b0 = static_cast<float>(ellipticCoefficients[IIR_base]);
+    s1b1 = static_cast<float>(ellipticCoefficients[IIR_base + 1]);
+    s1b2 = static_cast<float>(ellipticCoefficients[IIR_base + 2]);
+    s1a0 = static_cast<float>(ellipticCoefficients[IIR_base + 3]);
+    s1a1 = static_cast<float>(ellipticCoefficients[IIR_base + 4]);
+    s1a2 = static_cast<float>(ellipticCoefficients[IIR_base + 5]);
+    s2b0 = static_cast<float>(ellipticCoefficients[IIR_base + 6]);
+    s2b1 = static_cast<float>(ellipticCoefficients[IIR_base + 7]);
+    s2b2 = static_cast<float>(ellipticCoefficients[IIR_base + 8]);
+    s2a0 = static_cast<float>(ellipticCoefficients[IIR_base + 9]);
+    s2a1 = static_cast<float>(ellipticCoefficients[IIR_base + 10]);
+    s2a2 = static_cast<float>(ellipticCoefficients[IIR_base + 11]);
+    s3b0 = static_cast<float>(ellipticCoefficients[IIR_base + 12]);
+    s3b1 = static_cast<float>(ellipticCoefficients[IIR_base + 13]);
+    s3b2 = static_cast<float>(ellipticCoefficients[IIR_base + 14]);
+    s3a0 = static_cast<float>(ellipticCoefficients[IIR_base + 15]);
+    s3a1 = static_cast<float>(ellipticCoefficients[IIR_base + 16]);
+    s3a2 = static_cast<float>(ellipticCoefficients[IIR_base + 17]);
 }
 
 void SG323AudioProcessor::releaseResources()
