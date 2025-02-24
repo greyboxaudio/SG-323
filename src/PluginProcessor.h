@@ -104,11 +104,15 @@ private:
     unsigned int gainCeiling[24];
     int initSampleRateCount{};
     float lastSampleRate{};
+    float inputGainValue{1.0f};
+    float lfdecayValue{20.0f};
+    float nextHighPassValue{};
+    float hfdecayValue{16000.0f};
+    float nextLowPassValue{};
+    float mixLevel{1.0f};
     float adjustablePreDelay{};
-    float adjustableDecay{1.0f};
-    float nextInputGainValue{1.0f};
-    float nextHighPassValue{20.0f};
-    float nextLowPassValue{16000.0f};
+    float adjustableDecay{0.7f};
+
     int writeAddress{16383};
     unsigned int nROW{255};
     unsigned int nCOLUMN{255};

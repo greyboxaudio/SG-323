@@ -35,11 +35,11 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   }
   resizeButton.addListener(this);
   resizeButton.setLookAndFeel(&customTextButton);
-  customTextButton.setFontSize(fontSizeRegular * editorScale);
+  customTextButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
   addAndMakeVisible(resizeButton);
   resizeButton.setClickingTogglesState(true);
 
-  customToggleButton.setFontSize(fontSizeRegular * editorScale);
+  customToggleButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
 
   vintageButton.setButtonText("Vintage");
   vintageButton.setLookAndFeel(&customToggleButton);
@@ -55,6 +55,15 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   mixLockButton.setLookAndFeel(&customToggleButton);
   addAndMakeVisible(mixLockButton);*/
 
+  addAndMakeVisible(urlButton);
+  urlButton.setButtonText("greyboxaudio.com");
+  juce::URL u("https://store.greyboxaudio.com");
+  //urlButton.setButtonText("BUY NOW!");
+  //juce::URL u("https://store.greyboxaudio.com/products/sg-323-reverb");
+  urlButton.setURL(u);
+  urlButton.setJustificationType(juce::Justification::centred);
+  urlButton.setColour(juce::HyperlinkButton::textColourId, juce::Colour(255, 255, 255));
+
   programBox.addItem("Plate 1", 1);
   programBox.addItem("Plate 2", 2);
   programBox.addItem("Chamber", 3);
@@ -65,10 +74,10 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addItem("Canyon", 8);
   programBox.setLookAndFeel(&redBox);
   addAndMakeVisible(programBox);
-  redBox.setFontSize(fontSizeLarge * editorScale);
+  redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
   programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
 
-  customKnobLabel.setFontSize(fontSizeRegular * editorScale);
+  customKnobLabel.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
 
   inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, 100, 20);
@@ -162,16 +171,16 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setColour(headerColour);
   g.fillRect(headerArea);
 
-  juce::Rectangle<int> footerArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getBottom()* (1.0f-menuBarHeight)), juce::Point<int>(graphicsArea.getRight(), graphicsArea.getBottom()));
-  //g.fillRect(footerArea);
-  //graphicsArea.removeFromBottom(graphicsArea.getHeight() * menuBarHeight);
-  
+  juce::Rectangle<int> footerArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getBottom() * (1.0f - menuBarHeight)), juce::Point<int>(graphicsArea.getRight(), graphicsArea.getBottom()));
+  // g.fillRect(footerArea);
+  // graphicsArea.removeFromBottom(graphicsArea.getHeight() * menuBarHeight);
+
   graphicsArea.removeFromTop(graphicsArea.getHeight() * menuBarHeight);
   auto graphicsAreaWidth = graphicsArea.getWidth();
   auto graphicsAreaHeight = graphicsArea.getHeight();
   juce::Rectangle<int> imageArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight() * 0.16666667f, graphicsArea.getBottom() * 0.4f));
   juce::Rectangle<int> textArea(juce::Point<int>(graphicsArea.getRight() * 0.16666667f, graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight() * 0.66666667f, graphicsArea.getBottom() * 0.4f));
-  juce::Rectangle<int> boxArea (juce::Point<int> (graphicsArea.getRight() * 0.66666667f, graphicsArea.getY()),juce::Point<int> (graphicsArea.getRight() * 1.0f, graphicsArea.getBottom() * 0.4f));
+  juce::Rectangle<int> boxArea(juce::Point<int>(graphicsArea.getRight() * 0.66666667f, graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight() * 1.0f, graphicsArea.getBottom() * 0.4f));
 
   // draw rectangles for visual debugging
   /*g.setColour(juce::Colours::green);
@@ -189,8 +198,8 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
 
   g.setColour(juce::Colours::white);
   g.setFont(fontSizeRegular * editorScale);
-  //g.drawFittedText("v0.8.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
-  g.drawFittedText ("www.greyboxaudio.com | v1.0.0 ", headerArea, juce::Justification::centredRight, 1);
+  //g.drawFittedText("v1.0.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
+  g.drawFittedText("v1.0.0", headerArea, juce::Justification::centredRight, 1);
   g.setFont(fontSizeLarge * editorScale);
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png, BinaryData::greyboxaudiocatbw_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
@@ -215,7 +224,9 @@ void SG323AudioProcessorEditor::resized()
   resizeButton.setBounds(0, 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
   vintageButton.setBounds(resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
   noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
-  //mixLockButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
+  // mixLockButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
+  urlButton.setBounds(boxAreaMainWidth*0.7, 0, boxAreaMainWidth*0.25, boxAreaMainHeight * menuBarHeight);
+  //urlButton.setBounds((boxAreaMainWidth * 0.5) - (boxAreaMainWidth * 0.075), 0, boxAreaMainWidth * 0.15f, boxAreaMainHeight * menuBarHeight);
   boxAreaMain.removeFromTop(boxAreaMain.getHeight() * menuBarHeight);
   juce::Rectangle<int> boxArea(juce::Point<int>(boxAreaMain.getRight() * 0.70833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f), juce::Point<int>(boxAreaMain.getRight() * 0.95833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f));
 
@@ -233,26 +244,29 @@ void SG323AudioProcessorEditor::resized()
   decaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
 }
 
-void SG323AudioProcessorEditor::buttonClicked(Button *)
+void SG323AudioProcessorEditor::buttonClicked(juce::Button *button)
 {
-  if (resizeButton.getToggleState() == true)
+  if (button == &resizeButton)
   {
-    editorScale = 1.5f;
-    redBox.setFontSize(fontSizeLarge * editorScale);
-    customTextButton.setFontSize(fontSizeRegular * editorScale);
-    customToggleButton.setFontSize(fontSizeRegular * editorScale);
-    customKnobLabel.setFontSize(fontSizeRegular * editorScale);
-    setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
-    resizeButton.setButtonText("150%");
-  }
-  else
-  {
-    editorScale = 1.0f;
-    redBox.setFontSize(fontSizeLarge * editorScale);
-    customTextButton.setFontSize(fontSizeRegular * editorScale);
-    customToggleButton.setFontSize(fontSizeRegular * editorScale);
-    customKnobLabel.setFontSize(fontSizeRegular * editorScale);
-    setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
-    resizeButton.setButtonText("100%");
+    if (resizeButton.getToggleState() == true)
+    {
+      editorScale = 1.5f;
+      redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
+      customTextButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      customToggleButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      customKnobLabel.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
+      resizeButton.setButtonText("150%");
+    }
+    else
+    {
+      editorScale = 1.0f;
+      redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
+      customTextButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      customToggleButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      customKnobLabel.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
+      resizeButton.setButtonText("100%");
+    }
   }
 }

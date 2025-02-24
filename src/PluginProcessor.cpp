@@ -329,10 +329,10 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     juce::dsp::AudioBlock<float> randomBlock(randomBuffer);
     juce::dsp::AudioBlock<float> outputBlock(outputBuffer);
     // update filters
-    float lfdecayValue = *apvts.getRawParameterValue("LFDECAY");
+    lfdecayValue = *apvts.getRawParameterValue("LFDECAY");
     highPassSmooth.setTargetValue(lfdecayValue);
     nextHighPassValue = highPassSmooth.getNextValue();
-    float hfdecayValue = *apvts.getRawParameterValue("HFDECAY");
+    hfdecayValue = *apvts.getRawParameterValue("HFDECAY");
     lowPassSmooth.setTargetValue(hfdecayValue);
     nextLowPassValue = lowPassSmooth.getNextValue();
     updateFilter();
@@ -351,9 +351,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     }
     // apply input gain
-    float inputGainValue = *apvts.getRawParameterValue("INPUT");
-    inputGainSmooth.setTargetValue(inputGainValue * 0.5f);
-    nextInputGainValue = inputGainSmooth.getNextValue();
+    inputGainValue = *apvts.getRawParameterValue("INPUT");
+    inputGainSmooth.setTargetValue(inputGainValue);
+    float nextInputGainValue = inputGainSmooth.getNextValue();
     gainModule.setGainLinear(nextInputGainValue);
     gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
     // copy & filter random Sample buffer
@@ -579,12 +579,12 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     {
         auto *wetSignal = outputBuffer.getReadPointer(channel);
         auto *drySignal = inputBuffer.getReadPointer(channel);
-        float mixLevel = *apvts.getRawParameterValue("MIX") * 0.01f;
+        mixLevel = *apvts.getRawParameterValue("MIX") * 0.01f;
         mixSmooth.setTargetValue(mixLevel);
         float wetLevel = mixSmooth.getNextValue();
         float dryLevel = 1.0f - wetLevel;
         buffer.copyFromWithRamp(channel, 0, drySignal, bufferSize, dryLevel, dryLevel);
-        buffer.addFromWithRamp(channel, 0, wetSignal, bufferSize, mixLevel, mixLevel);
+        buffer.addFromWithRamp(channel, 0, wetSignal, bufferSize, wetLevel, wetLevel);
     }
 }
 

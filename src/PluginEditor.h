@@ -26,7 +26,7 @@ public:
   void paint(juce::Graphics &) override;
   void resized() override;
 
-  void buttonClicked(Button *) override;
+  void buttonClicked(juce::Button* button) override;
 
 private:
   // This reference is provided as a quick way for your editor to
@@ -62,6 +62,7 @@ private:
   juce::ToggleButton vintageButton;
   juce::ToggleButton noiseButton;
   //juce::ToggleButton mixLockButton;
+  juce::HyperlinkButton urlButton;
 
   juce::Label predelayLabel;
   juce::Label decayLabel;
