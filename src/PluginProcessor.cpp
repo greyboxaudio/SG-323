@@ -331,10 +331,10 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     // update filters
     float lfdecayValue = *apvts.getRawParameterValue("LFDECAY");
     highPassSmooth.setTargetValue(lfdecayValue);
-    nextHighPassValue = highPassSmooth.getNextValue();
+    //nextHighPassValue = highPassSmooth.getNextValue();
     float hfdecayValue = *apvts.getRawParameterValue("HFDECAY");
     lowPassSmooth.setTargetValue(hfdecayValue);
-    nextLowPassValue = lowPassSmooth.getNextValue();
+    //nextLowPassValue = lowPassSmooth.getNextValue();
     updateFilter();
     // clear buffers
     monoBuffer.clear(0, 0, bufferSize);
@@ -352,7 +352,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     }
     // apply input gain
     float inputGainValue = *apvts.getRawParameterValue("INPUT");
-    inputGainSmooth.setTargetValue(inputGainValue * 0.5f);
+    inputGainSmooth.setTargetValue(inputGainValue);
     nextInputGainValue = inputGainSmooth.getNextValue();
     gainModule.setGainLinear(nextInputGainValue);
     gainModule.process(juce::dsp::ProcessContextReplacing<float>(monoBlock));
@@ -466,7 +466,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             {
                 feedbackDelayTime += 16384;
             }
-            adjustableDecay = *apvts.getRawParameterValue("DECAY") * 0.01f;
+            //adjustableDecay = *apvts.getRawParameterValue("DECAY") * 0.01f;
             decaySmooth.setTargetValue(adjustableDecay);
             float nextDecayValue = decaySmooth.getNextValue();
             feedbackDelayTime *= 0.00003125f;
@@ -522,7 +522,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         float outputDelayTime{};
         float outputDelayGain{};
         // left output taps
-        adjustablePreDelay = *apvts.getRawParameterValue("PREDELAY");
+        //adjustablePreDelay = *apvts.getRawParameterValue("PREDELAY");
         predelaySmooth.setTargetValue(adjustablePreDelay);
         float nextPreDelayValue = predelaySmooth.getNextValue();
         for (int d = 0; d < 4; d++)
@@ -579,12 +579,12 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     {
         auto *wetSignal = outputBuffer.getReadPointer(channel);
         auto *drySignal = inputBuffer.getReadPointer(channel);
-        float mixLevel = *apvts.getRawParameterValue("MIX") * 0.01f;
+        //float mixLevel = *apvts.getRawParameterValue("MIX") * 0.01f;
         mixSmooth.setTargetValue(mixLevel);
         float wetLevel = mixSmooth.getNextValue();
         float dryLevel = 1.0f - wetLevel;
         buffer.copyFromWithRamp(channel, 0, drySignal, bufferSize, dryLevel, dryLevel);
-        buffer.addFromWithRamp(channel, 0, wetSignal, bufferSize, mixLevel, mixLevel);
+        buffer.addFromWithRamp(channel, 0, wetSignal, bufferSize, wetLevel, wetLevel);
     }
 }
 
