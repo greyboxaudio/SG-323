@@ -309,7 +309,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     // interleaved by keeping the same state.
     auto bufferSize = buffer.getNumSamples();
     // read program selection from the UI
-    int programId = *apvts.getRawParameterValue("PROGRAM");
+    int programId = static_cast<int>(*apvts.getRawParameterValue("PROGRAM"));
     // prepare audio buffers
     monoBuffer.setSize(1, bufferSize);
     feedbackBuffer.setSize(1, bufferSize);

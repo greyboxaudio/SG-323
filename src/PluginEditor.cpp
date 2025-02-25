@@ -167,20 +167,20 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.fillAll(backgroundColour);
 
   auto graphicsArea = getLocalBounds();
-  juce::Rectangle<int> headerArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight(), graphicsArea.getBottom() * menuBarHeight));
+  juce::Rectangle<int> headerArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight(), static_cast<int>(graphicsArea.getBottom() * menuBarHeight)));
   g.setColour(headerColour);
   g.fillRect(headerArea);
 
-  juce::Rectangle<int> footerArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getBottom() * (1.0f - menuBarHeight)), juce::Point<int>(graphicsArea.getRight(), graphicsArea.getBottom()));
+  juce::Rectangle<int> footerArea(juce::Point<int>(graphicsArea.getX(), static_cast<int>(graphicsArea.getBottom() * (1.0f - menuBarHeight))), juce::Point<int>(graphicsArea.getRight(), graphicsArea.getBottom()));
   // g.fillRect(footerArea);
   // graphicsArea.removeFromBottom(graphicsArea.getHeight() * menuBarHeight);
 
-  graphicsArea.removeFromTop(graphicsArea.getHeight() * menuBarHeight);
+  graphicsArea.removeFromTop(static_cast<int>(graphicsArea.getHeight() * menuBarHeight));
   auto graphicsAreaWidth = graphicsArea.getWidth();
   auto graphicsAreaHeight = graphicsArea.getHeight();
-  juce::Rectangle<int> imageArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight() * 0.16666667f, graphicsArea.getBottom() * 0.4f));
-  juce::Rectangle<int> textArea(juce::Point<int>(graphicsArea.getRight() * 0.16666667f, graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight() * 0.66666667f, graphicsArea.getBottom() * 0.4f));
-  juce::Rectangle<int> boxArea(juce::Point<int>(graphicsArea.getRight() * 0.66666667f, graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight() * 1.0f, graphicsArea.getBottom() * 0.4f));
+  juce::Rectangle<int> imageArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.16666667f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
+  juce::Rectangle<int> textArea(juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.16666667f), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.66666667f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
+  juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.66666667f), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 1.0f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
 
   // draw rectangles for visual debugging
   /*g.setColour(juce::Colours::green);
@@ -197,13 +197,13 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.drawRect (footerArea,2);*/
 
   g.setColour(juce::Colours::white);
-  g.setFont(fontSizeRegular * editorScale);
+  g.setFont(static_cast<float>(fontSizeRegular * editorScale));
   //g.drawFittedText("v1.0.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
   g.drawFittedText("v1.0.0", headerArea, juce::Justification::centredRight, 1);
-  g.setFont(fontSizeLarge * editorScale);
+  g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png, BinaryData::greyboxaudiocatbw_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
-  g.drawText("LEO MINOR", textArea.removeFromTop(textArea.getHeight() * 0.5f), Justification::bottomLeft);
+  g.drawText("LEO MINOR", textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
   g.drawText("SG-323 DIGITAL REVERBERATOR", textArea, Justification::topLeft);
 }
 
@@ -221,18 +221,18 @@ void SG323AudioProcessorEditor::resized()
   auto boxAreaMainWidth = boxAreaMain.getWidth();
   auto boxAreaMainHeight = boxAreaMain.getHeight();
 
-  resizeButton.setBounds(0, 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
-  vintageButton.setBounds(resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
-  noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
+  resizeButton.setBounds(0, 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
+  vintageButton.setBounds(resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
+  noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   // mixLockButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
-  urlButton.setBounds(boxAreaMainWidth*0.7, 0, boxAreaMainWidth*0.25, boxAreaMainHeight * menuBarHeight);
+  urlButton.setBounds(static_cast<int>(boxAreaMainWidth*0.7), 0, static_cast<int>(boxAreaMainWidth*0.25), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   //urlButton.setBounds((boxAreaMainWidth * 0.5) - (boxAreaMainWidth * 0.075), 0, boxAreaMainWidth * 0.15f, boxAreaMainHeight * menuBarHeight);
-  boxAreaMain.removeFromTop(boxAreaMain.getHeight() * menuBarHeight);
-  juce::Rectangle<int> boxArea(juce::Point<int>(boxAreaMain.getRight() * 0.70833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f), juce::Point<int>(boxAreaMain.getRight() * 0.95833333f, boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f));
+  boxAreaMain.removeFromTop(static_cast<int>(boxAreaMain.getHeight() * menuBarHeight));
+  juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.95833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
 
   auto area = getLocalBounds();
-  auto areaHeight = area.getHeight() * 0.5f;
-  auto areaWidth = area.getWidth() * 0.16666667f;
+  int areaHeight = static_cast<int>(area.getHeight() * 0.5f);
+  int areaWidth = static_cast<int>(area.getWidth() * 0.16666667f);
   auto areaBottom = area.removeFromBottom(areaHeight);
 
   programBox.setBounds(boxArea);
