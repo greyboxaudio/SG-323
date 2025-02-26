@@ -56,7 +56,7 @@ juce_add_plugin(SG323
     VST3_CATEGORIES Reverb
     DISABLE_AAX_MULTI_MONO TRUE
     AAX_CATEGORY Reverb
-    COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
+    COPY_PLUGIN_AFTER_BUILD FALSE        # Should the plugin be installed to a default location after building?
     PLUGIN_MANUFACTURER_CODE Gbox       # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE S323                    # A unique four-character plugin id with exactly one upper-case character
                                         # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
