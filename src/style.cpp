@@ -157,7 +157,7 @@ void CustomKnobLabel::setFontSize(float newSize)
 }
 Font CustomKnobLabel::getLabelFont(Label &label)
 {
-    return withDefaultMetrics(FontOptions(mKnobLabelFontSize));
+    return withDefaultMetrics(FontOptions(mKnobLabelFontSize, Font::plain));
 }
 
 void CustomKnobLabel::drawLabel(Graphics &g, Label &label)
