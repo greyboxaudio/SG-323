@@ -15,3 +15,4 @@ sg323_build_macos_release.sh
 /SG-323.vst3
 *.exe
 /distribution
+/build-demo

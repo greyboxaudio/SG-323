@@ -9,6 +9,19 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+#ifndef IS_DEMO
+juce::String url = "https://greyboxaudio.com";
+juce::String urlButtonText = "greyboxaudio.com";
+juce::String headerText = PLUGIN_VERSION;
+float urlButtonScale[2]{0.7f,0.25f};
+#else
+juce::String url = "https://store.greyboxaudio.com/products/sg-323-reverb";
+juce::String urlButtonText = "BUY NOW!";
+juce::String headerText = "DEMO - ALL KNOBS ARE DISABLED";
+float urlButtonScale[2]{0.42f,0.15f};
+#endif
+
+
 //==============================================================================
 SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
     : AudioProcessorEditor(&p), audioProcessor(p)
@@ -56,10 +69,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   addAndMakeVisible(mixLockButton);*/
 
   addAndMakeVisible(urlButton);
-  urlButton.setButtonText("greyboxaudio.com");
-  juce::URL u("https://greyboxaudio.com");
-  //urlButton.setButtonText("BUY NOW!");
-  //juce::URL u("https://store.greyboxaudio.com/products/sg-323-reverb");
+  urlButton.setButtonText(urlButtonText);
+  juce::URL u(url);
   urlButton.setURL(u);
   urlButton.setJustificationType(juce::Justification::centred);
   urlButton.setColour(juce::HyperlinkButton::textColourId, juce::Colour(255, 255, 255));
@@ -213,7 +224,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setColour(juce::Colours::white);
   g.setFont(static_cast<float>(fontSizeRegular * editorScale));
   //g.drawFittedText("v1.0.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
-  g.drawFittedText("v1.0.0", headerArea, juce::Justification::centredRight, 1);
+  g.drawFittedText(headerText, headerArea, juce::Justification::centredRight, 1);
   g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png, BinaryData::greyboxaudiocatbw_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
@@ -239,8 +250,7 @@ void SG323AudioProcessorEditor::resized()
   vintageButton.setBounds(resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   // mixLockButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
-  urlButton.setBounds(static_cast<int>(boxAreaMainWidth*0.7), 0, static_cast<int>(boxAreaMainWidth*0.25), static_cast<int>(boxAreaMainHeight * menuBarHeight));
-  //urlButton.setBounds((boxAreaMainWidth * 0.5) - (boxAreaMainWidth * 0.075), 0, boxAreaMainWidth * 0.15f, boxAreaMainHeight * menuBarHeight);
+  urlButton.setBounds(static_cast<int>(boxAreaMainWidth*urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth*urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   boxAreaMain.removeFromTop(static_cast<int>(boxAreaMain.getHeight() * menuBarHeight));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.95833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
 
