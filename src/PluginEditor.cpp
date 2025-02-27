@@ -57,7 +57,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
 
   addAndMakeVisible(urlButton);
   urlButton.setButtonText("greyboxaudio.com");
-  juce::URL u("https://store.greyboxaudio.com");
+  juce::URL u("https://greyboxaudio.com");
   //urlButton.setButtonText("BUY NOW!");
   //juce::URL u("https://store.greyboxaudio.com/products/sg-323-reverb");
   urlButton.setURL(u);
