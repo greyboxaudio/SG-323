@@ -47,7 +47,7 @@ juce_add_plugin(SG323
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
     COMPANY_NAME "Greybox Audio"         # Specify the name of the plugin's author
-    BUNDLE_ID com.GreyboxAudio.SG323
+    BUNDLE_ID com.greyboxaudio.sg323demo
     IS_SYNTH FALSE                       # Is this a synth or an effect?
     NEEDS_MIDI_INPUT FALSE               # Does the plugin need midi input?
     NEEDS_MIDI_OUTPUT FALSE              # Does the plugin need midi output?
@@ -60,12 +60,12 @@ juce_add_plugin(SG323
     PLUGIN_MANUFACTURER_CODE Gbox       # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE S323                    # A unique four-character plugin id with exactly one upper-case character
                                         # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3 AAX AU                 # The formats to build. Other valid formats are: Standalone Unity VST AUv3
-    PRODUCT_NAME "SG-323-Demo")         # The name of the final executable, which can differ from the target name
+    FORMATS VST3 AAX AU                 # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    PRODUCT_NAME "SG-323 Demo")              # The name of the final executable, which can differ from the target name
 
     clap_juce_extensions_plugin(
     TARGET SG323
-    CLAP_ID "com.greyboxaudio.sg-323"
+    CLAP_ID "com.greyboxaudio.sg323demo"
     CLAP_FEATURES audio-effect reverb stereo
     CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES 64
 )

@@ -14,3 +14,6 @@ sg323_build_macos_release.sh
 *.zip
 /SG-323.component
 /SG-323.vst3
+*.exe
+/distribution
+/build-demo
