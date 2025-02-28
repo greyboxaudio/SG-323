@@ -24,7 +24,7 @@ cd .\SG-323\
 cmake -B build
 cmake --build build --target ALL_BUILD --config Release
 ```
-The compiled plugins will be created in `.\build\SG323_artefacts\Release\` and should be copied to your system folders automatically.  
+The compiled plugins will be created in `.\build\SG323_artefacts\Release\`.  
 
 ### macOS 14
 Prerequisites:  
@@ -39,6 +39,7 @@ cd SG-323/
 cmake -B build -G Xcode -D CMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 cmake --build build --target all --config Release
 ```
+The compiled plugins will be created in `build/SG323_artefacts/Release/`.  
 
 ### Ubuntu 24.04
 Prerequisites:  
@@ -56,6 +57,7 @@ cd SG-323/
 cmake -B build
 cmake --build build --target all --config Release
 ```
+The compiled plugins will be created in `build/SG323_artefacts/Release/`.  
 
 ## Special thanks
 Dr. Albert Gräf and his team at the Computer Music Research Group http://www.musikinformatik.uni-mainz.de/e_ag.php  
