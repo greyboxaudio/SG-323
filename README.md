@@ -36,7 +36,7 @@ Open a new terminal and run the following commands
 ```
 git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
 cd SG-323/
-cmake -B build -D CMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+cmake -B build -G Xcode -D CMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 cmake --build build --target all --config Release
 ```
 
