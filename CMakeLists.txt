@@ -48,6 +48,7 @@ juce_add_plugin(SG323
     # ICON_SMALL ...
     COMPANY_NAME "Greybox Audio"         # Specify the name of the plugin's author
     BUNDLE_ID com.GreyboxAudio.SG323
+    LV2URI "urn:com.greyboxaudio.sg-323" # URI for LV2 descriptor
     IS_SYNTH FALSE                       # Is this a synth or an effect?
     NEEDS_MIDI_INPUT FALSE               # Does the plugin need midi input?
     NEEDS_MIDI_OUTPUT FALSE              # Does the plugin need midi output?
@@ -60,7 +61,7 @@ juce_add_plugin(SG323
     PLUGIN_MANUFACTURER_CODE Gbox       # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE S323                    # A unique four-character plugin id with exactly one upper-case character
                                         # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3 AAX AU                 # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS VST3 AAX AU LV2             # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "SG-323")              # The name of the final executable, which can differ from the target name
 
     clap_juce_extensions_plugin(
@@ -114,7 +115,7 @@ target_compile_definitions(SG323
 # static library. These source files can be of any kind (wav data, images, fonts, icons etc.).
 # Conversion to binary-data will happen when your target is built.
 
-juce_add_binary_data(AudioPluginData SOURCES 
+juce_add_binary_data(AudioPluginData SOURCES
     src/greybox-audio-cat-bw.png
 )
 
