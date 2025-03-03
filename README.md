@@ -8,7 +8,7 @@ This personal project is in no way affilliated or associated with Ursa Major Inc
 VST® is a registered trademark of Steinberg Media Technologies GmbH.
 
 ## Build It Yourself!
-You can build the VST3 and CLAP releases yourself!  
+You can build the VST3, CLAP, AU & LV2 releases yourself!  
 *AAX requires digital signing from PACE as well as Apple & Microsoft and can not be loaded into Pro Tools. If Pro Tools is your main DAW  you can use a third party plugin wrapper like the free Waves StudioVerse Audio Effects to load the VST3.*  
 
 ### Windows 11
