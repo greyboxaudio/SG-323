@@ -1,7 +1,8 @@
 # SG-323
 ## Ursa Major Stargate 323 Emulation
 
-This plugin is an authentic emulation of my Ursa Major Stargate 323 Reverb. It is based on over four years of work, which included a detailed analysis of the original circuit logic and filters, as well as eprom data.
+This plugin is an authentic emulation of my Ursa Major Stargate 323 Reverb. It is based on over four years of work, which included a detailed analysis of the original circuit logic and filters, as well as eprom data.  
+The commercial release is available on my store: https://store.greyboxaudio.com/products/sg-323-reverb  
 
 This personal project is in no way affilliated or associated with Ursa Major Inc / Christopher Moore / Seven Woods Audio Inc / AKG.  
 VST® is a registered trademark of Steinberg Media Technologies GmbH.
