@@ -332,12 +332,12 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     randomBuffer.setSize(1, bufferSize);
     noiseBuffer.setSize(1, bufferSize);
     bitBuffer.setSize(1, bufferSize);
-    fifoBuffer.setSize(1, 1024);
+    fifoBuffer.setSize(1, fifoBufferSize);
     inputBuffer.setSize(totalNumInputChannels, bufferSize);
     outputBuffer.setSize(totalNumOutputChannels, bufferSize);
     if (initSampleRateCount == 0)
     {
-        fifoBuffer.clear(0, 0, 1024);
+        fifoBuffer.clear(0, 0, fifoBufferSize);
         initSampleRateCount = 1;
     }
     // set up dsp elements
