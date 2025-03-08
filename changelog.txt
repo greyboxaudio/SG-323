@@ -1,0 +1,5 @@
+1.0.1 / 08.03.2025
+- fixed an issue at buffersizes above 512 samples
+
+1.0.0 / 27.02.2025
+- initial Release
