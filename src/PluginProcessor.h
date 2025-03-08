@@ -70,7 +70,8 @@ private:
     juce::AudioBuffer<float> noiseBuffer;
     juce::AudioBuffer<float> bitBuffer;
 
-    juce::AbstractFifo abstractFifo{1024};
+    int fifoBufferSize = 8192;
+    juce::AbstractFifo abstractFifo{fifoBufferSize};
     int start1, size1, start2, size2;
     juce::AudioBuffer<float> fifoBuffer;
 
