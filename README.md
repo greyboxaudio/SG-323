@@ -18,11 +18,19 @@ Download and install CMake. Make sure to check the "Add CMake to the PATH enviro
 Download and install Visual Studio 2022 Community and install the "Desktop Development with C++" workload. https://learn.microsoft.com/en-us/cpp/build/vscpp-step-0-installation?view=msvc-170  
 
 Build it:  
-Open a new command prompt or PowerShell window:
+Open a new command prompt or PowerShell window  
+for INTEL/AMD  
 ```
 git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
 cd .\SG-323\
 cmake -B build
+cmake --build build --target ALL_BUILD --config Release
+```
+for Qualcomm Snapdragon  
+```
+git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
+cd .\SG-323\
+cmake -B build -A ARM64EC
 cmake --build build --target ALL_BUILD --config Release
 ```
 The compiled plugins will be created in `.\build\SG323_artefacts\Release\`.  
