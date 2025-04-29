@@ -16,3 +16,4 @@ sg323_build_macos_release.sh
 *.exe
 /distribution
 /build-demo
+/.vscode
