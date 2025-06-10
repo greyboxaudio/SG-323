@@ -96,7 +96,7 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    auto delayBufferSize = sampleRate * 0.512;
+    auto delayBufferSize = sampleRate * 2.084;
     // set up filters
     lastSampleRate = static_cast<float>(sampleRate);
     float smoothSlow{0.1f};
@@ -224,6 +224,9 @@ int calculateAddress(unsigned int rowInput, unsigned int columnInput)
     unsigned int rowDelay = ((rowInput << 1) & 126) | bit6 | (MSB << 7);
     // calculate address column
     unsigned int columnDelay = (columnInput + delayCarryOut) & 63;
+    //bit6 = ((columnInput + delayCarryOut) & 64) >> 6;
+    //MSB = ((columnInput + delayCarryOut) & 128) >> 7;
+    //unsigned int columnDelay = (((columnInput + delayCarryOut) << 1) & 126) | bit6 | (MSB << 7) ;
     return ((rowDelay) + (columnDelay * 256));
 }
 
@@ -428,7 +431,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         fractionalDelay.pushSample(0, data[i]);
         // calculate base address factors
         unsigned int decayTime = 7;
-        unsigned int gainBaseAddr = (decayTime << 5) | (programId << 8);
+        unsigned int decayLow = decayTime & 7;
+        unsigned int decayHigh = decayTime >> 3;
+        unsigned int gainBaseAddr = (decayHigh << 12) | (programId << 8) | (decayLow << 5);
         unsigned int delayBaseAddr = programId << 6;
         // calculate write tap (=test tap)
         int rowInput = nROW;
@@ -643,7 +648,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
 
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PROGRAM", "Program",
-                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon"), 3));
+                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon", "9", "10", "11", "12", "13", "14", "15", "16"), 3));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "Pre Delay", 0.0f, 320.0f, 0.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 100.0f, 70.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("MIX", "Mix", 0.0f, 100.0f, 50.0f));
