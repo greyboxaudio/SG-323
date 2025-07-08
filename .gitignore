@@ -17,3 +17,4 @@ sg323_build_macos_release.sh
 /distribution
 /build-demo
 /.vscode
+/out
