@@ -18,3 +18,4 @@ sg323_build_macos_release.sh
 /build-demo
 /.vscode
 /out
+/repros
