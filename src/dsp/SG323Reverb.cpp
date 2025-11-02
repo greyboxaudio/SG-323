@@ -337,6 +337,12 @@ void Reverb::processBuffer(juce::AudioBuffer<float>& buffer)
             rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * fSampleRate, d == 7) * outputGainArray[d] * 0.5f;
         }
 
+        if(vintageMode)
+        {
+            leftOutputSample = std::floor(leftOutputSample * 32768.0f) * 0.000030518f;
+            rightOutputSample = std::floor(rightOutputSample * 32768.0f) * 0.000030518f;
+        }
+
         if (numChannels == 1) {
             auto output = filters[FILTER_ID::deEmphasisL].processSample(leftOutputSample + rightOutputSample);
             buffer.setSample(0, i, output);
