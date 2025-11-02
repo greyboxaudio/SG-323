@@ -281,7 +281,7 @@ void Reverb::processBuffer(juce::AudioBuffer<float>& buffer)
 
         auto input = data[i] + feedbackOutputSample;
         if(vintageMode) {
-            input = std::floor(input * 32768.0f) * 0.000030518f;
+            input = std::floor(input * 16383.5f) * 6.103701e-5f;
         }
         if(addNoise) {
             input += ((random.nextFloat() * 2.0f) - 1.0f) * NOISE_LEVEL;
@@ -339,8 +339,8 @@ void Reverb::processBuffer(juce::AudioBuffer<float>& buffer)
 
         if(vintageMode)
         {
-            leftOutputSample = std::floor(leftOutputSample * 32768.0f) * 0.000030518f;
-            rightOutputSample = std::floor(rightOutputSample * 32768.0f) * 0.000030518f;
+            leftOutputSample = std::floor(leftOutputSample * 16383.5f) * 6.103701e-5f;
+            rightOutputSample = std::floor(rightOutputSample * 16383.5f) * 6.103701e-5f;
         }
 
         if (numChannels == 1) {
