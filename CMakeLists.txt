@@ -86,6 +86,7 @@ juce_generate_juce_header(SG323)
 
 target_sources(SG323
     PRIVATE
+        src/dsp/SG323Reverb.cpp
         src/PluginEditor.cpp
         src/PluginProcessor.cpp
         src/style.cpp)

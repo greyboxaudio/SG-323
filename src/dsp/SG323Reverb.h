@@ -11,7 +11,7 @@ class Reverb
 public:
 
     Reverb();
-    ~Reverb();
+    ~Reverb() = default;
 
     void prepare(const juce::dsp::ProcessSpec& spec);
     void processBuffer(juce::AudioBuffer<float>& buffer);

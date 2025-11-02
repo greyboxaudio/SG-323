@@ -5,6 +5,11 @@
 namespace SG323
 {
 
+Reverb::Reverb()
+{
+    mixer.setMixingRule(juce::dsp::DryWetMixingRule::sin3dB); // this is a change from the original design, but I think this mode is better for reverbs
+}
+
 void Reverb::setProgramId(int id)
 {
     jassert(juce::isPositiveAndNotGreaterThan(id, NUM_PROGRAMS));
