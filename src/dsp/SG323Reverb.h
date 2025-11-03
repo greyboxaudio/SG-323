@@ -38,7 +38,6 @@ private:
     juce::AudioBuffer<float> randomBuffer;
     
     static constexpr float NOISE_LEVEL = 0.00012f;
-    static constexpr int NUM_PROGRAMS = 8;
 
     juce::Random random;
 

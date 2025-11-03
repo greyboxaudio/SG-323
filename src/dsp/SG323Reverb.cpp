@@ -12,9 +12,10 @@ Reverb::Reverb()
 
 void Reverb::setProgramId(int id)
 {
-    jassert(juce::isPositiveAndNotGreaterThan(id, NUM_PROGRAMS));
+    const auto num_programs = programNames.size();
+    jassert(juce::isPositiveAndNotGreaterThan(id, num_programs));
 
-    programId = juce::jlimit(0, NUM_PROGRAMS, id);
+    programId = juce::jlimit(0, num_programs, id);
 }
 
 void Reverb::setPreDelay(float delayMilliseconds)
