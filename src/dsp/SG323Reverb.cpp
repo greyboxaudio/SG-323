@@ -129,7 +129,6 @@ void Reverb::initializeFilters()
     aaFilters.clear();
     auto aaCutoff = std::min(fSampleRate * 0.45f, 19500.0f);
     auto aaCoefficients = juce::dsp::FilterDesign<float>::designIIRLowpassHighOrderEllipticMethod(aaCutoff, sampleRate, 0.05f, -0.5f, -90.0f);
-    DBG(aaCoefficients.size());
     for(auto& c : aaCoefficients)
     {
         auto& f = aaFilters.emplace_back(juce::dsp::IIR::Filter<float>(c));
@@ -213,6 +212,7 @@ void Reverb::processBuffer(juce::AudioBuffer<float>& buffer)
         monoBuffer.applyGain(0.5f);
     }
     inputGainSmooth.applyGain(monoBuffer, numSamples);
+    // should the input clip/saturate at higher gain levels?
     auto monoBlock = juce::dsp::AudioBlock<float>(monoBuffer).getSubBlock(0, numSamples);
     auto monoContext = juce::dsp::ProcessContextReplacing<float>(monoBlock);
 

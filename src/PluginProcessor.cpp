@@ -34,29 +34,17 @@ const juce::String SG323AudioProcessor::getName() const
 
 bool SG323AudioProcessor::acceptsMidi() const
 {
-#if JucePlugin_WantsMidiInput
-    return true;
-#else
     return false;
-#endif
 }
 
 bool SG323AudioProcessor::producesMidi() const
 {
-#if JucePlugin_ProducesMidiOutput
-    return true;
-#else
     return false;
-#endif
 }
 
 bool SG323AudioProcessor::isMidiEffect() const
 {
-#if JucePlugin_IsMidiEffect
-    return true;
-#else
     return false;
-#endif
 }
 
 double SG323AudioProcessor::getTailLengthSeconds() const
@@ -108,7 +96,7 @@ void SG323AudioProcessor::releaseResources()
 
 bool SG323AudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const
 {
-    // update to add mono->stereo support
+    // could update to add mono->stereo support
 
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono() && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
@@ -183,9 +171,6 @@ juce::AudioProcessorEditor *SG323AudioProcessor::createEditor()
 //==============================================================================
 void SG323AudioProcessor::getStateInformation(juce::MemoryBlock &destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
     auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml(state.createXml());
     copyXmlToBinary(*xml, destData);
@@ -193,8 +178,6 @@ void SG323AudioProcessor::getStateInformation(juce::MemoryBlock &destData)
 
 void SG323AudioProcessor::setStateInformation(const void *data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
     std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
 
     if (xmlState.get() != nullptr)
