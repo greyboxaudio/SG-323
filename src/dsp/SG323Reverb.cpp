@@ -192,6 +192,13 @@ int Reverb::rngsus(float randomSample)
     return (rateLevel);
 }
 
+float Reverb::quantizeSample(float sample)
+{
+    sample = juce::jlimit(0.0f, 1.0f, (sample * 0.5f) + 0.5f);
+    sample = std::floor(sample * 32767.0f) * 3.051851e-5f;
+    return (sample * 2.0f) - 1.0f;
+}
+
 void Reverb::processBuffer(juce::AudioBuffer<float>& buffer)
 {
     const auto numSamples = buffer.getNumSamples();
@@ -284,7 +291,7 @@ void Reverb::processBuffer(juce::AudioBuffer<float>& buffer)
 
         auto input = data[i] + feedbackOutputSample;
         if(vintageMode) {
-            input = std::floor(input * 16383.5f) * 6.103701e-5f;
+            input = quantizeSample(input);
         }
         if(addNoise) {
             input += ((random.nextFloat() * 2.0f) - 1.0f) * NOISE_LEVEL;
@@ -342,8 +349,8 @@ void Reverb::processBuffer(juce::AudioBuffer<float>& buffer)
 
         if(vintageMode)
         {
-            leftOutputSample = std::floor(leftOutputSample * 16383.5f) * 6.103701e-5f;
-            rightOutputSample = std::floor(rightOutputSample * 16383.5f) * 6.103701e-5f;
+            leftOutputSample = quantizeSample(leftOutputSample);
+            rightOutputSample = quantizeSample(rightOutputSample);
         }
 
         if (numChannels == 1) {

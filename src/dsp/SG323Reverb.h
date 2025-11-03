@@ -33,6 +33,7 @@ private:
     int calculateAddress(unsigned int rowInput, unsigned int columnInput);
     int rngsus(float randomSample);
     int countWriteAddress();
+    inline float quantizeSample(float sample);
 
     juce::AudioBuffer<float> monoBuffer;
     juce::AudioBuffer<float> randomBuffer;
