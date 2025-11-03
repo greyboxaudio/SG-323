@@ -126,11 +126,13 @@ void Reverb::initializeFilters()
     *(fbkFilters[1].coefficients) = *juce::dsp::IIR::Coefficients<float>::makeFirstOrderLowPass(sampleRate, 18000.0f);
     *(fbkFilters[2].coefficients) = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 9000.0f, 0.5f, 0.85f);
 
-    const auto aaFrequency = std::min(fSampleRate * 0.45f, 19500.0f);
-    for(auto& f : aaFilters)
+    aaFilters.clear();
+    auto aaCutoff = std::min(fSampleRate * 0.45f, 19500.0f);
+    auto aaCoefficients = juce::dsp::FilterDesign<float>::designIIRLowpassHighOrderEllipticMethod(aaCutoff, sampleRate, 0.05f, -0.5f, -90.0f);
+    DBG(aaCoefficients.size());
+    for(auto& c : aaCoefficients)
     {
-        f.setCutoffFrequency(aaFrequency);
-        f.setResonance(0.707f);
+        auto& f = aaFilters.emplace_back(juce::dsp::IIR::Filter<float>(c));
         f.reset();
     }
 
@@ -288,7 +290,7 @@ void Reverb::processBuffer(juce::AudioBuffer<float>& buffer)
             input += ((random.nextFloat() * 2.0f) - 1.0f) * NOISE_LEVEL;
         }
         for(auto& f : aaFilters) {
-            input = f.processSample(0, input);
+            input = f.processSample(input);
         }
 
         fractionalDelay.pushSample(0, input);

@@ -61,7 +61,7 @@ private:
     };
 
     std::array<juce::dsp::IIR::Filter<float>, numFilters> filters;
-    std::array<juce::dsp::StateVariableTPTFilter<float>, 3> aaFilters;
+    std::vector<juce::dsp::IIR::Filter<float>> aaFilters;
     std::array<juce::dsp::IIR::Filter<float>, 3> fbkFilters;
 
     float outputGainArray[8] {-0.996f, 0.996f, 0.622f, 0.378f, 0.378f, 0.622f, 0.966f, -0.966f};
