@@ -13,6 +13,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.13" CACHE STRING "Minimum OS X deployment target")
 set(HARDENED_RUNTIME_ENABLED)
 
+set(BUILD_CLAP ON)
+
 # The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
 # `project()` command. `project()` sets up some helpful variables that describe source/binary
 # directories, and the current project version. This is a standard CMake command.
@@ -64,12 +66,14 @@ juce_add_plugin(SG323
     FORMATS VST3 AAX AU LV2 #Standalone                # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "SG-323")              # The name of the final executable, which can differ from the target name
 
+if(BUILD_CLAP)
     clap_juce_extensions_plugin(
     TARGET SG323
     CLAP_ID "com.greyboxaudio.sg-323"
     CLAP_FEATURES audio-effect reverb stereo
     CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES 64
 )
+endif()
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
