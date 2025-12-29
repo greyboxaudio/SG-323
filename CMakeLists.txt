@@ -27,7 +27,6 @@ project(SG323 VERSION 1.0.1)
 #find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your system
 # or
 add_subdirectory(libs/JUCE)                    # If you've put JUCE in a subdirectory called JUCE
-add_subdirectory(libs/clap-juce-extensions EXCLUDE_FROM_ALL)
 add_subdirectory(src)
 
 # If you are building a VST2 or AAX plugin, CMake needs to be told where to find these SDKs on your
@@ -61,15 +60,8 @@ juce_add_plugin(SG323
     PLUGIN_MANUFACTURER_CODE Gbox       # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE S323                    # A unique four-character plugin id with exactly one upper-case character
                                         # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3 AAX AU LV2 #Standalone                # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS VST3 #AAX AU LV2 #Standalone                # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "SG-323")              # The name of the final executable, which can differ from the target name
-
-    clap_juce_extensions_plugin(
-    TARGET SG323
-    CLAP_ID "com.greyboxaudio.sg-323"
-    CLAP_FEATURES audio-effect reverb stereo
-    CLAP_PROCESS_EVENTS_RESOLUTION_SAMPLES 64
-)
 
 # `juce_generate_juce_header` will create a JuceHeader.h for a given target, which will be generated
 # into your build tree. This should be included with `#include <JuceHeader.h>`. The include path for
@@ -130,13 +122,13 @@ target_link_libraries(SG323
         AudioPluginData           # If we'd created a binary data target, we'd link to it here
         juce::juce_audio_utils
         juce::juce_dsp
-        clap_juce_extensions
+        #clap_juce_extensions
     PUBLIC
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
 
 if(DEFINED BUILD_AS_ARM64X)
- 	set(ARM64X_TARGETS SG323_VST3 SG323_CLAP)
+ 	set(ARM64X_TARGETS SG323_VST3)
  	include("arm64x.cmake")
  endif()
