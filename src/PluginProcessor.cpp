@@ -93,26 +93,26 @@ void SG323AudioProcessor::changeProgramName(int index, const juce::String &newNa
 int calculateAddress(unsigned int rowInput, unsigned int columnInput)
 {
     // calculate address row
-unsigned int bit6 = (rowInput & 0x40) >> 6;
-unsigned int MSB = (rowInput & 0x80) >> 7;
-unsigned int delayCarryOut = rowInput >> 8;
-unsigned int rowDelay = ((rowInput & 0x3f) << 1) | bit6 | (MSB << 7);
-// calculate address column
-bit6 = ((columnInput + delayCarryOut) & 0x40) >> 6;
-MSB = ((columnInput + delayCarryOut) & 0x80) >> 7;
-unsigned int columnDelay = (((columnInput + delayCarryOut) & 0x3f) << 1) | bit6 | (MSB << 7);
-return ((rowDelay)+(columnDelay * 256));
+    unsigned int bit6 = (rowInput & 0x40) >> 6;
+    unsigned int MSB = (rowInput & 0x80) >> 7;
+    unsigned int delayCarryOut = rowInput >> 8;
+    unsigned int rowDelay = ((rowInput & 0x3f) << 1) | bit6 | (MSB << 7);
+    // calculate address column
+    bit6 = ((columnInput + delayCarryOut) & 0x40) >> 6;
+    MSB = ((columnInput + delayCarryOut) & 0x80) >> 7;
+    unsigned int columnDelay = (((columnInput + delayCarryOut) & 0x3f) << 1) | bit6 | (MSB << 7);
+    return ((rowDelay) + (columnDelay * 256));
 }
 
 int countWriteAddress(int writeAddress)
 {
     // advance write address & wraparound if < 0
-int writeAddressIncr = writeAddress - 1;
-if (writeAddressIncr < 0)
-{
-    writeAddressIncr = 65535;
-}
-return writeAddressIncr;
+    int writeAddressIncr = writeAddress - 1;
+    if (writeAddressIncr < 0)
+    {
+        writeAddressIncr = 65535;
+    }
+    return writeAddressIncr;
 }
 
 float roundBits(float inputSample)
@@ -254,8 +254,6 @@ bool SG323AudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) con
 #endif
 }
 #endif
-
-
 
 int rngsus(float randomSample)
 {
@@ -440,9 +438,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     {
         fractionalDelay.pushSample(0, data[i]);
         // calculate base address factors
-        unsigned int decayTime = 7;
+        unsigned int decayTime = 15;
         unsigned int preDelay = 15;
-        unsigned int gainBaseAddr = (decayTime << 5) | (programId << 8);
+        unsigned int gainBaseAddr = ((decayTime & 0x07) << 5) | (programId << 8) | ((decayTime >> 3) << 12);
         unsigned int delayBaseAddr = programId << 9;
         // calculate write tap (=test tap)
         int rowInput = nROW;
@@ -516,7 +514,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         if (modClockOut == modRateCeiling)
         {
             unsigned int modRateCount = rateLevel | (programId << 4);
-            modClockOut = static_cast<int>((modRateCountData[modRateCount]& 0xf) * modScale);
+            modClockOut = static_cast<int>((modRateCountData[modRateCount] & 0xf) * modScale);
         }
         unsigned int modCarry = modClockOut + 1;
         if (modCarry >= modRateCeiling)
