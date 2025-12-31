@@ -83,6 +83,14 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addItem("Large Hall", 6);
   programBox.addItem("Cathedral", 7);
   programBox.addItem("Canyon", 8);
+  programBox.addItem("9", 9);
+  programBox.addItem("10", 10);
+  programBox.addItem("11", 11);
+  programBox.addItem("12", 12);
+  programBox.addItem("13", 13);
+  programBox.addItem("14", 14);
+  programBox.addItem("15", 15);
+  programBox.addItem("16", 16);
   programBox.setLookAndFeel(&redBox);
   addAndMakeVisible(programBox);
   redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
