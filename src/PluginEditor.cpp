@@ -10,7 +10,7 @@
 #include "PluginEditor.h"
 
 #ifndef IS_DEMO
-juce::String url = "https://greyboxaudio.com";
+juce::String url = "https://store.greyboxaudio.com";
 juce::String urlButtonText = "greyboxaudio.com";
 juce::String headerText = PLUGIN_VERSION;
 float urlButtonScale[2]{0.7f,0.25f};
@@ -83,14 +83,14 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addItem("Large Hall", 6);
   programBox.addItem("Cathedral", 7);
   programBox.addItem("Canyon", 8);
-  programBox.addItem("9", 9);
-  programBox.addItem("10", 10);
-  programBox.addItem("11", 11);
-  programBox.addItem("12", 12);
-  programBox.addItem("13", 13);
-  programBox.addItem("14", 14);
-  programBox.addItem("15", 15);
-  programBox.addItem("16", 16);
+  programBox.addItem("Program 9", 9);
+  programBox.addItem("Program A", 10);
+  programBox.addItem("Program B", 11);
+  programBox.addItem("Program C", 12);
+  programBox.addItem("Program D", 13);
+  programBox.addItem("Program E", 14);
+  programBox.addItem("Program F", 15);
+  programBox.addItem("Program 0", 16);
   programBox.setLookAndFeel(&redBox);
   addAndMakeVisible(programBox);
   redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
