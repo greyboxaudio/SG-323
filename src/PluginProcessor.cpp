@@ -171,8 +171,8 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     fractionalDelay.prepare(spec);
     fractionalDelay.reset();
     fractionalDelay.setMaximumDelayInSamples(static_cast<int>(delayBufferSize));
-    modScale = lastSampleRate * 0.00003125f;
-    modRateCeiling = static_cast<int>(16 * modScale);
+    modScale = lastSampleRate * 0.00003125f; //scale modulation counter for samplerates > 32kHz
+    modRateCeiling = static_cast<int>(16 * modScale); //scale counter ceiling for samplerates > 32kHz
     int IIR_sr{0};
     if (lastSampleRate == 48000.0)
     {
