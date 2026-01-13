@@ -135,3 +135,8 @@ target_link_libraries(SG323
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+if(DEFINED BUILD_AS_ARM64X)
+ 	set(ARM64X_TARGETS SG323_VST3)
+ 	include("arm64x.cmake")
+ endif()
