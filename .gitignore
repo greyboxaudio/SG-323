@@ -2,7 +2,7 @@
 .DS_Store
 /source/.vs
 /source/out
-.vscode/settings.json
+.vscode/
 /sg323_stm32/Drivers
 /sg323_stm32/Debug
 /sg323_stm32/.settings
@@ -17,3 +17,6 @@ sg323_build_macos_release.sh
 /distribution
 /build-demo
 /out
+/repros
+build_arm64x
+/build_demo

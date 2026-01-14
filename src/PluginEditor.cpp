@@ -10,7 +10,7 @@
 #include "PluginEditor.h"
 
 #ifndef IS_DEMO
-juce::String url = "https://greyboxaudio.com";
+juce::String url = "https://store.greyboxaudio.com";
 juce::String urlButtonText = "greyboxaudio.com";
 juce::String headerText = PLUGIN_VERSION;
 float urlButtonScale[2]{0.7f,0.25f};
@@ -83,6 +83,14 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addItem("Large Hall", 6);
   programBox.addItem("Cathedral", 7);
   programBox.addItem("Canyon", 8);
+  programBox.addItem("Program 9", 9);
+  programBox.addItem("Program A", 10);
+  programBox.addItem("Program B", 11);
+  programBox.addItem("Program C", 12);
+  programBox.addItem("Program D", 13);
+  programBox.addItem("Program E", 14);
+  programBox.addItem("Program F", 15);
+  programBox.addItem("Program 0", 16);
   programBox.setLookAndFeel(&redBox);
   addAndMakeVisible(programBox);
   redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
@@ -226,7 +234,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   //g.drawFittedText("v1.0.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
   g.drawFittedText(headerText, headerArea, juce::Justification::centredRight, 1);
   g.setFont(static_cast<float>(fontSizeLarge * editorScale));
-  companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png, BinaryData::greyboxaudiocatbw_pngSize);
+  companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
   g.drawText("LEO MINOR", textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
   g.drawText("SG-323 DIGITAL REVERBERATOR", textArea, Justification::topLeft);

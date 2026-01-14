@@ -16,7 +16,7 @@ set(HARDENED_RUNTIME_ENABLED)
 # The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
 # `project()` command. `project()` sets up some helpful variables that describe source/binary
 # directories, and the current project version. This is a standard CMake command.
-project(SG323 VERSION 1.0.1)
+project(SG323 VERSION 1.1.0)
 
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
@@ -61,7 +61,7 @@ juce_add_plugin(SG323
     PLUGIN_MANUFACTURER_CODE Gbox       # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE S323                    # A unique four-character plugin id with exactly one upper-case character
                                         # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3 AAX AU LV2 #Standalone                # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS VST3 AAX AU LV2 #Standalone # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "SG-323")              # The name of the final executable, which can differ from the target name
 
     clap_juce_extensions_plugin(
@@ -116,7 +116,7 @@ target_compile_definitions(SG323
 # Conversion to binary-data will happen when your target is built.
 
 juce_add_binary_data(AudioPluginData SOURCES
-    src/greybox-audio-cat-bw.png
+    src/greybox-audio-cat_white.png
 )
 
 # `target_link_libraries` links libraries and JUCE modules to other libraries or executables. Here,
@@ -135,3 +135,8 @@ target_link_libraries(SG323
         juce::juce_recommended_config_flags
         juce::juce_recommended_lto_flags
         juce::juce_recommended_warning_flags)
+
+if(DEFINED BUILD_AS_ARM64X)
+ 	set(ARM64X_TARGETS SG323_VST3)
+ 	include("arm64x.cmake")
+ endif()

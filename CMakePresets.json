@@ -1,0 +1,52 @@
+{
+   "version": 3,
+   "configurePresets": [
+     {
+       "name": "windows-base",
+       "hidden": true,
+       "binaryDir": "${sourceDir}/out/build/${presetName}",
+       "installDir": "${sourceDir}/out/install/${presetName}",
+       "cacheVariables": {
+         "CMAKE_C_COMPILER": "cl.exe",
+         "CMAKE_CXX_COMPILER": "cl.exe"
+       },
+ 	  "generator": "Visual Studio 18 2026"
+     },
+     {
+       "name": "arm64",
+       "displayName": "arm64",
+       "inherits": "windows-base",
+       "hidden": true,
+ 	  "architecture": {
+ 		 "value": "arm64",
+ 		 "strategy": "set"
+ 	  }
+     },
+     {
+       "name": "arm64ec",
+       "displayName": "arm64ec",
+       "inherits": "windows-base",
+       "hidden": true,
+       "architecture": {
+         "value": "arm64ec",
+         "strategy": "set"
+       }
+     },
+     {
+       "name": "arm64-x",
+       "displayName": "arm64 (arm64x)",
+       "inherits": "arm64",
+       "cacheVariables": {
+         "BUILD_AS_ARM64X": "ARM64"
+       }
+       },
+     {
+       "name": "arm64ec-x",
+       "displayName": "arm64ec (arm64x)",
+       "inherits": "arm64ec",
+       "cacheVariables": {
+         "BUILD_AS_ARM64X": "ARM64EC"
+       }
+       }
+   ]
+ }

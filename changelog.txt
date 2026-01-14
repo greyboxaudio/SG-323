@@ -1,3 +1,6 @@
+1.1.0 / 13.01.2026
+- added programs of the Stargate 626
+
 1.0.1 / 08.03.2025
 - fixed an issue at buffersizes above 512 samples
 
