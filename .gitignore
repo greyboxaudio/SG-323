@@ -19,3 +19,4 @@ sg323_build_macos_release.sh
 /out
 /repros
 build_arm64x
+/build_demo
