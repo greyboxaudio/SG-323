@@ -234,7 +234,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   //g.drawFittedText("v1.0.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
   g.drawFittedText(headerText, headerArea, juce::Justification::centredRight, 1);
   g.setFont(static_cast<float>(fontSizeLarge * editorScale));
-  companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocatbw_png, BinaryData::greyboxaudiocatbw_pngSize);
+  companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
   g.drawText("LEO MINOR", textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
   g.drawText("SG-323 DIGITAL REVERBERATOR", textArea, Justification::topLeft);
