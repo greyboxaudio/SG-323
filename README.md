@@ -1,5 +1,5 @@
 # SG-323
-## Ursa Major Stargate 323 Emulation
+## Ursa Major Stargate 323 & Stargate 626 Emulation
 
 This plugin is an authentic emulation of my Ursa Major Stargate 323 Reverb. It is based on over four years of work, which included a detailed analysis of the original circuit logic and filters, as well as eprom data.  
 The commercial release is available on my store: https://store.greyboxaudio.com/products/sg-323-reverb  
@@ -17,9 +17,8 @@ Download and install Git for Windows. You can leave all the settings at default.
 Download and install CMake. Make sure to check the "Add CMake to the PATH environment variable" during installation. https://cmake.org/download/#latest  
 Download and install Visual Studio 2026 Community and install the "Desktop Development with C++" workload. https://visualstudio.microsoft.com/downloads/  
 
-Build it:  
+Build it (INTEL/AMD):  
 Open a new command prompt or PowerShell window  
-for INTEL/AMD  
 ```
 git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
 cd .\SG-323\
@@ -28,7 +27,8 @@ cmake --build build --target ALL_BUILD --config Release
 ```
 The compiled plugins will be created in `.\build\SG323_artefacts\Release\`.   
 
-for Qualcomm Snapdragon  
+Build it (Qualcomm Snapdragon):  
+Open a new command prompt or PowerShell window  
 ```
 git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
 cd .\SG-323\  
