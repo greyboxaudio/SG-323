@@ -15,7 +15,7 @@ You can build the VST3, CLAP, AU & LV2 releases yourself!
 Prerequisites:  
 Download and install Git for Windows. You can leave all the settings at default. https://git-scm.com/downloads/win  
 Download and install CMake. Make sure to check the "Add CMake to the PATH environment variable" during installation. https://cmake.org/download/#latest  
-Download and install Visual Studio 2022 Community and install the "Desktop Development with C++" workload. https://learn.microsoft.com/en-us/cpp/build/vscpp-step-0-installation?view=msvc-170  
+Download and install Visual Studio 2026 Community and install the "Desktop Development with C++" workload. https://visualstudio.microsoft.com/downloads/  
 
 Build it:  
 Open a new command prompt or PowerShell window  
@@ -26,16 +26,20 @@ cd .\SG-323\
 cmake -B build
 cmake --build build --target ALL_BUILD --config Release
 ```
+The compiled plugins will be created in `.\build\SG323_artefacts\Release\`.   
+
 for Qualcomm Snapdragon  
 ```
 git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
-cd .\SG-323\
-cmake -B build -A ARM64EC
-cmake --build build --target ALL_BUILD --config Release
+cd .\SG-323\  
+cmake --preset arm64-x
+cmake --build .\out\build\arm64-x\ --config Release 
+cmake --preset arm64ec-x  
+cmake --build .\out\build\arm64ec-x\ --config Release   
 ```
-The compiled plugins will be created in `.\build\SG323_artefacts\Release\`.  
+The compiled plugins will be created in `.\out\build\arm64ec-x\SG323_artefacts\Release\`.
 
-### macOS 14
+### macOS 26
 Prerequisites:  
 Download and install CMake. https://cmake.org/download/#latest  
 Open a terminal and add CMake to your path: `PATH="/Applications/CMake.app/Contents/bin":"$PATH"`. While you're in the terminal you also need to install the Xcode command line tools: `xcode-select --install`  
@@ -54,7 +58,8 @@ The compiled plugins will be created in `build/SG323_artefacts/Release/`.
 Prerequisites:  
 Open a terminal and install basic development tools as well as dependencies for JUCE
 ```
-apt install git build-essential cmake libasound2-dev libcurl4-openssl-dev libfontconfig1-dev libfreetype-dev libwebkit2gtk-4.1-dev
+apt install git build-essential cmake libasound2-dev\
+ libcurl4-openssl-dev libfontconfig1-dev libfreetype-dev libwebkit2gtk-4.1-dev
 ```
 (You can find info about the JUCE dependencies on linux here: https://github.com/juce-framework/JUCE/blob/master/docs/Linux%20Dependencies.md)  
 
