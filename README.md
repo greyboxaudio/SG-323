@@ -50,7 +50,7 @@ Open a new terminal and run the following commands
 git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
 cd SG-323/
 cmake -B build -G Xcode -D CMAKE_OSX_ARCHITECTURES="arm64;x86_64"
-cmake --build build --target all --config Release
+cmake --build build --target ALL_BUILD --config Release
 ```
 The compiled plugins will be created in `build/SG323_artefacts/Release/`.  
 
