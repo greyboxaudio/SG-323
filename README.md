@@ -42,13 +42,14 @@ The compiled plugins will be created in `.\out\build\arm64ec-x\SG323_artefacts\R
 ### macOS 26
 Prerequisites:  
 Download and install CMake. https://cmake.org/download/#latest  
-Open a terminal and add CMake to your path: `PATH="/Applications/CMake.app/Contents/bin":"$PATH"`. While you're in the terminal you also need to install the Xcode command line tools: `xcode-select --install`  
+Open a terminal and install the Xcode command line tools: `xcode-select --install`  
 
 Build it:  
 Open a new terminal and run the following commands  
 ```
 git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
 cd SG-323/
+PATH="/Applications/CMake.app/Contents/bin":"$PATH"
 cmake -B build -G Xcode -D CMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 cmake --build build --target ALL_BUILD --config Release
 ```
