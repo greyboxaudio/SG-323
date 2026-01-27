@@ -438,8 +438,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     {
         fractionalDelay.pushSample(0, data[i]);
         // calculate base address factors
-        unsigned int decayTime = 15;
-        unsigned int preDelay = static_cast<int>(*apvts.getRawParameterValue("DELAY"));
+        unsigned int decayTime = static_cast<int>(*apvts.getRawParameterValue("DELAY"));
+        decayTime = sgLookup[decayTime];
+        unsigned int preDelay = static_cast<int>(*apvts.getRawParameterValue("PDELAY"));
         preDelay = sgLookup[preDelay];
         unsigned int gainBaseAddr = ((decayTime & 0x07) << 5) | (programId << 8) | ((decayTime >> 3) << 12);
         unsigned int delayBaseAddr = ((preDelay & 0x07) << 6) | ((programId & 0x07) << 9) | ((preDelay >> 3) << 12) | ((programId >> 3) << 13);
@@ -690,6 +691,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PROGRAM", "Program",
                                                                       juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon", "Program 9", "Program A", "Program B", "Program C", "Program D", "Program E", "Program F", "Program 0"), 3));
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("DELAY", "Delay",
+                                                                      juce::StringArray("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"), 3));
+    parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PDELAY", "PDelay",
                                                                       juce::StringArray("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"), 3));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "Pre Delay", 0.0f, 320.0f, 0.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 100.0f, 70.0f));

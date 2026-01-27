@@ -117,6 +117,27 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
   delayBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "DELAY", delayBox);
 
+  preDelayBox.addItem("1", 1);
+  preDelayBox.addItem("2", 2);
+  preDelayBox.addItem("3", 3);
+  preDelayBox.addItem("4", 4);
+  preDelayBox.addItem("5", 5);
+  preDelayBox.addItem("6", 6);
+  preDelayBox.addItem("7", 7);
+  preDelayBox.addItem("8", 8);
+  preDelayBox.addItem("9", 9);
+  preDelayBox.addItem("10", 10);
+  preDelayBox.addItem("11", 11);
+  preDelayBox.addItem("12", 12);
+  preDelayBox.addItem("13", 13);
+  preDelayBox.addItem("14", 14);
+  preDelayBox.addItem("15", 15);
+  preDelayBox.addItem("16", 16);
+  preDelayBox.setLookAndFeel(&redBox);
+  addAndMakeVisible(preDelayBox);
+  redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
+  preDelayBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PDELAY", preDelayBox);
+
   customKnobLabel.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
 
   int textBoxWidth = 100;
@@ -257,8 +278,8 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
-  g.drawText(__DATE__ " " __TIME__, textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
-  g.drawText("SG-323", textArea, Justification::topLeft);
+  g.drawText(__DATE__, textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
+  g.drawText(__TIME__, textArea, Justification::topLeft);
 }
 
 void SG323AudioProcessorEditor::resized()
@@ -282,7 +303,10 @@ void SG323AudioProcessorEditor::resized()
   urlButton.setBounds(static_cast<int>(boxAreaMainWidth*urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth*urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   boxAreaMain.removeFromTop(static_cast<int>(boxAreaMain.getHeight() * menuBarHeight));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.95833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
-  juce::Rectangle<int> boxArea2(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.30833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
+
+  juce::Rectangle<int> boxArea3(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.5), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.6), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
+
+  juce::Rectangle<int> boxArea2(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.6), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
 
   auto area = getLocalBounds();
   int areaHeight = static_cast<int>(area.getHeight() * 0.5f);
@@ -291,6 +315,7 @@ void SG323AudioProcessorEditor::resized()
 
   programBox.setBounds(boxArea);
   delayBox.setBounds(boxArea2);
+  preDelayBox.setBounds(boxArea3);
   inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   lfdecaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   hfdecaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));

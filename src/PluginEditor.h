@@ -57,6 +57,7 @@ private:
 
   juce::ComboBox programBox;
   juce::ComboBox delayBox;
+  juce::ComboBox preDelayBox;
   juce::Slider predelaySlider;
   juce::Slider decaySlider;
   juce::Slider mixSlider;
@@ -80,6 +81,7 @@ private:
 
   std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> programBoxAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> delayBoxAttachment;
+  std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> preDelayBoxAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> decaySliderAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> predelaySliderAttachment;
   std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mixSliderAttachment;
