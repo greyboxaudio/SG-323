@@ -127,7 +127,7 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    auto delayBufferSize = sampleRate * 2.084;
+    auto delayBufferSize = sampleRate * 1.024;
     // set up filters
     lastSampleRate = static_cast<float>(sampleRate);
     float smoothSlow{0.1f};
@@ -453,7 +453,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         unsigned int delayAddress = delayBaseAddr + 16;
         unsigned int gainModContAddress = gainModContBaseAddr + 8;
         unsigned int gainAddress = gainBaseAddr + 8;
-        float feedbackDelayGainMult = -0.29f;
+        float feedbackDelayGainMult = -0.33f;
         float feedbackOutputSample{};
         float feedbackDelayTime{};
         float feedbackDelayGain{};
@@ -479,11 +479,11 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             float feedbackGain{};
             if (nGSN == 0)
             {
-                feedbackGain = gainCeiling[1 + d] * -0.00390625f;
+                feedbackGain = gainCeiling[1 + d] * -0.00392156f;
             }
             else
             {
-                feedbackGain = gainCeiling[1 + d] * 0.00390625f;
+                feedbackGain = gainCeiling[1 + d] * 0.00392156f;
             }
             long readPosition = delayTaps[1 + d];
             int writeIndex = writeAddressArray[writePosition];
@@ -512,11 +512,11 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             unsigned int nGSN = gainData[gainAddress + d] >> 7;
             if (nGSN == 0)
             {
-                outputGainArray[d] = gainCeiling[16 + d] * -0.00390625f;
+                outputGainArray[d] = gainCeiling[16 + d] * -0.00392156f;
             }
             else
             {
-                outputGainArray[d] = gainCeiling[16 + d] * 0.00390625f;
+                outputGainArray[d] = gainCeiling[16 + d] * 0.00392156f;
             }
             long readPosition = delayTaps[16 + d];
             int writeIndex = writeAddressArray[writePosition];
@@ -533,7 +533,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         float randomSample = randomBuffer.getSample(0, i);
         if (randomSample < 0)
         {
-            randomSample *= -0.33f;
+            randomSample *= -1.0f;
         }
         // scale randomSample by a certain amount
         float randomSampleMult = 8.0f;
