@@ -127,7 +127,7 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    auto delayBufferSize = sampleRate * 1.024;
+    auto delayBufferSize = sampleRate * 2.084;
     // set up filters
     lastSampleRate = static_cast<float>(sampleRate);
     float smoothSlow{0.1f};
@@ -171,8 +171,8 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     fractionalDelay.prepare(spec);
     fractionalDelay.reset();
     fractionalDelay.setMaximumDelayInSamples(static_cast<int>(delayBufferSize));
-    modScale = lastSampleRate * 0.00003125f; //scale modulation counter for samplerates > 32kHz
-    modRateCeiling = static_cast<int>(16 * modScale); //scale counter ceiling for samplerates > 32kHz
+    modScale = lastSampleRate * 0.00003125f;          // scale modulation counter for samplerates > 32kHz
+    modRateCeiling = static_cast<int>(16 * modScale); // scale counter ceiling for samplerates > 32kHz
     int IIR_sr{0};
     if (lastSampleRate == 48000.0)
     {
@@ -439,7 +439,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         fractionalDelay.pushSample(0, data[i]);
         // calculate base address factors
         unsigned int decayTime = 15;
-        unsigned int preDelay = 3;
+        unsigned int preDelay = static_cast<int>(*apvts.getRawParameterValue("DELAY"));
+        preDelay = sgLookup[preDelay];
         unsigned int gainBaseAddr = ((decayTime & 0x07) << 5) | (programId << 8) | ((decayTime >> 3) << 12);
         unsigned int delayBaseAddr = ((preDelay & 0x07) << 6) | ((programId & 0x07) << 9) | ((preDelay >> 3) << 12) | ((programId >> 3) << 13);
         // calculate write tap (=test tap)
@@ -579,7 +580,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         float nextPreDelayValue = predelaySmooth.getNextValue();
         for (int d = 0; d < 4; d++)
         {
-            //outputDelayTime = ((programId * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
+            // outputDelayTime = ((programId * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
             outputDelayTime = outputDelayArray[d] + (nextPreDelayValue * 0.001f);
             outputDelayGain = outputGainArray[d] * outputDelayGainMult;
             leftOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, false) * outputDelayGain;
@@ -587,12 +588,12 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         // right output taps
         for (int d = 4; d < 7; d++)
         {
-            //outputDelayTime = ((programId * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
+            // outputDelayTime = ((programId * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
             outputDelayTime = outputDelayArray[d] + (nextPreDelayValue * 0.001f);
             outputDelayGain = outputGainArray[d] * outputDelayGainMult;
             rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, false) * outputDelayGain;
         }
-        //outputDelayTime = ((programId * outputDelayArray[7]) + outputDelayArray[7 + 8] + nextPreDelayValue) * 0.001f;
+        // outputDelayTime = ((programId * outputDelayArray[7]) + outputDelayArray[7 + 8] + nextPreDelayValue) * 0.001f;
         outputDelayTime = outputDelayArray[7] + (nextPreDelayValue * 0.001f);
         outputDelayGain = outputGainArray[7] * outputDelayGainMult;
         rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, true) * outputDelayGain;
@@ -687,7 +688,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
 
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PROGRAM", "Program",
-                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon" ,"Program 9" ,"Program A" ,"Program B" ,"Program C" ,"Program D" ,"Program E" ,"Program F" ,"Program 0"), 3));
+                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon", "Program 9", "Program A", "Program B", "Program C", "Program D", "Program E", "Program F", "Program 0"), 3));
+    parameters.push_back(std::make_unique<juce::AudioParameterChoice>("DELAY", "Delay",
+                                                                      juce::StringArray("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"), 3));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "Pre Delay", 0.0f, 320.0f, 0.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 100.0f, 70.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("MIX", "Mix", 0.0f, 100.0f, 50.0f));

@@ -96,6 +96,27 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
   programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
 
+  delayBox.addItem("1", 1);
+  delayBox.addItem("2", 2);
+  delayBox.addItem("3", 3);
+  delayBox.addItem("4", 4);
+  delayBox.addItem("5", 5);
+  delayBox.addItem("6", 6);
+  delayBox.addItem("7", 7);
+  delayBox.addItem("8", 8);
+  delayBox.addItem("9", 9);
+  delayBox.addItem("10", 10);
+  delayBox.addItem("11", 11);
+  delayBox.addItem("12", 12);
+  delayBox.addItem("13", 13);
+  delayBox.addItem("14", 14);
+  delayBox.addItem("15", 15);
+  delayBox.addItem("16", 16);
+  delayBox.setLookAndFeel(&redBox);
+  addAndMakeVisible(delayBox);
+  redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
+  delayBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "DELAY", delayBox);
+
   customKnobLabel.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
 
   int textBoxWidth = 100;
@@ -236,8 +257,8 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
-  g.drawText("LEO MINOR", textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
-  g.drawText("SG-323 DIGITAL REVERBERATOR", textArea, Justification::topLeft);
+  g.drawText(__DATE__ " " __TIME__, textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
+  g.drawText("SG-323", textArea, Justification::topLeft);
 }
 
 void SG323AudioProcessorEditor::resized()
@@ -261,6 +282,7 @@ void SG323AudioProcessorEditor::resized()
   urlButton.setBounds(static_cast<int>(boxAreaMainWidth*urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth*urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   boxAreaMain.removeFromTop(static_cast<int>(boxAreaMain.getHeight() * menuBarHeight));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.95833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
+  juce::Rectangle<int> boxArea2(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.30833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
 
   auto area = getLocalBounds();
   int areaHeight = static_cast<int>(area.getHeight() * 0.5f);
@@ -268,6 +290,7 @@ void SG323AudioProcessorEditor::resized()
   auto areaBottom = area.removeFromBottom(areaHeight);
 
   programBox.setBounds(boxArea);
+  delayBox.setBounds(boxArea2);
   inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   lfdecaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   hfdecaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
