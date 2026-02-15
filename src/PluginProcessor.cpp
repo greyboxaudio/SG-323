@@ -442,8 +442,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         decayTime = sgLookup[decayTime];
         unsigned int preDelay = static_cast<int>(*apvts.getRawParameterValue("PDELAY"));
         preDelay = sgLookup[preDelay];
-        unsigned int gainBaseAddr = ((decayTime & 0x07) << 5) | (programId << 8) | ((decayTime >> 3) << 12);
-        unsigned int delayBaseAddr = ((preDelay & 0x07) << 6) | ((programId & 0x07) << 9) | ((preDelay >> 3) << 12) | ((programId >> 3) << 13);
+        unsigned int gainBaseAddr = ((decayTime & 0x7) << 5) | (programId << 8) | ((decayTime & 0x8) << 9);
+        unsigned int delayBaseAddr = ((preDelay & 0x7) << 6) | ((programId & 0x7) << 9) | ((preDelay & 0x8) << 9) | ((programId & 0x8) << 10);
         // calculate write tap (=test tap)
         int rowInput = nROW;
         int columnInput = nCOLUMN;
@@ -453,7 +453,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         unsigned int delayAddress = delayBaseAddr + 16;
         unsigned int gainModContAddress = gainModContBaseAddr + 8;
         unsigned int gainAddress = gainBaseAddr + 8;
-        float feedbackDelayGainMult = -0.33f;
+        float feedbackDelayGainMult = -0.29f;
         float feedbackOutputSample{};
         float feedbackDelayTime{};
         float feedbackDelayGain{};
@@ -479,11 +479,11 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             float feedbackGain{};
             if (nGSN == 0)
             {
-                feedbackGain = gainCeiling[1 + d] * -0.00392156f;
+                feedbackGain = gainCeiling[1 + d] * -0.00392156f; // = 1/255
             }
             else
             {
-                feedbackGain = gainCeiling[1 + d] * 0.00392156f;
+                feedbackGain = gainCeiling[1 + d] * 0.00392156f; // = 1/255
             }
             long readPosition = delayTaps[1 + d];
             int writeIndex = writeAddressArray[writePosition];
@@ -499,24 +499,24 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             feedbackDelayGain = feedbackGain * (feedbackDelayGainMult * nextDecayValue);
             feedbackOutputSample += fractionalDelay.popSample(0, feedbackDelayTime * lastSampleRate, false) * feedbackDelayGain;
         }
-        gainAddress = gainBaseAddr + 23;
         delayModAddress = delayBaseAddr + 45;
         delayAddress = delayBaseAddr + 46;
+        gainAddress = gainBaseAddr + 23;
         for (int d = 0; d < 8; d++)
         {
             rowInput = delayData[delayModAddress + d * 2] + nROW;
             columnInput = delayData[delayAddress + d * 2] + nCOLUMN;
             delayTaps[16 + d] = calculateAddress(rowInput, columnInput);
 
-            gainCeiling[16 + d] = (gainData[gainAddress + d] << 1) & 255;
+            gainCeiling[16 + d] = (gainData[gainAddress + d] << 1) & 0xff;
             unsigned int nGSN = gainData[gainAddress + d] >> 7;
             if (nGSN == 0)
             {
-                outputGainArray[d] = gainCeiling[16 + d] * -0.00392156f;
+                outputGainArray[d] = gainCeiling[16 + d] * -0.00392156f; // = 1/255
             }
             else
             {
-                outputGainArray[d] = gainCeiling[16 + d] * 0.00392156f;
+                outputGainArray[d] = gainCeiling[16 + d] * 0.00392156f; // = 1/255
             }
             long readPosition = delayTaps[16 + d];
             int writeIndex = writeAddressArray[writePosition];
