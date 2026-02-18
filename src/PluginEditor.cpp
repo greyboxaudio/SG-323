@@ -52,6 +52,11 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   addAndMakeVisible(resizeButton);
   resizeButton.setClickingTogglesState(true);
 
+  reverbClearButton.setButtonText("RVBCLR");
+  reverbClearButton.addListener(this);
+  reverbClearButton.setLookAndFeel(&customTextButton);
+  addAndMakeVisible(reverbClearButton);
+
   customToggleButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
 
   vintageButton.setButtonText("Vintage");
@@ -95,48 +100,6 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   addAndMakeVisible(programBox);
   redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
   programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
-
-  delayBox.addItem("d1", 1);
-  delayBox.addItem("d2", 2);
-  delayBox.addItem("d3", 3);
-  delayBox.addItem("d4", 4);
-  delayBox.addItem("d5", 5);
-  delayBox.addItem("d6", 6);
-  delayBox.addItem("d7", 7);
-  delayBox.addItem("d8", 8);
-  delayBox.addItem("d9", 9);
-  delayBox.addItem("d10", 10);
-  delayBox.addItem("d11", 11);
-  delayBox.addItem("d12", 12);
-  delayBox.addItem("d13", 13);
-  delayBox.addItem("d14", 14);
-  delayBox.addItem("d15", 15);
-  delayBox.addItem("d16", 16);
-  delayBox.setLookAndFeel(&redBox);
-  addAndMakeVisible(delayBox);
-  redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
-  delayBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "DELAY", delayBox);
-
-  preDelayBox.addItem("p1", 1);
-  preDelayBox.addItem("p2", 2);
-  preDelayBox.addItem("p3", 3);
-  preDelayBox.addItem("p4", 4);
-  preDelayBox.addItem("p5", 5);
-  preDelayBox.addItem("p6", 6);
-  preDelayBox.addItem("p7", 7);
-  preDelayBox.addItem("p8", 8);
-  preDelayBox.addItem("p9", 9);
-  preDelayBox.addItem("p10", 10);
-  preDelayBox.addItem("p11", 11);
-  preDelayBox.addItem("p12", 12);
-  preDelayBox.addItem("p13", 13);
-  preDelayBox.addItem("p14", 14);
-  preDelayBox.addItem("p15", 15);
-  preDelayBox.addItem("p16", 16);
-  preDelayBox.setLookAndFeel(&redBox);
-  addAndMakeVisible(preDelayBox);
-  redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
-  preDelayBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PDELAY", preDelayBox);
 
   customKnobLabel.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
 
@@ -278,8 +241,8 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
-  g.drawText(__DATE__, textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
-  g.drawText(__TIME__, textArea, Justification::topLeft);
+  g.drawText("LEO MINOR", textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
+  g.drawText("SG-323 DIGITAL REVERBERATOR", textArea, Justification::topLeft);
 }
 
 void SG323AudioProcessorEditor::resized()
@@ -299,14 +262,10 @@ void SG323AudioProcessorEditor::resized()
   resizeButton.setBounds(0, 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   vintageButton.setBounds(resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
-  // mixLockButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
+  reverbClearButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   urlButton.setBounds(static_cast<int>(boxAreaMainWidth*urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth*urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   boxAreaMain.removeFromTop(static_cast<int>(boxAreaMain.getHeight() * menuBarHeight));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.95833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
-
-  juce::Rectangle<int> boxArea3(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.5), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.6), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
-
-  juce::Rectangle<int> boxArea2(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.6), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
 
   auto area = getLocalBounds();
   int areaHeight = static_cast<int>(area.getHeight() * 0.5f);
@@ -314,8 +273,6 @@ void SG323AudioProcessorEditor::resized()
   auto areaBottom = area.removeFromBottom(areaHeight);
 
   programBox.setBounds(boxArea);
-  delayBox.setBounds(boxArea2);
-  preDelayBox.setBounds(boxArea3);
   inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   lfdecaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   hfdecaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
@@ -326,6 +283,10 @@ void SG323AudioProcessorEditor::resized()
 
 void SG323AudioProcessorEditor::buttonClicked(juce::Button *button)
 {
+  if (button == &reverbClearButton)
+  {
+    audioProcessor.clearButtonState = true;
+  }
   if (button == &resizeButton)
   {
     if (resizeButton.getToggleState() == true)

@@ -171,6 +171,8 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     fractionalDelay.prepare(spec);
     fractionalDelay.reset();
     fractionalDelay.setMaximumDelayInSamples(static_cast<int>(delayBufferSize));
+    fifoBuffer.setSize(1, fifoBufferSize);
+    fifoBuffer.clear(0, 0, fifoBufferSize);
     modScale = lastSampleRate * 0.00003125f;          // scale modulation counter for samplerates > 32kHz
     modRateCeiling = static_cast<int>(16 * modScale); // scale counter ceiling for samplerates > 32kHz
     int IIR_sr{0};
@@ -343,13 +345,23 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     randomBuffer.setSize(1, bufferSize);
     noiseBuffer.setSize(1, bufferSize);
     bitBuffer.setSize(1, bufferSize);
-    fifoBuffer.setSize(1, fifoBufferSize);
     inputBuffer.setSize(totalNumInputChannels, bufferSize);
     outputBuffer.setSize(totalNumOutputChannels, bufferSize);
-    if (initSampleRateCount == 0)
+    // reverb clear
+    if (clearButtonState)
     {
+        clearButtonState = false;
+        fractionalDelay.reset();
         fifoBuffer.clear(0, 0, fifoBufferSize);
-        initSampleRateCount = 1;
+        inputHighPass.reset();
+        inputLowPass.reset();
+        preEmphasis.reset();
+        feedBackHighPass.reset();
+        feedBackLowPass.reset();
+        feedBackDip.reset();
+        antiAliasFirstSection.reset();
+        antiAliasSecondSection.reset();
+        antiAliasThirdSection.reset();
     }
     // set up dsp elements
     juce::dsp::AudioBlock<float> monoBlock(monoBuffer);
@@ -538,7 +550,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             {
                 feedbackDelayTime += 65536;
             }
-            outputDelayArray[d] = feedbackDelayTime * 0.00003125f + (preDelayMod[preDelayOffset+d] * 0.01f * nextPreDelayValue);
+            outputDelayArray[d] = feedbackDelayTime * 0.00003125f + (preDelayMod[preDelayOffset + 1 + d] * 0.01f * nextPreDelayValue);
         }
         feedbackBuffer.setSample(0, i, feedbackOutputSample);
         // process random sample
