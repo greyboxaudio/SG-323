@@ -460,6 +460,10 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         for (int d = 0; d < 15; d++)
         {
             rowInput = delayModData[delayModAddress + d] + nROW;
+            if (moddis)
+            {
+                rowInput = nROW;
+            }
             columnInput = delayData[delayAddress + d * 2] + nCOLUMN;
             delayTaps[1 + d] = calculateAddress(rowInput, columnInput);
             unsigned int gainModContOut = gainModControlData[gainModContAddress + d] & 0x7;
@@ -467,6 +471,10 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             unsigned int gainModAddress = gainModContOut | gainModBaseAddr;
             unsigned int gainModOut = gainModData[gainModAddress];
             unsigned int gainOut = (gainData[gainAddress + d] << 1) & 0xff;
+            if (moddis)
+            {
+                nGainModEnable = 1;
+            }
             if (gainModOut < gainOut && nGainModEnable == 0)
             {
                 gainCeiling[1 + d] = gainModOut;
@@ -546,6 +554,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         {
             unsigned int modRateCount = rateLevel | (programId << 4);
             modClockOut = static_cast<int>((modRateCountData[modRateCount] & 0xf) * modScale);
+            moddis = static_cast<bool>((modRateCountData[modRateCount] & 0x10) >> 4);
         }
         unsigned int modCarry = modClockOut + 1;
         if (modCarry >= modRateCeiling)
