@@ -214,7 +214,7 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     s3a1 = static_cast<float>(ellipticCoefficients[IIR_base + 16]);
     s3a2 = static_cast<float>(ellipticCoefficients[IIR_base + 17]);
     // store write address sequence
-    for (int i = 0; i < 65535; i++)
+    for (int i = 0; i < 65536; i++)
     {
         int x = calculateAddress(nROW, nCOLUMN);
         writeAddressArray[x] = i;
@@ -462,11 +462,11 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             rowInput = delayModData[delayModAddress + d] + nROW;
             columnInput = delayData[delayAddress + d * 2] + nCOLUMN;
             delayTaps[1 + d] = calculateAddress(rowInput, columnInput);
-            unsigned int gainModContOut = gainModControlData[gainModContAddress + d] & 0x07;
-            unsigned int nGainModEnable = (gainModControlData[gainModContAddress + d] & 0x08) >> 3;
+            unsigned int gainModContOut = gainModControlData[gainModContAddress + d] & 0x7;
+            unsigned int nGainModEnable = (gainModControlData[gainModContAddress + d] & 0x8) >> 3;
             unsigned int gainModAddress = gainModContOut | gainModBaseAddr;
             unsigned int gainModOut = gainModData[gainModAddress];
-            unsigned int gainOut = (gainData[gainAddress + d] << 1) & 255;
+            unsigned int gainOut = (gainData[gainAddress + d] << 1) & 0xff;
             if (gainModOut < gainOut && nGainModEnable == 0)
             {
                 gainCeiling[1 + d] = gainModOut;
@@ -556,7 +556,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         {
             MCCK = 0;
         }
-        nROW = countWriteAddress(writeAddress) & 255;
+        nROW = countWriteAddress(writeAddress) & 0xff;
         nCOLUMN = countWriteAddress(writeAddress) >> 8;
         writeAddress = countWriteAddress(writeAddress);
         if (MCCK == 1)
@@ -691,9 +691,9 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PROGRAM", "Program",
                                                                       juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon", "Program 9", "Program A", "Program B", "Program C", "Program D", "Program E", "Program F", "Program 0"), 3));
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("DELAY", "Delay",
-                                                                      juce::StringArray("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"), 3));
+                                                                      juce::StringArray("d1", "d2", "d3", "d4", "d5", "d6", "d7", "d8", "d9", "d10", "d11", "d12", "d13", "d14", "d15", "d16"), 3));
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PDELAY", "PDelay",
-                                                                      juce::StringArray("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"), 3));
+                                                                      juce::StringArray("p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9", "p10", "p11", "p12", "p13", "p14", "p15", "p16"), 3));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "Pre Delay", 0.0f, 320.0f, 0.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 100.0f, 70.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("MIX", "Mix", 0.0f, 100.0f, 50.0f));
