@@ -80,6 +80,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   urlButton.setJustificationType(juce::Justification::centred);
   urlButton.setColour(juce::HyperlinkButton::textColourId, juce::Colour(255, 255, 255));
 
+  programBox.addSectionHeading ("STARGATE 323");
   programBox.addItem("Plate 1", 1);
   programBox.addItem("Plate 2", 2);
   programBox.addItem("Chamber", 3);
@@ -88,6 +89,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addItem("Large Hall", 6);
   programBox.addItem("Cathedral", 7);
   programBox.addItem("Canyon", 8);
+  programBox.addSeparator();
+  programBox.addSectionHeading ("STARGATE 626");
   programBox.addItem("Reverb 9", 9);
   programBox.addItem("Reverb A", 10);
   programBox.addItem("Reverb B", 11);
