@@ -118,7 +118,7 @@ int countWriteAddress(int writeAddress)
 float roundBits(float inputSample)
 {
     int roundedSample = static_cast<int>(inputSample * 32768);
-    float outputSample = static_cast<float>(roundedSample * 0.000030518);
+    float outputSample = static_cast<float>(roundedSample * 0.000030517578125); // = 1/32768
     return (outputSample);
 }
 
@@ -127,7 +127,7 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-    auto delayBufferSize = sampleRate * 1.024;
+    auto delayBufferSize = sampleRate * 2.048;
     // set up filters
     lastSampleRate = static_cast<float>(sampleRate);
     float smoothSlow{0.1f};
@@ -171,8 +171,10 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     fractionalDelay.prepare(spec);
     fractionalDelay.reset();
     fractionalDelay.setMaximumDelayInSamples(static_cast<int>(delayBufferSize));
-    modScale = lastSampleRate * 0.00003125f; //scale modulation counter for samplerates > 32kHz
-    modRateCeiling = static_cast<int>(16 * modScale); //scale counter ceiling for samplerates > 32kHz
+    fifoBuffer.setSize(1, fifoBufferSize);
+    fifoBuffer.clear(0, 0, fifoBufferSize);
+    modScale = lastSampleRate * 0.00003125f;          // scale modulation counter for samplerates > 32kHz
+    modRateCeiling = static_cast<int>(16 * modScale); // scale counter ceiling for samplerates > 32kHz
     int IIR_sr{0};
     if (lastSampleRate == 48000.0)
     {
@@ -214,11 +216,11 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     s3a1 = static_cast<float>(ellipticCoefficients[IIR_base + 16]);
     s3a2 = static_cast<float>(ellipticCoefficients[IIR_base + 17]);
     // store write address sequence
-    for (int i = 0; i < 65535; i++)
+    for (int i = 0; i < 65536; i++)
     {
         int x = calculateAddress(nROW, nCOLUMN);
         writeAddressArray[x] = i;
-        nROW = countWriteAddress(writeAddress) & 255;
+        nROW = countWriteAddress(writeAddress) & 0xff;
         nCOLUMN = countWriteAddress(writeAddress) >> 8;
         writeAddress = countWriteAddress(writeAddress);
     };
@@ -335,21 +337,31 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     // interleaved by keeping the same state.
     auto bufferSize = buffer.getNumSamples();
     // read program selection from the UI
-    int programId = static_cast<int>(*apvts.getRawParameterValue("PROGRAM"));
-    programId = sgLookup[programId];
+    int rawProgramId = static_cast<int>(*apvts.getRawParameterValue("PROGRAM"));
+    int programId = sgLookup[rawProgramId];
     // prepare audio buffers
     monoBuffer.setSize(1, bufferSize);
     feedbackBuffer.setSize(1, bufferSize);
     randomBuffer.setSize(1, bufferSize);
     noiseBuffer.setSize(1, bufferSize);
     bitBuffer.setSize(1, bufferSize);
-    fifoBuffer.setSize(1, fifoBufferSize);
     inputBuffer.setSize(totalNumInputChannels, bufferSize);
     outputBuffer.setSize(totalNumOutputChannels, bufferSize);
-    if (initSampleRateCount == 0)
+    // reverb clear
+    if (clearButtonState)
     {
+        clearButtonState = false;
+        fractionalDelay.reset();
         fifoBuffer.clear(0, 0, fifoBufferSize);
-        initSampleRateCount = 1;
+        inputHighPass.reset();
+        inputLowPass.reset();
+        preEmphasis.reset();
+        feedBackHighPass.reset();
+        feedBackLowPass.reset();
+        feedBackDip.reset();
+        antiAliasFirstSection.reset();
+        antiAliasSecondSection.reset();
+        antiAliasThirdSection.reset();
     }
     // set up dsp elements
     juce::dsp::AudioBlock<float> monoBlock(monoBuffer);
@@ -438,10 +450,8 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
     {
         fractionalDelay.pushSample(0, data[i]);
         // calculate base address factors
-        unsigned int decayTime = 15;
-        unsigned int preDelay = 3;
-        unsigned int gainBaseAddr = ((decayTime & 0x07) << 5) | (programId << 8) | ((decayTime >> 3) << 12);
-        unsigned int delayBaseAddr = ((preDelay & 0x07) << 6) | ((programId & 0x07) << 9) | ((preDelay >> 3) << 12) | ((programId >> 3) << 13);
+        unsigned int gainBaseAddr = ((decayTime & 0x7) << 5) | (programId << 8) | ((decayTime & 0x8) << 9);
+        unsigned int delayBaseAddr = ((preDelay & 0x7) << 6) | ((programId & 0x7) << 9) | ((preDelay & 0x8) << 9) | ((programId & 0x8) << 10);
         // calculate write tap (=test tap)
         int rowInput = nROW;
         int columnInput = nCOLUMN;
@@ -455,16 +465,31 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         float feedbackOutputSample{};
         float feedbackDelayTime{};
         float feedbackDelayGain{};
+        //
+        predelaySmooth.setTargetValue(adjustablePreDelay);
+        float nextPreDelayValue = predelaySmooth.getNextValue();
+        int preDelayOffset = rawProgramId * 9;
+        unsigned int modRateCount = rateLevel | (programId << 4);
+        moddis = static_cast<bool>((modRateCountData[modRateCount] & 0x10) >> 4);
+        //
         for (int d = 0; d < 15; d++)
         {
             rowInput = delayModData[delayModAddress + d] + nROW;
+            if (moddis)
+            {
+                rowInput = nROW;
+            }
             columnInput = delayData[delayAddress + d * 2] + nCOLUMN;
             delayTaps[1 + d] = calculateAddress(rowInput, columnInput);
-            unsigned int gainModContOut = gainModControlData[gainModContAddress + d] & 0x07;
-            unsigned int nGainModEnable = (gainModControlData[gainModContAddress + d] & 0x08) >> 3;
+            unsigned int gainModContOut = gainModControlData[gainModContAddress + d] & 0x7;
+            unsigned int nGainModEnable = (gainModControlData[gainModContAddress + d] & 0x8) >> 3;
             unsigned int gainModAddress = gainModContOut | gainModBaseAddr;
             unsigned int gainModOut = gainModData[gainModAddress];
-            unsigned int gainOut = (gainData[gainAddress + d] << 1) & 255;
+            unsigned int gainOut = (gainData[gainAddress + d] << 1) & 0xff;
+            if (moddis)
+            {
+                nGainModEnable = 1;
+            }
             if (gainModOut < gainOut && nGainModEnable == 0)
             {
                 gainCeiling[1 + d] = gainModOut;
@@ -477,11 +502,11 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             float feedbackGain{};
             if (nGSN == 0)
             {
-                feedbackGain = gainCeiling[1 + d] * -0.00390625f;
+                feedbackGain = gainCeiling[1 + d] * -0.00392156f; // = 1/255
             }
             else
             {
-                feedbackGain = gainCeiling[1 + d] * 0.00390625f;
+                feedbackGain = gainCeiling[1 + d] * 0.00392156f; // = 1/255
             }
             long readPosition = delayTaps[1 + d];
             int writeIndex = writeAddressArray[writePosition];
@@ -494,27 +519,28 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             decaySmooth.setTargetValue(adjustableDecay);
             float nextDecayValue = decaySmooth.getNextValue();
             feedbackDelayTime *= 0.00003125f;
+            feedbackDelayTime += (preDelayMod[preDelayOffset] * 0.01f * nextPreDelayValue);
             feedbackDelayGain = feedbackGain * (feedbackDelayGainMult * nextDecayValue);
             feedbackOutputSample += fractionalDelay.popSample(0, feedbackDelayTime * lastSampleRate, false) * feedbackDelayGain;
         }
-        gainAddress = gainBaseAddr + 23;
         delayModAddress = delayBaseAddr + 45;
         delayAddress = delayBaseAddr + 46;
+        gainAddress = gainBaseAddr + 23;
         for (int d = 0; d < 8; d++)
         {
             rowInput = delayData[delayModAddress + d * 2] + nROW;
             columnInput = delayData[delayAddress + d * 2] + nCOLUMN;
             delayTaps[16 + d] = calculateAddress(rowInput, columnInput);
 
-            gainCeiling[16 + d] = (gainData[gainAddress + d] << 1) & 255;
+            gainCeiling[16 + d] = (gainData[gainAddress + d] << 1) & 0xff;
             unsigned int nGSN = gainData[gainAddress + d] >> 7;
             if (nGSN == 0)
             {
-                outputGainArray[d] = gainCeiling[16 + d] * -0.00390625f;
+                outputGainArray[d] = gainCeiling[16 + d] * -0.00392156f; // = 1/255
             }
             else
             {
-                outputGainArray[d] = gainCeiling[16 + d] * 0.00390625f;
+                outputGainArray[d] = gainCeiling[16 + d] * 0.00392156f; // = 1/255
             }
             long readPosition = delayTaps[16 + d];
             int writeIndex = writeAddressArray[writePosition];
@@ -524,25 +550,24 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             {
                 feedbackDelayTime += 65536;
             }
-            outputDelayArray[d] = feedbackDelayTime * 0.00003125f;
+            outputDelayArray[d] = feedbackDelayTime * 0.00003125f + (preDelayMod[preDelayOffset + 1 + d] * 0.01f * nextPreDelayValue);
         }
         feedbackBuffer.setSample(0, i, feedbackOutputSample);
         // process random sample
         float randomSample = randomBuffer.getSample(0, i);
         if (randomSample < 0)
         {
-            randomSample *= -0.33f;
+            randomSample *= -1.0f;
         }
         // scale randomSample by a certain amount
         float randomSampleMult = 8.0f;
         randomSample *= randomSampleMult;
         // calculate rateLVL value
-        unsigned int rateLevel = rngsus(randomSample);
+        rateLevel = rngsus(randomSample);
         // mod rate counter
         modClockOut += 1;
         if (modClockOut == modRateCeiling)
         {
-            unsigned int modRateCount = rateLevel | (programId << 4);
             modClockOut = static_cast<int>((modRateCountData[modRateCount] & 0xf) * modScale);
         }
         unsigned int modCarry = modClockOut + 1;
@@ -554,7 +579,7 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         {
             MCCK = 0;
         }
-        nROW = countWriteAddress(writeAddress) & 255;
+        nROW = countWriteAddress(writeAddress) & 0xff;
         nCOLUMN = countWriteAddress(writeAddress) >> 8;
         writeAddress = countWriteAddress(writeAddress);
         if (MCCK == 1)
@@ -564,9 +589,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             {
                 modCount = 0;
             }
-            gainModContBaseAddr = (modCount >> 1) & 4064;
-            gainModBaseAddr = (modCount & 511) << 3;
-            delayModBaseAddr = (modCount >> 6) << 5;
+            gainModContBaseAddr = (modCount & 0x1fc0) >> 1;
+            gainModBaseAddr = (modCount & 0x1ff) << 3;
+            delayModBaseAddr = (modCount & 0x1fc0) >> 1;
         }
         // calculate output taps
         float outputDelayGainMult = 0.5f;
@@ -575,25 +600,20 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         float outputDelayTime{};
         float outputDelayGain{};
         // left output taps
-        predelaySmooth.setTargetValue(adjustablePreDelay);
-        float nextPreDelayValue = predelaySmooth.getNextValue();
         for (int d = 0; d < 4; d++)
         {
-            //outputDelayTime = ((programId * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
-            outputDelayTime = outputDelayArray[d] + (nextPreDelayValue * 0.001f);
+            outputDelayTime = outputDelayArray[d];
             outputDelayGain = outputGainArray[d] * outputDelayGainMult;
             leftOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, false) * outputDelayGain;
         }
         // right output taps
         for (int d = 4; d < 7; d++)
         {
-            //outputDelayTime = ((programId * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
-            outputDelayTime = outputDelayArray[d] + (nextPreDelayValue * 0.001f);
+            outputDelayTime = outputDelayArray[d];
             outputDelayGain = outputGainArray[d] * outputDelayGainMult;
             rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, false) * outputDelayGain;
         }
-        //outputDelayTime = ((programId * outputDelayArray[7]) + outputDelayArray[7 + 8] + nextPreDelayValue) * 0.001f;
-        outputDelayTime = outputDelayArray[7] + (nextPreDelayValue * 0.001f);
+        outputDelayTime = outputDelayArray[7];
         outputDelayGain = outputGainArray[7] * outputDelayGainMult;
         rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, true) * outputDelayGain;
         // add left channel to outputBuffer
@@ -687,8 +707,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout SG323AudioProcessor::createP
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
 
     parameters.push_back(std::make_unique<juce::AudioParameterChoice>("PROGRAM", "Program",
-                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon" ,"Program 9" ,"Program A" ,"Program B" ,"Program C" ,"Program D" ,"Program E" ,"Program F" ,"Program 0"), 3));
-    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "Pre Delay", 0.0f, 320.0f, 0.0f));
+                                                                      juce::StringArray("Plate 1", "Plate 2", "Chamber", "Small Hall", "Hall", "Large Hall", "Cathedral", "Canyon", "Reverb 9", "Reverb A", "Reverb B", "Delay C", "Delay D", "Delay E", "Delay F", "Reverb 0"), 3));
+    parameters.push_back(std::make_unique<juce::AudioParameterFloat>("PREDELAY", "Pre Delay", 0.0f, 100.0f, 0.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", 0.0f, 100.0f, 70.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("MIX", "Mix", 0.0f, 100.0f, 50.0f));
     parameters.push_back(std::make_unique<juce::AudioParameterFloat>("LFDECAY", "Low Frequency Decay", 20.0f, 480.0f, 20.0f));

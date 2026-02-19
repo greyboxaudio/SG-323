@@ -63,6 +63,7 @@ private:
   juce::Slider hfdecaySlider;
   juce::Slider inputGainSlider;
   juce::TextButton resizeButton;
+  juce::TextButton reverbClearButton;
   juce::ToggleButton vintageButton;
   juce::ToggleButton noiseButton;
   //juce::ToggleButton mixLockButton;

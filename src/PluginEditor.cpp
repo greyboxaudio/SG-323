@@ -52,6 +52,11 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   addAndMakeVisible(resizeButton);
   resizeButton.setClickingTogglesState(true);
 
+  reverbClearButton.setButtonText("RVBCLR");
+  reverbClearButton.addListener(this);
+  reverbClearButton.setLookAndFeel(&customTextButton);
+  addAndMakeVisible(reverbClearButton);
+
   customToggleButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
 
   vintageButton.setButtonText("Vintage");
@@ -75,6 +80,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   urlButton.setJustificationType(juce::Justification::centred);
   urlButton.setColour(juce::HyperlinkButton::textColourId, juce::Colour(255, 255, 255));
 
+  programBox.addSectionHeading ("STARGATE 323");
   programBox.addItem("Plate 1", 1);
   programBox.addItem("Plate 2", 2);
   programBox.addItem("Chamber", 3);
@@ -83,14 +89,16 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addItem("Large Hall", 6);
   programBox.addItem("Cathedral", 7);
   programBox.addItem("Canyon", 8);
-  programBox.addItem("Program 9", 9);
-  programBox.addItem("Program A", 10);
-  programBox.addItem("Program B", 11);
-  programBox.addItem("Program C", 12);
-  programBox.addItem("Program D", 13);
-  programBox.addItem("Program E", 14);
-  programBox.addItem("Program F", 15);
-  programBox.addItem("Program 0", 16);
+  programBox.addSeparator();
+  programBox.addSectionHeading ("STARGATE 626");
+  programBox.addItem("Reverb 9", 9);
+  programBox.addItem("Reverb A", 10);
+  programBox.addItem("Reverb B", 11);
+  programBox.addItem("Delay C", 12);
+  programBox.addItem("Delay D", 13);
+  programBox.addItem("Delay E", 14);
+  programBox.addItem("Delay F", 15);
+  programBox.addItem("Reverb 0", 16);
   programBox.setLookAndFeel(&redBox);
   addAndMakeVisible(programBox);
   redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
@@ -257,7 +265,7 @@ void SG323AudioProcessorEditor::resized()
   resizeButton.setBounds(0, 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   vintageButton.setBounds(resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
-  // mixLockButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, boxAreaMainHeight * menuBarHeight * 3, boxAreaMainHeight * menuBarHeight);
+  reverbClearButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   urlButton.setBounds(static_cast<int>(boxAreaMainWidth*urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth*urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   boxAreaMain.removeFromTop(static_cast<int>(boxAreaMain.getHeight() * menuBarHeight));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.95833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
@@ -278,6 +286,10 @@ void SG323AudioProcessorEditor::resized()
 
 void SG323AudioProcessorEditor::buttonClicked(juce::Button *button)
 {
+  if (button == &reverbClearButton)
+  {
+    audioProcessor.clearButtonState = true;
+  }
   if (button == &resizeButton)
   {
     if (resizeButton.getToggleState() == true)

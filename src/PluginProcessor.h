@@ -59,6 +59,7 @@ public:
 
     void updateFilter();
     juce::AudioProcessorValueTreeState apvts;
+    std::atomic<bool> clearButtonState;
 
 private:
     juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
@@ -70,7 +71,7 @@ private:
     juce::AudioBuffer<float> noiseBuffer;
     juce::AudioBuffer<float> bitBuffer;
 
-    int fifoBufferSize = 8192;
+    const int fifoBufferSize = 8192;
     juce::AbstractFifo abstractFifo{fifoBufferSize};
     int start1, size1, start2, size2;
     juce::AudioBuffer<float> fifoBuffer;
@@ -99,11 +100,10 @@ private:
     juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>> antiAliasSecondSection;
     juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients<float>> antiAliasThirdSection;
 
-    float outputGainArray[8]{-0.996f, 0.996f, 0.622f, 0.378f, 0.378f, 0.622f, 0.966f, -0.966f};
-    float outputDelayArray[16]{10.5f, 7.0f, 3.5f, 0.0f, 19.0f, 13.0f, 7.0f, 1.0f, 11.5f, 8.0f, 4.5f, 1.0f, 20.0f, 14.0f, 8.0f, 2.0f};
+    float outputGainArray[8]{};
+    float outputDelayArray[8]{};
     unsigned long delayTaps[24];
     unsigned int gainCeiling[24];
-    int initSampleRateCount{};
     float lastSampleRate{};
     float nextHighPassValue{};
     float nextLowPassValue{};
@@ -120,7 +120,12 @@ private:
     unsigned int gainModContBaseAddr{};
     unsigned int gainModBaseAddr{};
     unsigned int delayModBaseAddr{};
+    bool moddis;
+    unsigned int rateLevel{};
+    unsigned int decayTime{15};
+    unsigned int preDelay{3};
 
+    float preDelayMod[144]{0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.0,0.2415,0.1680,0.0945,0.0210,0.4200,0.2940,0.1680,0.0210,1.952,1.9500,1.9500,1.9500,1.9500,1.9500,1.9500,1.9500,1.9500,1.952,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.952,0.9750,0.9750,0.9750,0.9750,1.9500,1.9500,1.9500,1.9500,1.800,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200,0.3200};
     float s1a0{1.0f};
     float s1a1{1.0f};
     float s1a2{1.0f};
