@@ -118,7 +118,7 @@ int countWriteAddress(int writeAddress)
 float roundBits(float inputSample)
 {
     int roundedSample = static_cast<int>(inputSample * 32768);
-    float outputSample = static_cast<float>(roundedSample * 0.000030518);
+    float outputSample = static_cast<float>(roundedSample * 0.000030517578125); // = 1/32768
     return (outputSample);
 }
 
@@ -220,7 +220,7 @@ void SG323AudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock)
     {
         int x = calculateAddress(nROW, nCOLUMN);
         writeAddressArray[x] = i;
-        nROW = countWriteAddress(writeAddress) & 255;
+        nROW = countWriteAddress(writeAddress) & 0xff;
         nCOLUMN = countWriteAddress(writeAddress) >> 8;
         writeAddress = countWriteAddress(writeAddress);
     };
@@ -589,9 +589,9 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
             {
                 modCount = 0;
             }
-            gainModContBaseAddr = (modCount >> 1) & 4064;
-            gainModBaseAddr = (modCount & 511) << 3;
-            delayModBaseAddr = (modCount >> 6) << 5;
+            gainModContBaseAddr = (modCount & 0x1fc0) >> 1;
+            gainModBaseAddr = (modCount & 0x1ff) << 3;
+            delayModBaseAddr = (modCount & 0x1fc0) >> 1;
         }
         // calculate output taps
         float outputDelayGainMult = 0.5f;
@@ -602,7 +602,6 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         // left output taps
         for (int d = 0; d < 4; d++)
         {
-            // outputDelayTime = ((programId * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
             outputDelayTime = outputDelayArray[d];
             outputDelayGain = outputGainArray[d] * outputDelayGainMult;
             leftOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, false) * outputDelayGain;
@@ -610,12 +609,10 @@ void SG323AudioProcessor::processBlock(juce::AudioBuffer<float> &buffer, juce::M
         // right output taps
         for (int d = 4; d < 7; d++)
         {
-            // outputDelayTime = ((programId * outputDelayArray[d]) + outputDelayArray[d + 8] + nextPreDelayValue) * 0.001f;
             outputDelayTime = outputDelayArray[d];
             outputDelayGain = outputGainArray[d] * outputDelayGainMult;
             rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, false) * outputDelayGain;
         }
-        // outputDelayTime = ((programId * outputDelayArray[7]) + outputDelayArray[7 + 8] + nextPreDelayValue) * 0.001f;
         outputDelayTime = outputDelayArray[7];
         outputDelayGain = outputGainArray[7] * outputDelayGainMult;
         rightOutputSample += fractionalDelay.popSample(0, outputDelayTime * lastSampleRate, true) * outputDelayGain;
