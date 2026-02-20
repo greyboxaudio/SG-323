@@ -1,52 +1,99 @@
 {
-   "version": 3,
-   "configurePresets": [
-     {
-       "name": "windows-base",
-       "hidden": true,
-       "binaryDir": "${sourceDir}/out/build/${presetName}",
-       "installDir": "${sourceDir}/out/install/${presetName}",
-       "cacheVariables": {
-         "CMAKE_C_COMPILER": "cl.exe",
-         "CMAKE_CXX_COMPILER": "cl.exe"
-       },
- 	  "generator": "Visual Studio 18 2026"
-     },
-     {
-       "name": "arm64",
-       "displayName": "arm64",
-       "inherits": "windows-base",
-       "hidden": true,
- 	  "architecture": {
- 		 "value": "arm64",
- 		 "strategy": "set"
- 	  }
-     },
-     {
-       "name": "arm64ec",
-       "displayName": "arm64ec",
-       "inherits": "windows-base",
-       "hidden": true,
-       "architecture": {
-         "value": "arm64ec",
-         "strategy": "set"
-       }
-     },
-     {
-       "name": "arm64-x",
-       "displayName": "arm64 (arm64x)",
-       "inherits": "arm64",
-       "cacheVariables": {
-         "BUILD_AS_ARM64X": "ARM64"
-       }
-       },
-     {
-       "name": "arm64ec-x",
-       "displayName": "arm64ec (arm64x)",
-       "inherits": "arm64ec",
-       "cacheVariables": {
-         "BUILD_AS_ARM64X": "ARM64EC"
-       }
-       }
-   ]
- }
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "windows-base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe"
+      },
+      "generator": "Visual Studio 18 2026"
+    },
+    {
+      "name": "arm64",
+      "displayName": "arm64",
+      "inherits": "windows-base",
+      "hidden": true,
+      "architecture": {
+        "value": "arm64",
+        "strategy": "set"
+      }
+    },
+    {
+      "name": "arm64ec",
+      "displayName": "arm64ec",
+      "inherits": "windows-base",
+      "hidden": true,
+      "architecture": {
+        "value": "arm64ec",
+        "strategy": "set"
+      }
+    },
+    {
+      "name": "arm64-x",
+      "displayName": "arm64 (arm64x)",
+      "inherits": "arm64",
+      "cacheVariables": {
+        "BUILD_AS_ARM64X": "ARM64"
+      }
+    },
+    {
+      "name": "arm64ec-x",
+      "displayName": "arm64ec (arm64x)",
+      "inherits": "arm64ec",
+      "cacheVariables": {
+        "BUILD_AS_ARM64X": "ARM64EC"
+      }
+    },
+    {
+      "name": "windows-demo",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/out/build_demo/${presetName}",
+      "installDir": "${sourceDir}/out/install_demo/${presetName}",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe"
+      },
+      "generator": "Visual Studio 18 2026"
+    },
+    {
+      "name": "arm64-demo",
+      "displayName": "arm64",
+      "inherits": "windows-demo",
+      "hidden": true,
+      "architecture": {
+        "value": "arm64",
+        "strategy": "set"
+      }
+    },
+    {
+      "name": "arm64ec-demo",
+      "displayName": "arm64ec demo",
+      "inherits": "windows-demo",
+      "hidden": true,
+      "architecture": {
+        "value": "arm64ec",
+        "strategy": "set"
+      }
+    },
+    {
+      "name": "arm64-x-demo",
+      "displayName": "arm64 (arm64x)",
+      "inherits": "arm64-demo",
+      "cacheVariables": {
+        "BUILD_AS_ARM64X_DEMO": "ARM64"
+      }
+    },
+    {
+      "name": "arm64ec-x-demo",
+      "displayName": "arm64ec (arm64x)",
+      "inherits": "arm64ec-demo",
+      "cacheVariables": {
+        "BUILD_AS_ARM64X_DEMO": "ARM64EC"
+      }
+    }
+  ]
+}
