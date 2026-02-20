@@ -21,3 +21,5 @@ sg323_build_macos_release.sh
 build_arm64x
 /build_demo
 *.ps1
+*.iss
+metadata.json

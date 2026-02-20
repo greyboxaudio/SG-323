@@ -13,12 +13,16 @@
 juce::String url = "https://store.greyboxaudio.com";
 juce::String urlButtonText = "greyboxaudio.com";
 juce::String headerText = PLUGIN_VERSION;
+juce::String bodyText1 = "LEO MINOR";
+juce::String bodyText2 = "SG-323 DIGITAL REVERBERATOR";
 float urlButtonScale[2]{0.7f,0.25f};
 #else
 juce::String url = "https://store.greyboxaudio.com/products/sg-323-reverb";
 juce::String urlButtonText = "BUY NOW!";
-juce::String headerText = "DEMO - ALL KNOBS ARE DISABLED";
-float urlButtonScale[2]{0.42f,0.15f};
+juce::String headerText = PLUGIN_VERSION;
+juce::String bodyText1 = "SG-323 DEMO";
+juce::String bodyText2 = "ALL KNOBS ARE DISABLED";
+float urlButtonScale[2]{0.7f,0.25f};
 #endif
 
 
@@ -244,8 +248,8 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
-  g.drawText("LEO MINOR", textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
-  g.drawText("SG-323 DIGITAL REVERBERATOR", textArea, Justification::topLeft);
+  g.drawText(bodyText1, textArea.removeFromTop(static_cast<int>(textArea.getHeight() * 0.5f)), Justification::bottomLeft);
+  g.drawText(bodyText2, textArea, Justification::topLeft);
 }
 
 void SG323AudioProcessorEditor::resized()
