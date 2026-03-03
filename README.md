@@ -74,6 +74,24 @@ cmake --build build --target all --config Release
 ```
 The compiled plugins will be created in `build/SG323_artefacts/Release/`.  
 
+### Debian 13
+Prerequisites:  
+Open a terminal and install basic development tools as well as dependencies for JUCE
+```
+apt install git build-essential cmake libasound2-dev\
+ libcurl4-openssl-dev libfontconfig1-dev libfreetype-dev libwebkit2gtk-4.1-dev juce-tools juce-modules-source
+```
+
+Build it:  
+Open a new terminal and run the following commands  
+```
+git clone --recurse-submodules https://github.com/greyboxaudio/SG-323.git
+cd SG-323/
+cmake -B build
+cmake --build build --target all --config Release
+```
+The compiled plugins will be created in `build/SG323_artefacts/`.  
+
 ## Special thanks
 Dr. Albert Gräf and his team at the Computer Music Research Group http://www.musikinformatik.uni-mainz.de/e_ag.php  
 Joshua Krosenbrink https://www.electroacousticlabs.com/  
