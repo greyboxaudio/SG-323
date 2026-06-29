@@ -84,7 +84,7 @@ void SG323AudioProcessor::setCurrentProgram(int index)
 
 const juce::String SG323AudioProcessor::getProgramName(int index)
 {
-    return {};
+    return {"None"};
 }
 
 void SG323AudioProcessor::changeProgramName(int index, const juce::String &newName)
