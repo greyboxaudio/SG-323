@@ -150,6 +150,10 @@ void RedBox::positionComboBoxText(ComboBox &box, Label &label)
     label.setColour(juce::Label::textColourId, juce::Colour(255, 0, 0));
     label.setFont(getComboBoxFont(box));
 }
+Font RedBox::getPopupMenuFont()
+{
+    return withDefaultMetrics (FontOptions(mBoxLabelFontSize));
+}
 //==============================================================================
 void CustomKnobLabel::setFontSize(float newSize)
 {

@@ -51,8 +51,9 @@ public:
     void drawComboBox(juce::Graphics &, int width, int height, bool isButtonDown,
                       int buttonX, int buttonY, int buttonW, int buttonH,
                       juce::ComboBox &) override;
-    juce::Font getComboBoxFont(juce::ComboBox &) override;
+    Font getComboBoxFont(juce::ComboBox &) override;
     void positionComboBoxText(juce::ComboBox &, juce::Label &) override;
+    Font getPopupMenuFont() override;
 };
 //==============================================================================
 class CustomKnobLabel : public juce::LookAndFeel_V2
