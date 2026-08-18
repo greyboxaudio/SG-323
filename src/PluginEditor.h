@@ -37,6 +37,8 @@ private:
   int defaultWidth = 720;
   float fontSizeLarge = 24.0f;
   float fontSizeRegular = 16.0f;
+  int textBoxWidth = 100;
+  int textBoxHeight = 20;
 
   juce::Colour backgroundColour = juce::Colour(70, 74, 70);
   juce::Colour headerColour = juce::Colour(25, 25, 25);
