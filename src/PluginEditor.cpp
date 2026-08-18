@@ -194,6 +194,10 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   decayLabel.setJustificationType(juce::Justification::centred);
   decayLabel.setLookAndFeel(&customKnobLabel);
 
+  blueKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+  whiteKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+  redKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
   setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
@@ -307,6 +311,9 @@ void SG323AudioProcessorEditor::buttonClicked(juce::Button *button)
       mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
       predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
       decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
+      blueKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      whiteKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      redKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
       setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
       resizeButton.setButtonText("150%");
     }
@@ -323,6 +330,9 @@ void SG323AudioProcessorEditor::buttonClicked(juce::Button *button)
       mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
       predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
       decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
+      blueKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      whiteKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      redKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
       setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
       resizeButton.setButtonText("100%");
     }

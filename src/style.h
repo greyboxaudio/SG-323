@@ -73,30 +73,42 @@ public:
 //==============================================================================
 class BlueKnob : public juce::LookAndFeel_V4
 {
+private:
+    float mTextBoxFontSize;
 public:
     BlueKnob()
     {
     }
     void drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
                           const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &) override;
+    void setFontSize(float newSize);
+    juce::Font getLabelFont(juce::Label &) override;
 };
 //==============================================================================
 class WhiteKnob : public juce::LookAndFeel_V4
 {
+private:
+    float mTextBoxFontSize;
 public:
     WhiteKnob()
     {
     }
     void drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
                           const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &) override;
+    void setFontSize(float newSize);
+    juce::Font getLabelFont(juce::Label &) override;
 };
 //==============================================================================
 class RedKnob : public juce::LookAndFeel_V4
 {
+private:
+    float mTextBoxFontSize;
 public:
     RedKnob()
     {
     }
     void drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
                           const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &) override;
+    void setFontSize(float newSize);
+    juce::Font getLabelFont(juce::Label &) override;
 };

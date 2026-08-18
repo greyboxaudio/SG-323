@@ -223,6 +223,14 @@ void BlueKnob::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int 
     g.setColour(juce::Colours::white);
     g.fillPath(p);
 }
+void BlueKnob::setFontSize(float newSize)
+{
+    mTextBoxFontSize = newSize;
+}
+Font BlueKnob::getLabelFont(Label &label)
+{
+    return withDefaultMetrics(FontOptions(mTextBoxFontSize, Font::plain));
+}
 //==============================================================================
 void WhiteKnob::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
                                  const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &)
@@ -253,6 +261,14 @@ void WhiteKnob::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int
     g.setColour(juce::Colours::white);
     g.fillPath(p);
 }
+void WhiteKnob::setFontSize(float newSize)
+{
+    mTextBoxFontSize = newSize;
+}
+Font WhiteKnob::getLabelFont(Label &label)
+{
+    return withDefaultMetrics(FontOptions(mTextBoxFontSize, Font::plain));
+}
 //==============================================================================
 void RedKnob::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int height, float sliderPos,
                                const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &)
@@ -282,4 +298,12 @@ void RedKnob::drawRotarySlider(juce::Graphics &g, int x, int y, int width, int h
     // pointer
     g.setColour(juce::Colours::white);
     g.fillPath(p);
+}
+void RedKnob::setFontSize(float newSize)
+{
+    mTextBoxFontSize = newSize;
+}
+Font RedKnob::getLabelFont(Label &label)
+{
+    return withDefaultMetrics(FontOptions(mTextBoxFontSize, Font::plain));
 }
