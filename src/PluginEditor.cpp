@@ -10,16 +10,16 @@
 #include "PluginEditor.h"
 
 #ifndef IS_DEMO
-juce::String url = "https://store.greyboxaudio.com";
-juce::String urlButtonText = "greyboxaudio.com";
 juce::String headerText = PLUGIN_VERSION;
+juce::String url = "https://store.greyboxaudio.com/releasenotes.html#sg323-"+headerText;
+juce::String urlButtonText = "greyboxaudio.com";
 juce::String bodyText1 = "LEO MINOR";
 juce::String bodyText2 = "SG-323 DIGITAL REVERBERATOR";
 float urlButtonScale[2]{0.7f,0.25f};
 #else
+juce::String headerText = PLUGIN_VERSION;
 juce::String url = "https://store.greyboxaudio.com/products/sg-323-reverb";
 juce::String urlButtonText = "BUY NOW!";
-juce::String headerText = PLUGIN_VERSION;
 juce::String bodyText1 = "SG-323 DEMO";
 juce::String bodyText2 = "ALL KNOBS ARE DISABLED";
 float urlButtonScale[2]{0.7f,0.25f};
