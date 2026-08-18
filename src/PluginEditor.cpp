@@ -96,13 +96,13 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addSeparator();
   programBox.addSectionHeading ("STARGATE 626");
   programBox.addItem("Reverb 9", 9);
+  programBox.addItem("Reverb 0", 16);
   programBox.addItem("Reverb A", 10);
   programBox.addItem("Reverb B", 11);
   programBox.addItem("Delay C", 12);
   programBox.addItem("Delay D", 13);
   programBox.addItem("Delay E", 14);
   programBox.addItem("Delay F", 15);
-  programBox.addItem("Reverb 0", 16);
   programBox.setLookAndFeel(&redBox);
   addAndMakeVisible(programBox);
   redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
