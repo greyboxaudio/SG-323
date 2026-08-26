@@ -8,6 +8,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "roms.h"
 
 //==============================================================================
 SG323AudioProcessor::SG323AudioProcessor()
