@@ -31,10 +31,6 @@ public:
 private:
   // This reference is provided as a quick way for your editor to
   // access the processor object that created it.
-  float headerHeight = 0.1f;
-  float footerHeight = 0.1f;
-  float mainSectionTopHeight = 0.3f;
-  float mainSectionBottomHeight = 0.5f;
   double editorScale = 1.0;
   int defaultWidth = 720;
   int defaultHeight = 320;
@@ -56,8 +52,6 @@ private:
   juce::Rectangle<int> textArea2;
   juce::Rectangle<int> comboBoxArea0;
   juce::Rectangle<int> comboBoxArea1;
-  juce::Rectangle<int> knobArea0;
-  juce::Rectangle<int> header;
 
   juce::Colour backgroundColour = juce::Colour(70, 74, 70);
   juce::Colour headerColour = juce::Colour(25, 25, 25);
@@ -88,7 +82,6 @@ private:
   juce::TextButton reverbClearButton;
   juce::ToggleButton vintageButton;
   juce::ToggleButton noiseButton;
-  //juce::ToggleButton mixLockButton;
   juce::HyperlinkButton urlButton;
 
   juce::Label predelayLabel;

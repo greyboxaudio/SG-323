@@ -247,7 +247,7 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   // draw text & graphic elements
   g.setColour(juce::Colours::white);
   g.setFont(static_cast<float>(fontSizeRegular * editorScale));
-  g.drawFittedText(pluginVersionText, footerArea1, juce::Justification::centredRight, 1);
+  g.drawFittedText(pluginVersionText, headerArea1, juce::Justification::centredRight, 1);
   g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
   g.drawImageWithin(companyLogo, imageArea0.getX(), imageArea0.getY(), imageArea0.getWidth(), imageArea0.getHeight(), 36, false);
@@ -280,77 +280,39 @@ void SG323AudioProcessorEditor::resized()
   auto imageWidth = 120 * editorScale;
   imageArea0 = mainArea0.removeFromLeft(imageWidth);
   // define text area
-  auto textAreaWidth = 360 * editorScale;
+  auto textAreaWidth = 400 * editorScale;
   textArea0 = mainArea0.removeFromLeft(textAreaWidth);
   auto textAreaPadding = 8 * editorScale;
   textArea1 = juce::Rectangle<int>(juce::Point<int>(textArea0.getX() + textAreaPadding, textArea0.getY() + textAreaPadding), juce::Point<int>(textArea0.getRight() - textAreaPadding, static_cast<int>(textArea0.getBottom() - (pluginTopHeight * 0.5))));
   textArea2 = juce::Rectangle<int>(juce::Point<int>(textArea0.getX() + textAreaPadding, static_cast<int>(textArea0.getBottom() - (pluginTopHeight * 0.5))), juce::Point<int>(textArea0.getRight() - textAreaPadding, textArea0.getBottom() - textAreaPadding));
   // define combobox area
   comboBoxArea0 = mainArea0;
-  auto comboBoxAreaPadding = 20 * editorScale;
+  auto comboBoxAreaPadding = 16 * editorScale;
   comboBoxArea1 = juce::Rectangle<int>(juce::Point<int>(comboBoxArea0.getX() + comboBoxAreaPadding, comboBoxArea0.getY() + comboBoxAreaPadding), juce::Point<int>(comboBoxArea0.getRight() - comboBoxAreaPadding, comboBoxArea0.getBottom() - comboBoxAreaPadding));
   // remove some space for the labels
   auto labelAreaHeight = 32 * editorScale;
-  //define lower plugin area
+  // define lower plugin area
   labelArea0 = area.removeFromTop(labelAreaHeight);
   mainArea1 = area;
-  
-  // define image area
-  //imageArea0 = juce::Rectangle<int>(juce::Point<int>(mainArea0.getX(), mainArea0.getY()), juce::Point<int>(static_cast<int>(mainArea0.getRight() * 0.16666667), mainArea0.getBottom()));
-  // define text areas
-  //textArea0 = juce::Rectangle<int>(juce::Point<int>(imageArea0.getRight(), mainArea0.getY()), juce::Point<int>(static_cast<int>(mainArea0.getRight() * 0.66666667), mainArea0.getBottom()));
-  /*int textAreaX = textArea0.getX();
-  int textAreaY = textArea0.getY();
-  int textAreaRight = textArea0.getRight();
-  int textAreaBottom = textArea0.getBottom();
-  int textAreaHeight = textArea0.getHeight();
-  int textAreaPadding = static_cast<int>(textAreaHeight * 0.1);
-  textArea1 = juce::Rectangle<int>(juce::Point<int>(textAreaX + textAreaPadding, textAreaY + textAreaPadding), juce::Point<int>(textAreaRight - textAreaPadding, static_cast<int>(textAreaBottom - (textAreaHeight * 0.5))));
-  textArea2 = juce::Rectangle<int>(juce::Point<int>(textAreaX + textAreaPadding, static_cast<int>(textAreaBottom - (textAreaHeight * 0.5))), juce::Point<int>(textAreaRight - textAreaPadding, textAreaBottom - textAreaPadding));
-  // define comboBox areas
-  comboBoxArea0 = juce::Rectangle<int>(juce::Point<int>(static_cast<int>(mainArea0.getRight() * 0.66666667), mainArea0.getY()), juce::Point<int>(static_cast<int>(mainArea0.getRight() * 1.0), mainArea0.getBottom()));
-  int comboBoxHeight = comboBoxArea0.getHeight();
-  int comboBoxPadding = static_cast<int>(comboBoxHeight * 0.25);
-  comboBoxArea1 = juce::Rectangle<int>(juce::Point<int>(comboBoxArea0.getX() + comboBoxPadding, comboBoxArea0.getY() + comboBoxPadding), juce::Point<int>(comboBoxArea0.getRight() - comboBoxPadding, comboBoxArea0.getBottom() - comboBoxPadding));*/
-  // define lower plugin section
-  //mainArea1 = juce::Rectangle<int>(juce::Point<int>(area.getX(), static_cast<int>(area.getBottom() * (headerHeight + mainSectionTopHeight))), juce::Point<int>(area.getRight(), area.getBottom() * (1.0f - footerHeight)));
-  int labelHeight = static_cast<int>(area.getHeight() * 0.075);
-  knobArea0 = juce::Rectangle<int>(juce::Point<int>(mainArea1.getX(), mainArea1.getY() + labelHeight), juce::Point<int>(mainArea1.getRight(), mainArea1.getBottom()));
-
-  auto textButtonWidth1 = 64;
-  auto toggleButtonWidth1 = 72;
-  resizeButton.setBounds(headerArea1.removeFromLeft(textButtonWidth1 * editorScale));
-  vintageButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth1 * editorScale));
-  noiseButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth1 * editorScale));
-  reverbClearButton.setBounds(headerArea1.removeFromLeft(textButtonWidth1 * editorScale));
+  // place header elements
+  auto textButtonWidth1 = 64 * editorScale;
+  resizeButton.setBounds(headerArea1.removeFromLeft(textButtonWidth1));
+  auto toggleButtonWidth1 = 72 * editorScale;
+  vintageButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth1));
+  noiseButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth1));
+  reverbClearButton.setBounds(headerArea1.removeFromLeft(textButtonWidth1));
+  auto urlButtonWidth = 192 * editorScale;
+  urlButton.setBounds(headerArea1.removeFromLeft(urlButtonWidth));
+  // place combobox
   programBox.setBounds(comboBoxArea1);
-  /*
-  // define UI areas
-  auto boxAreaMain = getLocalBounds();
-  auto boxAreaMainWidth = boxAreaMain.getWidth();
-  auto boxAreaMainHeight = boxAreaMain.getHeight();
-
-  resizeButton.setBounds(0, 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
-  vintageButton.setBounds(resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
-  noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
-  reverbClearButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
-  urlButton.setBounds(static_cast<int>(boxAreaMainWidth*urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth*urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * headerHeight));
-  boxAreaMain.removeFromTop(static_cast<int>(boxAreaMain.getHeight() * headerHeight));
-  juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.95833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
-
-  auto area = getLocalBounds();
-  int areaHeight = static_cast<int>(area.getHeight() * 0.5f);
-  int areaWidth = static_cast<int>(area.getWidth() * 0.16666667f);
-  auto areaBottom = area.removeFromBottom(areaHeight);
-
-  programBox.setBounds(boxArea);
-  inputGainSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
-  lfdecaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
-  hfdecaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
-  mixSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
-  predelaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
-  decaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
-  */
+  // place sliders
+  auto sliderWidth = defaultWidth / 6 * editorScale;
+  inputGainSlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
+  lfdecaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
+  hfdecaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
+  mixSlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
+  predelaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
+  decaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
 }
 
 void SG323AudioProcessorEditor::buttonClicked(juce::Button *button)
