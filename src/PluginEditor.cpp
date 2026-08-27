@@ -17,7 +17,7 @@ juce::String headerText = versionNumber+"_dev";
 #endif
 
 #ifndef IS_DEMO
-juce::String url = "https://store.greyboxaudio.com/releasenotes.html#sg323-"+headerText;
+juce::String url = "https://store.greyboxaudio.com/releasenotes.html#sg323-"+versionNumber;
 juce::String urlButtonText = "greyboxaudio.com";
 juce::String bodyText1 = "LEO MINOR";
 juce::String bodyText2 = "SG-323 DIGITAL REVERBERATOR";
