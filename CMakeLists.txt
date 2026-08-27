@@ -61,7 +61,7 @@ juce_add_plugin(SG323
     PLUGIN_MANUFACTURER_CODE Gbox       # A four-character manufacturer id with at least one upper-case character
     PLUGIN_CODE S323                    # A unique four-character plugin id with exactly one upper-case character
                                         # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
-    FORMATS VST3 AAX AU LV2 #Standalone # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
+    FORMATS VST3 AAX AU LV2 Standalone # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
     PRODUCT_NAME "SG-323")              # The name of the final executable, which can differ from the target name
 
     clap_juce_extensions_plugin(
@@ -106,6 +106,7 @@ target_compile_definitions(SG323
     PRIVATE
         PLUGIN_VERSION="${CMAKE_PROJECT_VERSION}"
         #IS_DEMO
+        DEVBUILD
     )
 
 # If your target needs extra binary assets, you can add them here. The first argument is the name of

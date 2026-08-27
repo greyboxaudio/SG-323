@@ -9,15 +9,20 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+juce::String versionNumber = PLUGIN_VERSION;
+#ifndef DEVBUILD
+juce::String headerText = versionNumber;
+#else
+juce::String headerText = versionNumber+"_dev";
+#endif
+
 #ifndef IS_DEMO
-juce::String headerText = PLUGIN_VERSION;
 juce::String url = "https://store.greyboxaudio.com/releasenotes.html#sg323-"+headerText;
 juce::String urlButtonText = "greyboxaudio.com";
 juce::String bodyText1 = "LEO MINOR";
 juce::String bodyText2 = "SG-323 DIGITAL REVERBERATOR";
 float urlButtonScale[2]{0.7f,0.25f};
 #else
-juce::String headerText = PLUGIN_VERSION;
 juce::String url = "https://store.greyboxaudio.com/products/sg-323-reverb";
 juce::String urlButtonText = "BUY NOW!";
 juce::String bodyText1 = "SG-323 DEMO";
@@ -213,35 +218,44 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   // (Our component is opaque, so we must completely fill the background with a solid colour)
   g.fillAll(backgroundColour);
 
-  auto graphicsArea = getLocalBounds();
-  juce::Rectangle<int> headerArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(graphicsArea.getRight(), static_cast<int>(graphicsArea.getBottom() * menuBarHeight)));
+  auto windowArea = getLocalBounds();
+  //draw header
+  juce::Rectangle<int> headerArea(juce::Point<int>(windowArea.getX(), windowArea.getY()), juce::Point<int>(windowArea.getRight(), static_cast<int>(windowArea.getBottom() * menuBarHeight)));
   g.setColour(headerColour);
   g.fillRect(headerArea);
+  //draw footer
+  juce::Rectangle<int> footerArea(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0f - menuBarHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
+  g.setColour(footerColour);
+  g.fillRect(footerArea);
 
-  juce::Rectangle<int> footerArea(juce::Point<int>(graphicsArea.getX(), static_cast<int>(graphicsArea.getBottom() * (1.0f - menuBarHeight))), juce::Point<int>(graphicsArea.getRight(), graphicsArea.getBottom()));
-  // g.fillRect(footerArea);
-  // graphicsArea.removeFromBottom(graphicsArea.getHeight() * menuBarHeight);
-
+  //draw upper plugin section
+  auto graphicsArea = getLocalBounds();
   graphicsArea.removeFromTop(static_cast<int>(graphicsArea.getHeight() * menuBarHeight));
-  //auto graphicsAreaWidth = graphicsArea.getWidth();
-  //auto graphicsAreaHeight = graphicsArea.getHeight();
   juce::Rectangle<int> imageArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.16666667f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
   juce::Rectangle<int> textArea(juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.16666667f), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.66666667f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.66666667f), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 1.0f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
 
+  //draw lower plugin section
+  auto knobArea = getLocalBounds();
+  knobArea.removeFromTop(static_cast<int>(headerArea.getHeight()+imageArea.getHeight()));
+  knobArea.removeFromBottom(static_cast<int>(footerArea.getHeight()));
+
+  #ifndef DEVBUILD
+  #else
   // draw rectangles for visual debugging
-  /*g.setColour(juce::Colours::green);
+  g.setColour(juce::Colours::green);
   g.drawRect (headerArea,2);
-  g.setColour (juce::Colours::purple);
-  g.drawRect (graphicsArea,4);
-  g.setColour (juce::Colours::red);
+  g.setColour (juce::Colours::yellow);
   g.drawRect (imageArea,2);
   g.setColour (juce::Colours::orange);
   g.drawRect (textArea,2);
-  g.setColour (juce::Colours::yellow);
+  g.setColour (juce::Colours::red);
   g.drawRect (boxArea,2);
+  g.setColour (juce::Colours::purple);
+  g.drawRect (knobArea,2);
   g.setColour (juce::Colours::blue);
-  g.drawRect (footerArea,2);*/
+  g.drawRect (footerArea,2);
+  #endif
 
   g.setColour(juce::Colours::white);
   g.setFont(static_cast<float>(fontSizeRegular * editorScale));
@@ -263,7 +277,7 @@ void SG323AudioProcessorEditor::resized()
   {
     pluginProperties->setValue("scalingFactor", editorScale);
   }
-
+  auto windowArea = getLocalBounds();
   auto boxAreaMain = getLocalBounds();
   auto boxAreaMainWidth = boxAreaMain.getWidth();
   auto boxAreaMainHeight = boxAreaMain.getHeight();
@@ -273,7 +287,7 @@ void SG323AudioProcessorEditor::resized()
   noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   reverbClearButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
   urlButton.setBounds(static_cast<int>(boxAreaMainWidth*urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth*urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * menuBarHeight));
-  boxAreaMain.removeFromTop(static_cast<int>(boxAreaMain.getHeight() * menuBarHeight));
+  boxAreaMain.removeFromTop(static_cast<int>(windowArea.getHeight() * menuBarHeight));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.95833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
 
   auto area = getLocalBounds();

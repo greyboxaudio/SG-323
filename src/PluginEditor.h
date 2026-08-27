@@ -32,8 +32,9 @@ private:
   // This reference is provided as a quick way for your editor to
   // access the processor object that created it.
   float menuBarHeight = 0.1f;
+  float footerHeight = 0.1f;
   double editorScale = 1.0;
-  int defaultHeight = 280;
+  int defaultHeight = 320;
   int defaultWidth = 720;
   float fontSizeLarge = 24.0f;
   float fontSizeRegular = 16.0f;
@@ -42,6 +43,7 @@ private:
 
   juce::Colour backgroundColour = juce::Colour(70, 74, 70);
   juce::Colour headerColour = juce::Colour(25, 25, 25);
+  juce::Colour footerColour = juce::Colour(25, 25, 25);
   juce::Colour textColour = juce::Colour(255, 255, 255);
   juce::Colour stargateRed = juce::Colour(179, 26, 26);
   juce::Colour stargateBeige = juce::Colour(179, 148, 118);
