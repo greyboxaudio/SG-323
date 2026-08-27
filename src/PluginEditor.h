@@ -47,15 +47,15 @@ private:
   juce::Rectangle<int> headerArea1;
   juce::Rectangle<int> footerArea0;
   juce::Rectangle<int> footerArea1;
-  juce::Rectangle<int> pluginAreaTop;
-  juce::Rectangle<int> pluginAreaBottom;
-  juce::Rectangle<int> imageArea;
+  juce::Rectangle<int> mainArea0;
+  juce::Rectangle<int> mainArea1;
+  juce::Rectangle<int> imageArea0;
   juce::Rectangle<int> textArea0;
   juce::Rectangle<int> textArea1;
   juce::Rectangle<int> textArea2;
   juce::Rectangle<int> comboBoxArea0;
   juce::Rectangle<int> comboBoxArea1;
-  juce::Rectangle<int> knobArea;
+  juce::Rectangle<int> knobArea0;
 
   juce::Colour backgroundColour = juce::Colour(70, 74, 70);
   juce::Colour headerColour = juce::Colour(25, 25, 25);
