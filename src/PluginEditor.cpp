@@ -233,7 +233,7 @@ void SG323AudioProcessorEditor::resized()
 {
   // This is generally where you'll want to lay out the positions of any
   // subcomponents in your editor..
-  setResizable(false, false);
+  setResizable(true, true);
   if (auto *pluginProperties = applicationProperties.getCommonSettings(true))
   {
     pluginProperties->setValue("scalingFactor", editorScale);
@@ -245,8 +245,7 @@ void SG323AudioProcessorEditor::resized()
   footerArea0 = area.removeFromBottom(headerFooterHeight);
   // add padding to header & footer
   auto headerFooterPadding = 4 * editorScale;
-  headerArea1 = juce::Rectangle<int>(juce::Point<int>(headerArea0.getX() + headerFooterPadding, headerArea0.getY() + headerFooterPadding), juce::Point<int>(headerArea0.getRight() - headerFooterPadding, headerArea0.getBottom() - headerFooterPadding));
-  footerArea1 = juce::Rectangle<int>(juce::Point<int>(footerArea0.getX() + headerFooterPadding, footerArea0.getY() + headerFooterPadding), juce::Point<int>(footerArea0.getRight() - headerFooterPadding, footerArea0.getBottom() - headerFooterPadding));
+  headerArea1 = headerArea0;
   // define upper plugin area
   auto pluginTopHeight = 80 * editorScale;
   mainArea0 = area.removeFromTop(pluginTopHeight);
@@ -262,7 +261,6 @@ void SG323AudioProcessorEditor::resized()
   // define combobox areas
   comboBoxArea0 = mainArea0;
   auto comboBoxAreaPadding = 16 * editorScale;
-  comboBoxArea1 = juce::Rectangle<int>(juce::Point<int>(comboBoxArea0.getX() + comboBoxAreaPadding, comboBoxArea0.getY() + comboBoxAreaPadding), juce::Point<int>(comboBoxArea0.getRight() - comboBoxAreaPadding, comboBoxArea0.getBottom() - comboBoxAreaPadding));
   // remove some space for the slider labels
   auto labelAreaHeight = 32 * editorScale;
   // define lower plugin area
@@ -271,14 +269,14 @@ void SG323AudioProcessorEditor::resized()
   // place control elements
   // place header elements
   auto buttonWidth = 85 * editorScale;
-  resizeButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
+  resizeButton.setBounds(headerArea1.removeFromLeft(buttonWidth).reduced(headerFooterPadding));
   resizeButton.changeWidthToFitText();
-  vintageButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
-  noiseButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
+  vintageButton.setBounds(headerArea1.removeFromLeft(buttonWidth).reduced(headerFooterPadding));
+  noiseButton.setBounds(headerArea1.removeFromLeft(buttonWidth).reduced(headerFooterPadding));
   auto urlButtonWidth = 200 * editorScale;
-  urlButton.setBounds(headerArea1.removeFromLeft(urlButtonWidth));
+  urlButton.setBounds(headerArea1.removeFromLeft(urlButtonWidth).reduced(headerFooterPadding));
   // place combobox
-  programBox.setBounds(comboBoxArea1);
+  programBox.setBounds(comboBoxArea0.reduced(comboBoxAreaPadding));
   // place sliders
   auto sliderWidth = defaultWidth / 6 * editorScale;
   inputGainSlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
@@ -288,7 +286,7 @@ void SG323AudioProcessorEditor::resized()
   predelaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   decaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   // place footer elements
-  reverbClearButton.setBounds(footerArea1.removeFromRight(sliderWidth-headerFooterPadding));
+  reverbClearButton.setBounds(footerArea0.removeFromRight(sliderWidth).reduced(headerFooterPadding));
   reverbClearButton.changeWidthToFitText();
 }
 
