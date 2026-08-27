@@ -217,9 +217,13 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   // define UI areas
   auto windowArea = getLocalBounds();
   // define header
-  headerArea = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), windowArea.getY()), juce::Point<int>(windowArea.getRight(), static_cast<int>(windowArea.getBottom() * headerHeight)));
-  // define footer
-  footerArea = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0f - footerHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
+   headerArea0 = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), windowArea.getY()), juce::Point<int>(windowArea.getRight(), static_cast<int>(windowArea.getBottom() * headerHeight)));
+  int headerAreaPadding = static_cast<int>(headerArea0.getHeight() * 0.1);
+  headerArea1 = juce::Rectangle<int>(juce::Point<int>((headerArea0.getX() + headerAreaPadding),headerArea0.getY()+headerAreaPadding),juce::Point<int>(headerArea0.getRight()-headerAreaPadding, headerArea0.getBottom()-headerAreaPadding));
+   // define footer
+  footerArea0 = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0f - footerHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
+  int footerAreaPadding = static_cast<int>(footerArea0.getHeight() * 0.1);
+  footerArea1 = juce::Rectangle<int>(juce::Point<int>((footerArea0.getX() + footerAreaPadding),footerArea0.getY()+footerAreaPadding),juce::Point<int>(footerArea0.getRight()-footerAreaPadding, footerArea0.getBottom()-footerAreaPadding));
   // define upper plugin section
   pluginAreaTop = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * headerHeight)), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0f - mainSectionBottomHeight - footerHeight)));
   // define image area
@@ -248,15 +252,16 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   // (Our component is opaque, so we must completely fill the background with a solid colour)
   g.fillAll(backgroundColour);
   g.setColour(headerColour);
-  g.fillRect(headerArea);
+  g.fillRect(headerArea0);
   g.setColour(footerColour);
-  g.fillRect(footerArea);
+  g.fillRect(footerArea0);
 
 #ifndef DEVBUILD
 #else
   // draw rectangles for visual debugging
   g.setColour(juce::Colours::blue);
-  g.drawRect(headerArea, 2);
+  g.drawRect(headerArea0, 2);
+  g.drawRect(headerArea1, 2);
   g.setColour(juce::Colours::purple);
   g.drawRect(pluginAreaTop, 2);
   g.setColour(juce::Colours::green);
@@ -272,13 +277,14 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.drawRect(comboBoxArea0, 2);
   g.drawRect(comboBoxArea1, 2);
   g.setColour(juce::Colours::blue);
-  g.drawRect(footerArea, 2);
+  g.drawRect(footerArea0, 2);
+  g.drawRect(footerArea1, 2);
 #endif
 
   //draw text & graphic elements
   g.setColour(juce::Colours::white);
   g.setFont(static_cast<float>(fontSizeRegular * editorScale));
-  g.drawFittedText(headerText, footerArea, juce::Justification::centredRight, 1);
+  g.drawFittedText(headerText, footerArea0, juce::Justification::centredRight, 1);
   g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
   g.drawImageWithin(companyLogo, imageArea.getX(), imageArea.getY(), imageArea.getWidth(), imageArea.getHeight(), 36, false);
@@ -298,11 +304,13 @@ void SG323AudioProcessorEditor::resized()
   // define UI areas
   auto windowArea = getLocalBounds();
   // define header
-  headerArea = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), windowArea.getY()), juce::Point<int>(windowArea.getRight(), static_cast<int>(windowArea.getBottom() * headerHeight)));
+  headerArea0 = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), windowArea.getY()), juce::Point<int>(windowArea.getRight(), static_cast<int>(windowArea.getBottom() * headerHeight)));
+  int headerAreaPadding = static_cast<int>(headerArea0.getHeight() * 0.1);
+  headerArea1 = juce::Rectangle<int>(juce::Point<int>((headerArea0.getX() + headerAreaPadding),headerArea0.getY()+headerAreaPadding),juce::Point<int>(headerArea0.getRight()-headerAreaPadding, headerArea0.getBottom()-headerAreaPadding));
   // define footer
-  footerArea = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0f - footerHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
+  footerArea0 = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0 - footerHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
   // define upper plugin section
-  pluginAreaTop = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * headerHeight)), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0f - mainSectionBottomHeight - footerHeight)));
+  pluginAreaTop = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * headerHeight)), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0 - mainSectionBottomHeight - footerHeight)));
   // define image area
   imageArea = juce::Rectangle<int>(juce::Point<int>(pluginAreaTop.getX(), pluginAreaTop.getY()), juce::Point<int>(static_cast<int>(pluginAreaTop.getRight() * 0.16666667), pluginAreaTop.getBottom()));
   // define text areas
@@ -321,7 +329,7 @@ void SG323AudioProcessorEditor::resized()
   int comboBoxPadding = static_cast<int>(comboBoxHeight * 0.25);
   comboBoxArea1 = juce::Rectangle<int>(juce::Point<int>(comboBoxArea0.getX() + comboBoxPadding, comboBoxArea0.getY() + comboBoxPadding), juce::Point<int>(comboBoxArea0.getRight() - comboBoxPadding, comboBoxArea0.getBottom() - comboBoxPadding));
   // define lower plugin section
-  pluginAreaBottom = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (headerHeight + mainSectionTopHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0f - footerHeight)));
+  pluginAreaBottom = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (headerHeight + mainSectionTopHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0 - footerHeight)));
   int labelHeight = static_cast<int>(windowArea.getHeight()*0.08);
   knobArea = juce::Rectangle<int>(juce::Point<int>(pluginAreaBottom.getX(),pluginAreaBottom.getY()+labelHeight),juce::Point<int>(pluginAreaBottom.getRight(),pluginAreaBottom.getBottom()));
 

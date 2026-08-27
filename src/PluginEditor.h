@@ -43,8 +43,10 @@ private:
   int textBoxWidth = 100;
   int textBoxHeight = 20;
 
-  juce::Rectangle<int> headerArea;
-  juce::Rectangle<int> footerArea;
+  juce::Rectangle<int> headerArea0;
+  juce::Rectangle<int> headerArea1;
+  juce::Rectangle<int> footerArea0;
+  juce::Rectangle<int> footerArea1;
   juce::Rectangle<int> pluginAreaTop;
   juce::Rectangle<int> pluginAreaBottom;
   juce::Rectangle<int> imageArea;
