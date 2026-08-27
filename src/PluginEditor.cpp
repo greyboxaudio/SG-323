@@ -13,23 +13,22 @@ juce::String versionNumber = PLUGIN_VERSION;
 #ifndef DEVBUILD
 juce::String headerText = versionNumber;
 #else
-juce::String headerText = versionNumber+"_dev";
+juce::String headerText = versionNumber + "_dev";
 #endif
 
 #ifndef IS_DEMO
-juce::String url = "https://store.greyboxaudio.com/releasenotes.html#sg323-"+versionNumber;
+juce::String url = "https://store.greyboxaudio.com/releasenotes.html#sg323-" + versionNumber;
 juce::String urlButtonText = "greyboxaudio.com";
 juce::String bodyText1 = "LEO MINOR";
 juce::String bodyText2 = "SG-323 DIGITAL REVERBERATOR";
-float urlButtonScale[2]{0.7f,0.25f};
+float urlButtonScale[2]{0.7f, 0.25f};
 #else
 juce::String url = "https://store.greyboxaudio.com/products/sg-323-reverb";
 juce::String urlButtonText = "BUY NOW!";
 juce::String bodyText1 = "SG-323 DEMO";
 juce::String bodyText2 = "ALL KNOBS ARE DISABLED";
-float urlButtonScale[2]{0.7f,0.25f};
+float urlButtonScale[2]{0.7f, 0.25f};
 #endif
-
 
 //==============================================================================
 SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
@@ -89,7 +88,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   urlButton.setJustificationType(juce::Justification::centred);
   urlButton.setColour(juce::HyperlinkButton::textColourId, juce::Colour(255, 255, 255));
 
-  programBox.addSectionHeading ("STARGATE 323");
+  programBox.addSectionHeading("STARGATE 323");
   programBox.addItem("Plate 1", 1);
   programBox.addItem("Plate 2", 2);
   programBox.addItem("Chamber", 3);
@@ -99,7 +98,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addItem("Cathedral", 7);
   programBox.addItem("Canyon", 8);
   programBox.addSeparator();
-  programBox.addSectionHeading ("STARGATE 626");
+  programBox.addSectionHeading("STARGATE 626");
   programBox.addItem("Reverb 9", 9);
   programBox.addItem("Reverb A", 10);
   programBox.addItem("Reverb B", 11);
@@ -118,8 +117,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
   inputGainSlider.setTextBoxIsEditable(true);
-  inputGainSlider.setColour(juce::Slider::textBoxOutlineColourId,backgroundColour);
-  inputGainSlider.setColour(juce::Slider::textBoxBackgroundColourId,stargateDark);
+  inputGainSlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  inputGainSlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   inputGainSlider.setLookAndFeel(&blueKnob);
   addAndMakeVisible(inputGainSlider);
   inputGainSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "INPUT", inputGainSlider);
@@ -132,8 +131,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   lfdecaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   lfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
   lfdecaySlider.setTextBoxIsEditable(true);
-  lfdecaySlider.setColour(juce::Slider::textBoxOutlineColourId,backgroundColour);
-  lfdecaySlider.setColour(juce::Slider::textBoxBackgroundColourId,stargateDark);
+  lfdecaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  lfdecaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   lfdecaySlider.setLookAndFeel(&whiteKnob);
   addAndMakeVisible(lfdecaySlider);
   lfdecaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "LFDECAY", lfdecaySlider);
@@ -146,8 +145,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   hfdecaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   hfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
   hfdecaySlider.setTextBoxIsEditable(true);
-  hfdecaySlider.setColour(juce::Slider::textBoxOutlineColourId,backgroundColour);
-  hfdecaySlider.setColour(juce::Slider::textBoxBackgroundColourId,stargateDark);
+  hfdecaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  hfdecaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   hfdecaySlider.setLookAndFeel(&whiteKnob);
   addAndMakeVisible(hfdecaySlider);
   hfdecaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "HFDECAY", hfdecaySlider);
@@ -160,8 +159,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   mixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
   mixSlider.setTextBoxIsEditable(true);
-  mixSlider.setColour(juce::Slider::textBoxOutlineColourId,backgroundColour);
-  mixSlider.setColour(juce::Slider::textBoxBackgroundColourId,stargateDark);
+  mixSlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  mixSlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   mixSlider.setLookAndFeel(&blueKnob);
   addAndMakeVisible(mixSlider);
   mixSliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "MIX", mixSlider);
@@ -172,10 +171,10 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   mixLabel.setLookAndFeel(&customKnobLabel);
 
   predelaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false,static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
+  predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
   predelaySlider.setTextBoxIsEditable(true);
-  predelaySlider.setColour(juce::Slider::textBoxOutlineColourId,backgroundColour);
-  predelaySlider.setColour(juce::Slider::textBoxBackgroundColourId,stargateDark);
+  predelaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  predelaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   predelaySlider.setLookAndFeel(&redKnob);
   addAndMakeVisible(predelaySlider);
   predelaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "PREDELAY", predelaySlider);
@@ -188,8 +187,8 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   decaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
   decaySlider.setTextBoxIsEditable(true);
-  decaySlider.setColour(juce::Slider::textBoxOutlineColourId,backgroundColour);
-  decaySlider.setColour(juce::Slider::textBoxBackgroundColourId,stargateDark);
+  decaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  decaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   decaySlider.setLookAndFeel(&redKnob);
   addAndMakeVisible(decaySlider);
   decaySliderAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(audioProcessor.apvts, "DECAY", decaySlider);
@@ -219,45 +218,61 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.fillAll(backgroundColour);
 
   auto windowArea = getLocalBounds();
-  //draw header
+  // draw header
   juce::Rectangle<int> headerArea(juce::Point<int>(windowArea.getX(), windowArea.getY()), juce::Point<int>(windowArea.getRight(), static_cast<int>(windowArea.getBottom() * headerHeight)));
   g.setColour(headerColour);
   g.fillRect(headerArea);
-  //draw footer
+  // draw footer
   juce::Rectangle<int> footerArea(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0f - footerHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
   g.setColour(footerColour);
   g.fillRect(footerArea);
-  //draw upper plugin section
+  // draw upper plugin section
   juce::Rectangle<int> upperPluginArea(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * headerHeight)), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0f - mainSectionBottomHeight - footerHeight)));
-  //draw lower plugin section
+
+  // draw lower plugin section
   juce::Rectangle<int> lowerPluginArea(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (headerHeight + mainSectionTopHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0f - footerHeight)));
 
   auto graphicsArea = getLocalBounds();
   graphicsArea.removeFromTop(static_cast<int>(graphicsArea.getHeight() * headerHeight));
-  juce::Rectangle<int> imageArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.16666667f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
-  juce::Rectangle<int> textArea(juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.16666667f), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.66666667f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
+  // define logo area
+  juce::Rectangle<int> imageArea(juce::Point<int>(upperPluginArea.getX(), upperPluginArea.getY()), juce::Point<int>(static_cast<int>(upperPluginArea.getRight() * 0.16666667f), upperPluginArea.getBottom()));
+  // define text areas
+  juce::Rectangle<int> textArea(juce::Point<int>(imageArea.getRight(), upperPluginArea.getY()), juce::Point<int>(static_cast<int>(upperPluginArea.getRight() * 0.66666667f), upperPluginArea.getBottom()));
+  int textAreaPadding = static_cast<int>(textArea.getHeight() * 0.1);
+  int textAreaX = textArea.getX();
+  int textAreaY = textArea.getY();
+  int textAreaRight = textArea.getRight();
+  int textAreaBottom = textArea.getBottom();
+  int textAreaHeight = textArea.getHeight();
+  juce::Rectangle<int> textArea1(juce::Point<int>(textAreaX + textAreaPadding, textAreaY + textAreaPadding),juce::Point<int>(textAreaRight - textAreaPadding, static_cast<int>(textAreaBottom-(textAreaHeight*0.5))));
+  juce::Rectangle<int> textArea2(juce::Point<int>(textAreaX + textAreaPadding,static_cast<int>(textAreaBottom-(textAreaHeight*0.5))),juce::Point<int>(textAreaRight - textAreaPadding,textAreaBottom-textAreaPadding));
+
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.66666667f), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 1.0f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
 
-  #ifndef DEVBUILD
-  #else
+#ifndef DEVBUILD
+#else
   // draw rectangles for visual debugging
+  g.setColour(juce::Colours::blue);
+  g.drawRect(headerArea, 2);
+  g.setColour(juce::Colours::purple);
+  g.drawRect(upperPluginArea, 2);
+  g.setColour(juce::Colours::green);
+  g.drawRect(lowerPluginArea, 2);
   g.setColour(juce::Colours::red);
-  g.drawRect (headerArea,2);
-  g.setColour (juce::Colours::yellow);
-  g.drawRect (upperPluginArea,2);
-  g.setColour (juce::Colours::green);
-  g.drawRect (lowerPluginArea,2);
-  g.setColour (juce::Colours::orange);
-  //g.drawRect (boxArea,2);
-  g.setColour (juce::Colours::purple);
-  //g.drawRect (knobArea,2);
-  g.setColour (juce::Colours::blue);
-  g.drawRect (footerArea,2);
-  #endif
+  g.drawRect(imageArea, 2);
+  g.setColour(juce::Colours::orange);
+  g.drawRect(textArea, 2);
+  g.drawRect(textArea1, 2);
+  g.drawRect (textArea2,2);
+  g.setColour(juce::Colours::yellow);
+  g.drawRect(boxArea, 2);
+  g.setColour(juce::Colours::blue);
+  g.drawRect(footerArea, 2);
+#endif
 
   g.setColour(juce::Colours::white);
   g.setFont(static_cast<float>(fontSizeRegular * editorScale));
-  //g.drawFittedText("v1.0.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
+  // g.drawFittedText("v1.0.0 " __DATE__ " " __TIME__, headerArea, juce::Justification::centredRight, 1);
   g.drawFittedText(headerText, headerArea, juce::Justification::centredRight, 1);
   g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
@@ -284,7 +299,7 @@ void SG323AudioProcessorEditor::resized()
   vintageButton.setBounds(resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
   noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
   reverbClearButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
-  urlButton.setBounds(static_cast<int>(boxAreaMainWidth*urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth*urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * headerHeight));
+  urlButton.setBounds(static_cast<int>(boxAreaMainWidth * urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth * urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * headerHeight));
   boxAreaMain.removeFromTop(static_cast<int>(windowArea.getHeight() * headerHeight));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.95833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
 
