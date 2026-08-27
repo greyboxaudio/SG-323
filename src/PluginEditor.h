@@ -43,6 +43,17 @@ private:
   int textBoxWidth = 100;
   int textBoxHeight = 20;
 
+  juce::Rectangle<int> headerArea;
+  juce::Rectangle<int> footerArea;
+  juce::Rectangle<int> upperPluginArea;
+  juce::Rectangle<int> lowerPluginArea;
+  juce::Rectangle<int> imageArea;
+  juce::Rectangle<int> textArea0;
+  juce::Rectangle<int> textArea1;
+  juce::Rectangle<int> textArea2;
+  juce::Rectangle<int> comboBoxArea0;
+  juce::Rectangle<int> comboBoxArea1;
+
   juce::Colour backgroundColour = juce::Colour(70, 74, 70);
   juce::Colour headerColour = juce::Colour(25, 25, 25);
   juce::Colour footerColour = juce::Colour(25, 25, 25);
