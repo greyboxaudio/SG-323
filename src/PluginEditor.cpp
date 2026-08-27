@@ -224,35 +224,33 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setColour(headerColour);
   g.fillRect(headerArea);
   //draw footer
-  juce::Rectangle<int> footerArea(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0f - headerHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
+  juce::Rectangle<int> footerArea(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0f - footerHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
   g.setColour(footerColour);
   g.fillRect(footerArea);
-
   //draw upper plugin section
+  juce::Rectangle<int> upperPluginArea(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * headerHeight)), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0f - mainSectionBottomHeight - footerHeight)));
+  //draw lower plugin section
+  juce::Rectangle<int> lowerPluginArea(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (headerHeight + mainSectionTopHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0f - footerHeight)));
+
   auto graphicsArea = getLocalBounds();
   graphicsArea.removeFromTop(static_cast<int>(graphicsArea.getHeight() * headerHeight));
   juce::Rectangle<int> imageArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.16666667f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
   juce::Rectangle<int> textArea(juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.16666667f), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.66666667f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.66666667f), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 1.0f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
 
-  //draw lower plugin section
-  auto knobArea = getLocalBounds();
-  knobArea.removeFromTop(static_cast<int>(headerArea.getHeight()+imageArea.getHeight()));
-  knobArea.removeFromBottom(static_cast<int>(footerArea.getHeight()));
-
   #ifndef DEVBUILD
   #else
   // draw rectangles for visual debugging
-  g.setColour(juce::Colours::green);
+  g.setColour(juce::Colours::red);
   g.drawRect (headerArea,2);
   g.setColour (juce::Colours::yellow);
-  g.drawRect (imageArea,2);
+  g.drawRect (upperPluginArea,2);
+  g.setColour (juce::Colours::green);
+  g.drawRect (lowerPluginArea,2);
   g.setColour (juce::Colours::orange);
-  g.drawRect (textArea,2);
-  g.setColour (juce::Colours::red);
-  g.drawRect (boxArea,2);
+  //g.drawRect (boxArea,2);
   g.setColour (juce::Colours::purple);
-  g.drawRect (knobArea,2);
+  //g.drawRect (knobArea,2);
   g.setColour (juce::Colours::blue);
   g.drawRect (footerArea,2);
   #endif

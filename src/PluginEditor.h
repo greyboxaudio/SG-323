@@ -33,8 +33,8 @@ private:
   // access the processor object that created it.
   float headerHeight = 0.1f;
   float footerHeight = 0.1f;
-  float mainSectionTopHeight = 0.33f;
-  float mainSectionBottomHeight = 0.47f;
+  float mainSectionTopHeight = 0.3f;
+  float mainSectionBottomHeight = 0.5f;
   double editorScale = 1.0;
   int defaultWidth = 720;
   int defaultHeight = 320;
