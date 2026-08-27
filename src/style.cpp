@@ -51,7 +51,7 @@ void CustomTextButton::drawButtonBackground(Graphics &g,
         g.fillRoundedRectangle(bounds, cornerSize);
 
         g.setColour(button.findColour(ComboBox::outlineColourId));
-        // g.drawRoundedRectangle(bounds, cornerSize, 1.0f);
+        g.drawRoundedRectangle(bounds, cornerSize, 1.0f);
     }
 }
 //==============================================================================
