@@ -233,52 +233,58 @@ void SG323AudioProcessorEditor::resized()
 {
   // This is generally where you'll want to lay out the positions of any
   // subcomponents in your editor..
+  #ifndef DEVBUILD
+  setResizable(false, false);
+  #else
   setResizable(true, true);
+  #endif
   if (auto *pluginProperties = applicationProperties.getCommonSettings(true))
   {
     pluginProperties->setValue("scalingFactor", editorScale);
   }
   auto area = getLocalBounds();
+  // define size variables
+  auto variableScalingFactor = area.getWidth() / defaultWidth;
+  auto headerFooterHeight = area.getHeight() * 0.1;
+  auto headerFooterPadding = headerFooterHeight * 0.1;
+  auto pluginTopHeight = area.getHeight() * 0.3;
+  auto imageWidth = area.getWidth() / 6;
+  auto textAreaWidth = area.getWidth() * 0.55;
+  auto sliderWidth = area.getWidth() / 6;
+  auto comboBoxAreaPadding = pluginTopHeight * 0.25;
+  auto textAreaPadding = area.getHeight() * 0.025;
+  auto labelAreaHeight = area.getHeight() * 0.1;
+  auto buttonWidth = area.getWidth() * 0.12;
+  auto urlButtonWidth = area.getWidth() * 0.3;
   // define header & footer
-  auto headerFooterHeight = 32 * editorScale;
   headerArea0 = area.removeFromTop(headerFooterHeight);
   footerArea0 = area.removeFromBottom(headerFooterHeight);
   // add padding to header & footer
-  auto headerFooterPadding = 4 * editorScale;
   headerArea1 = headerArea0;
   // define upper plugin area
-  auto pluginTopHeight = 80 * editorScale;
   mainArea0 = area.removeFromTop(pluginTopHeight);
   // define image area
-  auto imageWidth = 120 * editorScale;
   imageArea0 = mainArea0.removeFromLeft(imageWidth);
   // define text areas
-  auto textAreaWidth = 400 * editorScale;
   textArea0 = mainArea0.removeFromLeft(textAreaWidth);
-  auto textAreaPadding = 8 * editorScale;
   textArea1 = juce::Rectangle<int>(juce::Point<int>(textArea0.getX() + textAreaPadding, textArea0.getY() + textAreaPadding), juce::Point<int>(textArea0.getRight() - textAreaPadding, static_cast<int>(textArea0.getBottom() - (pluginTopHeight * 0.5))));
   textArea2 = juce::Rectangle<int>(juce::Point<int>(textArea0.getX() + textAreaPadding, static_cast<int>(textArea0.getBottom() - (pluginTopHeight * 0.5))), juce::Point<int>(textArea0.getRight() - textAreaPadding, textArea0.getBottom() - textAreaPadding));
-  // define combobox areas
+  // define combobox area
   comboBoxArea0 = mainArea0;
-  auto comboBoxAreaPadding = 16 * editorScale;
   // remove some space for the slider labels
-  auto labelAreaHeight = 32 * editorScale;
-  // define lower plugin area
   labelArea0 = area.removeFromTop(labelAreaHeight);
+  // define lower plugin area
   mainArea1 = area;
   // place control elements
   // place header elements
-  auto buttonWidth = 85 * editorScale;
   resizeButton.setBounds(headerArea1.removeFromLeft(buttonWidth).reduced(headerFooterPadding));
   resizeButton.changeWidthToFitText();
   vintageButton.setBounds(headerArea1.removeFromLeft(buttonWidth).reduced(headerFooterPadding));
   noiseButton.setBounds(headerArea1.removeFromLeft(buttonWidth).reduced(headerFooterPadding));
-  auto urlButtonWidth = 200 * editorScale;
   urlButton.setBounds(headerArea1.removeFromLeft(urlButtonWidth).reduced(headerFooterPadding));
   // place combobox
   programBox.setBounds(comboBoxArea0.reduced(comboBoxAreaPadding));
   // place sliders
-  auto sliderWidth = defaultWidth / 6 * editorScale;
   inputGainSlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   lfdecaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   hfdecaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
