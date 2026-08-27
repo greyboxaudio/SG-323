@@ -31,11 +31,13 @@ public:
 private:
   // This reference is provided as a quick way for your editor to
   // access the processor object that created it.
-  float menuBarHeight = 0.1f;
+  float headerHeight = 0.1f;
   float footerHeight = 0.1f;
+  float mainSectionTopHeight = 0.33f;
+  float mainSectionBottomHeight = 0.47f;
   double editorScale = 1.0;
-  int defaultHeight = 320;
   int defaultWidth = 720;
+  int defaultHeight = 320;
   float fontSizeLarge = 24.0f;
   float fontSizeRegular = 16.0f;
   int textBoxWidth = 100;

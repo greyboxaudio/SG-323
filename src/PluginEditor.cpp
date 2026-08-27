@@ -220,17 +220,17 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
 
   auto windowArea = getLocalBounds();
   //draw header
-  juce::Rectangle<int> headerArea(juce::Point<int>(windowArea.getX(), windowArea.getY()), juce::Point<int>(windowArea.getRight(), static_cast<int>(windowArea.getBottom() * menuBarHeight)));
+  juce::Rectangle<int> headerArea(juce::Point<int>(windowArea.getX(), windowArea.getY()), juce::Point<int>(windowArea.getRight(), static_cast<int>(windowArea.getBottom() * headerHeight)));
   g.setColour(headerColour);
   g.fillRect(headerArea);
   //draw footer
-  juce::Rectangle<int> footerArea(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0f - menuBarHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
+  juce::Rectangle<int> footerArea(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0f - headerHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
   g.setColour(footerColour);
   g.fillRect(footerArea);
 
   //draw upper plugin section
   auto graphicsArea = getLocalBounds();
-  graphicsArea.removeFromTop(static_cast<int>(graphicsArea.getHeight() * menuBarHeight));
+  graphicsArea.removeFromTop(static_cast<int>(graphicsArea.getHeight() * headerHeight));
   juce::Rectangle<int> imageArea(juce::Point<int>(graphicsArea.getX(), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.16666667f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
   juce::Rectangle<int> textArea(juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.16666667f), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.66666667f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 0.66666667f), graphicsArea.getY()), juce::Point<int>(static_cast<int>(graphicsArea.getRight() * 1.0f), static_cast<int>(graphicsArea.getBottom() * 0.4f)));
@@ -282,12 +282,12 @@ void SG323AudioProcessorEditor::resized()
   auto boxAreaMainWidth = boxAreaMain.getWidth();
   auto boxAreaMainHeight = boxAreaMain.getHeight();
 
-  resizeButton.setBounds(0, 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
-  vintageButton.setBounds(resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
-  noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
-  reverbClearButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * menuBarHeight * 3), static_cast<int>(boxAreaMainHeight * menuBarHeight));
-  urlButton.setBounds(static_cast<int>(boxAreaMainWidth*urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth*urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * menuBarHeight));
-  boxAreaMain.removeFromTop(static_cast<int>(windowArea.getHeight() * menuBarHeight));
+  resizeButton.setBounds(0, 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
+  vintageButton.setBounds(resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
+  noiseButton.setBounds(vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
+  reverbClearButton.setBounds(noiseButton.getWidth() + vintageButton.getWidth() + resizeButton.getWidth(), 0, static_cast<int>(boxAreaMainHeight * headerHeight * 3), static_cast<int>(boxAreaMainHeight * headerHeight));
+  urlButton.setBounds(static_cast<int>(boxAreaMainWidth*urlButtonScale[0]), 0, static_cast<int>(boxAreaMainWidth*urlButtonScale[1]), static_cast<int>(boxAreaMainHeight * headerHeight));
+  boxAreaMain.removeFromTop(static_cast<int>(windowArea.getHeight() * headerHeight));
   juce::Rectangle<int> boxArea(juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.70833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.08333333f)), juce::Point<int>(static_cast<int>(boxAreaMain.getRight() * 0.95833333f), static_cast<int>(boxAreaMain.getY() + boxAreaMain.getHeight() * 0.25f)));
 
   auto area = getLocalBounds();
