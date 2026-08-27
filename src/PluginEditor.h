@@ -36,8 +36,12 @@ private:
   int defaultHeight = 320;
   float fontSizeLarge = 24.0f;
   float fontSizeRegular = 16.0f;
+  float fontSizeLargeScaled{};
+  float fontSizeRegularScaled{};
   int textBoxWidth = 100;
   int textBoxHeight = 20;
+  int textBoxWidthScaled{};
+  int textBoxHeightScaled{};
 
   juce::Rectangle<int> headerArea0;
   juce::Rectangle<int> headerArea1;

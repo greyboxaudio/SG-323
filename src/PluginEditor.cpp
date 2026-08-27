@@ -44,6 +44,10 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   {
     editorScale = pluginProperties->getDoubleValue("scalingFactor", 1.0);
   }
+  fontSizeRegularScaled = static_cast<float>(fontSizeRegular * editorScale);
+  fontSizeLargeScaled = static_cast<float>(fontSizeLarge * editorScale);
+  textBoxWidthScaled = static_cast<int>(textBoxWidth * editorScale);
+  textBoxHeightScaled = static_cast<int>(textBoxHeight * editorScale);
 
   if (editorScale == 1.0)
   {
@@ -56,7 +60,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   }
   resizeButton.addListener(this);
   resizeButton.setLookAndFeel(&customTextButton);
-  customTextButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+  customTextButton.setFontSize(fontSizeRegularScaled);
   addAndMakeVisible(resizeButton);
   resizeButton.setClickingTogglesState(true);
 
@@ -65,7 +69,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   reverbClearButton.setLookAndFeel(&customTextButton);
   addAndMakeVisible(reverbClearButton);
 
-  customToggleButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+  customToggleButton.setFontSize(fontSizeRegularScaled);
 
   vintageButton.setButtonText("Vintage");
   vintageButton.setLookAndFeel(&customToggleButton);
@@ -76,10 +80,6 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   noiseButton.setLookAndFeel(&customToggleButton);
   addAndMakeVisible(noiseButton);
   noiseButtonAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(audioProcessor.apvts, "NOISE", noiseButton);
-
-  /*mixLockButton.setButtonText("Mix Lock");
-  mixLockButton.setLookAndFeel(&customToggleButton);
-  addAndMakeVisible(mixLockButton);*/
 
   addAndMakeVisible(urlButton);
   urlButton.setButtonText(urlButtonText);
@@ -109,13 +109,13 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   programBox.addItem("Reverb 0", 16);
   programBox.setLookAndFeel(&redBox);
   addAndMakeVisible(programBox);
-  redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
+  redBox.setFontSize(fontSizeLargeScaled);
   programBoxAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(audioProcessor.apvts, "PROGRAM", programBox);
 
-  customKnobLabel.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+  customKnobLabel.setFontSize(fontSizeRegularScaled);
 
   inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
+  inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   inputGainSlider.setTextBoxIsEditable(true);
   inputGainSlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
   inputGainSlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
@@ -129,7 +129,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   inputGainLabel.setLookAndFeel(&customKnobLabel);
 
   lfdecaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  lfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
+  lfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   lfdecaySlider.setTextBoxIsEditable(true);
   lfdecaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
   lfdecaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
@@ -143,7 +143,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   lfdecayLabel.setLookAndFeel(&customKnobLabel);
 
   hfdecaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  hfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
+  hfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   hfdecaySlider.setTextBoxIsEditable(true);
   hfdecaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
   hfdecaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
@@ -157,7 +157,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   hfdecayLabel.setLookAndFeel(&customKnobLabel);
 
   mixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
+  mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   mixSlider.setTextBoxIsEditable(true);
   mixSlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
   mixSlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
@@ -171,7 +171,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   mixLabel.setLookAndFeel(&customKnobLabel);
 
   predelaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
+  predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   predelaySlider.setTextBoxIsEditable(true);
   predelaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
   predelaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
@@ -185,7 +185,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   predelayLabel.setLookAndFeel(&customKnobLabel);
 
   decaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-  decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
+  decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   decaySlider.setTextBoxIsEditable(true);
   decaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
   decaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
@@ -198,9 +198,9 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   decayLabel.setJustificationType(juce::Justification::centred);
   decayLabel.setLookAndFeel(&customKnobLabel);
 
-  blueKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-  whiteKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-  redKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+  blueKnob.setFontSize(fontSizeRegularScaled);
+  whiteKnob.setFontSize(fontSizeRegularScaled);
+  redKnob.setFontSize(fontSizeRegularScaled);
 
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
@@ -248,9 +248,9 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setColour(juce::Colours::white);
   g.setFont(static_cast<float>(fontSizeRegular * editorScale));
   g.drawFittedText(pluginVersionText, headerArea1, juce::Justification::centredRight, 1);
-  g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
   g.drawImageWithin(companyLogo, imageArea0.getX(), imageArea0.getY(), imageArea0.getWidth(), imageArea0.getHeight(), 36, false);
+  g.setFont(static_cast<float>(fontSizeLarge * editorScale));
   g.drawText(bodyText1, textArea1, Justification::bottomLeft);
   g.drawText(bodyText2, textArea2, Justification::topLeft);
 }
@@ -326,38 +326,46 @@ void SG323AudioProcessorEditor::buttonClicked(juce::Button *button)
     if (resizeButton.getToggleState() == true)
     {
       editorScale = 1.5f;
-      redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
-      customTextButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-      customToggleButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-      customKnobLabel.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-      inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      lfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      hfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      blueKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-      whiteKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-      redKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      fontSizeLargeScaled = static_cast<float>(fontSizeLarge * editorScale);
+      fontSizeRegularScaled = static_cast<float>(fontSizeRegular * editorScale);
+      textBoxWidthScaled = static_cast<int>(textBoxWidth * editorScale);
+      textBoxHeightScaled = static_cast<int>(textBoxHeight * editorScale);
+      redBox.setFontSize(fontSizeLargeScaled);
+      customTextButton.setFontSize(fontSizeRegularScaled);
+      customToggleButton.setFontSize(fontSizeRegularScaled);
+      customKnobLabel.setFontSize(fontSizeRegularScaled);
+      inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      lfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      hfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      blueKnob.setFontSize(fontSizeRegularScaled);
+      whiteKnob.setFontSize(fontSizeRegularScaled);
+      redKnob.setFontSize(fontSizeRegularScaled);
       setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
       resizeButton.setButtonText("150%");
     }
     else
     {
       editorScale = 1.0f;
-      redBox.setFontSize(static_cast<float>(fontSizeLarge * editorScale));
-      customTextButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-      customToggleButton.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-      customKnobLabel.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-      inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      lfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      hfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, static_cast<int>(textBoxWidth * editorScale), static_cast<int>(textBoxHeight * editorScale));
-      blueKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-      whiteKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
-      redKnob.setFontSize(static_cast<float>(fontSizeRegular * editorScale));
+      fontSizeLargeScaled = static_cast<float>(fontSizeLarge * editorScale);
+      fontSizeRegularScaled = static_cast<float>(fontSizeRegular * editorScale);
+      textBoxWidthScaled = static_cast<int>(textBoxWidth * editorScale);
+      textBoxHeightScaled = static_cast<int>(textBoxHeight * editorScale);
+      redBox.setFontSize(fontSizeLargeScaled);
+      customTextButton.setFontSize(fontSizeRegularScaled);
+      customToggleButton.setFontSize(fontSizeRegularScaled);
+      customKnobLabel.setFontSize(fontSizeRegularScaled);
+      inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      lfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      hfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
+      blueKnob.setFontSize(fontSizeRegularScaled);
+      whiteKnob.setFontSize(fontSizeRegularScaled);
+      redKnob.setFontSize(fontSizeRegularScaled);
       setSize(static_cast<int>(defaultWidth * editorScale), static_cast<int>(defaultHeight * editorScale));
       resizeButton.setButtonText("100%");
     }
