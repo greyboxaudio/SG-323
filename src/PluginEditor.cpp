@@ -214,44 +214,6 @@ SG323AudioProcessorEditor::~SG323AudioProcessorEditor()
 //==============================================================================
 void SG323AudioProcessorEditor::paint(juce::Graphics &g)
 {
-  // define UI areas
-  auto windowArea = getLocalBounds();
-  // define header
-  headerArea0 = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), windowArea.getY()), juce::Point<int>(windowArea.getRight(), static_cast<int>(windowArea.getBottom() * headerHeight)));
-  int headerAreaPadding = static_cast<int>(headerArea0.getHeight() * 0.1);
-  headerArea1 = juce::Rectangle<int>(juce::Point<int>((headerArea0.getX() + headerAreaPadding), headerArea0.getY() + headerAreaPadding), juce::Point<int>(headerArea0.getRight() - headerAreaPadding, headerArea0.getBottom() - headerAreaPadding));
-  int headerArea1Width = headerArea1.getWidth();
-  int headerArea1Spacer = static_cast<int>(headerArea1Width * 0.05);
-  float textButtonWidth = 0.1f;
-  float toggleButtonWidth = 0.15f;
-  // define footer
-  footerArea0 = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (1.0f - footerHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom()));
-  int footerAreaPadding = static_cast<int>(footerArea0.getHeight() * 0.1);
-  footerArea1 = juce::Rectangle<int>(juce::Point<int>((footerArea0.getX() + footerAreaPadding), footerArea0.getY() + footerAreaPadding), juce::Point<int>(footerArea0.getRight() - footerAreaPadding, footerArea0.getBottom() - footerAreaPadding));
-  // define upper plugin section
-  mainArea0 = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * headerHeight)), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0f - mainSectionBottomHeight - footerHeight)));
-  // define image area
-  imageArea0 = juce::Rectangle<int>(juce::Point<int>(mainArea0.getX(), mainArea0.getY()), juce::Point<int>(static_cast<int>(mainArea0.getRight() * 0.16666667), mainArea0.getBottom()));
-  // define text areas
-  textArea0 = juce::Rectangle<int>(juce::Point<int>(imageArea0.getRight(), mainArea0.getY()), juce::Point<int>(static_cast<int>(mainArea0.getRight() * 0.66666667), mainArea0.getBottom()));
-  int textAreaX = textArea0.getX();
-  int textAreaY = textArea0.getY();
-  int textAreaRight = textArea0.getRight();
-  int textAreaBottom = textArea0.getBottom();
-  int textAreaHeight = textArea0.getHeight();
-  int textAreaPadding = static_cast<int>(textAreaHeight * 0.1);
-  textArea1 = juce::Rectangle<int>(juce::Point<int>(textAreaX + textAreaPadding, textAreaY + textAreaPadding), juce::Point<int>(textAreaRight - textAreaPadding, static_cast<int>(textAreaBottom - (textAreaHeight * 0.5))));
-  textArea2 = juce::Rectangle<int>(juce::Point<int>(textAreaX + textAreaPadding, static_cast<int>(textAreaBottom - (textAreaHeight * 0.5))), juce::Point<int>(textAreaRight - textAreaPadding, textAreaBottom - textAreaPadding));
-  // define comboBox areas
-  comboBoxArea0 = juce::Rectangle<int>(juce::Point<int>(static_cast<int>(mainArea0.getRight() * 0.66666667), mainArea0.getY()), juce::Point<int>(static_cast<int>(mainArea0.getRight() * 1.0), mainArea0.getBottom()));
-  int comboBoxHeight = comboBoxArea0.getHeight();
-  int comboBoxPadding = static_cast<int>(comboBoxHeight * 0.25);
-  comboBoxArea1 = juce::Rectangle<int>(juce::Point<int>(comboBoxArea0.getX() + comboBoxPadding, comboBoxArea0.getY() + comboBoxPadding), juce::Point<int>(comboBoxArea0.getRight() - comboBoxPadding, comboBoxArea0.getBottom() - comboBoxPadding));
-  // define lower plugin section
-  mainArea1 = juce::Rectangle<int>(juce::Point<int>(windowArea.getX(), static_cast<int>(windowArea.getBottom() * (headerHeight + mainSectionTopHeight))), juce::Point<int>(windowArea.getRight(), windowArea.getBottom() * (1.0f - footerHeight)));
-  int labelHeight = static_cast<int>(windowArea.getHeight() * 0.075);
-  knobArea0 = juce::Rectangle<int>(juce::Point<int>(mainArea1.getX(), mainArea1.getY() + labelHeight), juce::Point<int>(mainArea1.getRight(), mainArea1.getBottom()));
-
   // paint the UI
   // (Our component is opaque, so we must completely fill the background with a solid colour)
   g.fillAll(backgroundColour);
@@ -265,14 +227,12 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   // draw rectangles for visual debugging
   g.setColour(juce::Colours::blue);
   g.drawRect(headerArea0, 2);
-  g.drawRect(headerArea1, 2);
   g.setColour(juce::Colours::purple);
   g.drawRect(mainArea0, 2);
   g.setColour(juce::Colours::green);
   g.drawRect(mainArea1, 2);
-  g.drawRect(knobArea0, 2);
   g.setColour(juce::Colours::red);
-  g.drawRect(imageArea0, 2);
+  g.drawRect(labelArea0, 2);
   g.setColour(juce::Colours::orange);
   g.drawRect(textArea0, 2);
   g.drawRect(textArea1, 2);
@@ -282,7 +242,6 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.drawRect(comboBoxArea1, 2);
   g.setColour(juce::Colours::blue);
   g.drawRect(footerArea0, 2);
-  g.drawRect(footerArea1, 2);
 #endif
 
   // draw text & graphic elements
@@ -305,6 +264,52 @@ void SG323AudioProcessorEditor::resized()
   {
     pluginProperties->setValue("scalingFactor", editorScale);
   }
+  auto area = getLocalBounds();
+  // define header & footer
+  auto headerFooterHeight = 32;
+  headerArea0 = area.removeFromTop(headerFooterHeight);
+  footerArea0 = area.removeFromBottom(headerFooterHeight);
+  auto pluginTopHeight = 76;
+  auto labelAreaHeight = 16;
+  mainArea0 = area.removeFromTop(pluginTopHeight);
+  labelArea0 = area.removeFromTop(labelAreaHeight);
+  mainArea1 = area;
+  
+  int headerAreaPadding = static_cast<int>(headerArea0.getHeight() * 0.1);
+  headerArea1 = juce::Rectangle<int>(juce::Point<int>((headerArea0.getX() + headerAreaPadding), headerArea0.getY() + headerAreaPadding), juce::Point<int>(headerArea0.getRight() - headerAreaPadding, headerArea0.getBottom() - headerAreaPadding));
+  int headerArea1Width = headerArea1.getWidth();
+  int headerArea1Spacer = static_cast<int>(headerArea1Width * 0.05);
+  float textButtonWidth = 0.1f;
+  float toggleButtonWidth = 0.15f;
+  // define footer
+  int footerAreaPadding = static_cast<int>(footerArea0.getHeight() * 0.1);
+  footerArea1 = juce::Rectangle<int>(juce::Point<int>((footerArea0.getX() + footerAreaPadding), footerArea0.getY() + footerAreaPadding), juce::Point<int>(footerArea0.getRight() - footerAreaPadding, footerArea0.getBottom() - footerAreaPadding));
+  // define upper plugin section
+  //mainArea0 = juce::Rectangle<int>(juce::Point<int>(area.getX(), static_cast<int>(area.getBottom() * headerHeight)), juce::Point<int>(area.getRight(), area.getBottom() * (1.0f - mainSectionBottomHeight - footerHeight)));
+  // define image area
+  imageArea0 = juce::Rectangle<int>(juce::Point<int>(mainArea0.getX(), mainArea0.getY()), juce::Point<int>(static_cast<int>(mainArea0.getRight() * 0.16666667), mainArea0.getBottom()));
+  // define text areas
+  textArea0 = juce::Rectangle<int>(juce::Point<int>(imageArea0.getRight(), mainArea0.getY()), juce::Point<int>(static_cast<int>(mainArea0.getRight() * 0.66666667), mainArea0.getBottom()));
+  int textAreaX = textArea0.getX();
+  int textAreaY = textArea0.getY();
+  int textAreaRight = textArea0.getRight();
+  int textAreaBottom = textArea0.getBottom();
+  int textAreaHeight = textArea0.getHeight();
+  int textAreaPadding = static_cast<int>(textAreaHeight * 0.1);
+  textArea1 = juce::Rectangle<int>(juce::Point<int>(textAreaX + textAreaPadding, textAreaY + textAreaPadding), juce::Point<int>(textAreaRight - textAreaPadding, static_cast<int>(textAreaBottom - (textAreaHeight * 0.5))));
+  textArea2 = juce::Rectangle<int>(juce::Point<int>(textAreaX + textAreaPadding, static_cast<int>(textAreaBottom - (textAreaHeight * 0.5))), juce::Point<int>(textAreaRight - textAreaPadding, textAreaBottom - textAreaPadding));
+  // define comboBox areas
+  comboBoxArea0 = juce::Rectangle<int>(juce::Point<int>(static_cast<int>(mainArea0.getRight() * 0.66666667), mainArea0.getY()), juce::Point<int>(static_cast<int>(mainArea0.getRight() * 1.0), mainArea0.getBottom()));
+  int comboBoxHeight = comboBoxArea0.getHeight();
+  int comboBoxPadding = static_cast<int>(comboBoxHeight * 0.25);
+  comboBoxArea1 = juce::Rectangle<int>(juce::Point<int>(comboBoxArea0.getX() + comboBoxPadding, comboBoxArea0.getY() + comboBoxPadding), juce::Point<int>(comboBoxArea0.getRight() - comboBoxPadding, comboBoxArea0.getBottom() - comboBoxPadding));
+  // define lower plugin section
+  //mainArea1 = juce::Rectangle<int>(juce::Point<int>(area.getX(), static_cast<int>(area.getBottom() * (headerHeight + mainSectionTopHeight))), juce::Point<int>(area.getRight(), area.getBottom() * (1.0f - footerHeight)));
+  int labelHeight = static_cast<int>(area.getHeight() * 0.075);
+  knobArea0 = juce::Rectangle<int>(juce::Point<int>(mainArea1.getX(), mainArea1.getY() + labelHeight), juce::Point<int>(mainArea1.getRight(), mainArea1.getBottom()));
+
+  programBox.setBounds(comboBoxArea1);
+  /*
   // define UI areas
   auto boxAreaMain = getLocalBounds();
   auto boxAreaMainWidth = boxAreaMain.getWidth();
@@ -330,6 +335,7 @@ void SG323AudioProcessorEditor::resized()
   mixSlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   predelaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
   decaySlider.setBounds(areaBottom.removeFromLeft(areaWidth));
+  */
 }
 
 void SG323AudioProcessorEditor::buttonClicked(juce::Button *button)
