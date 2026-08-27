@@ -217,8 +217,6 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.fillAll(backgroundColour);
   g.setColour(headerColour);
   g.fillRect(headerArea0);
-  g.setColour(footerColour);
-  g.fillRect(footerArea0);
 
   // draw text & graphic elements
   g.setColour(juce::Colours::white);
@@ -247,8 +245,8 @@ void SG323AudioProcessorEditor::resized()
   footerArea0 = area.removeFromBottom(headerFooterHeight);
   // add padding to header & footer
   auto headerFooterPadding = 4 * editorScale;
-  headerArea1 = juce::Rectangle<int>(juce::Point<int>((headerArea0.getX() + headerFooterPadding), headerArea0.getY() + headerFooterPadding), juce::Point<int>(headerArea0.getRight() - headerFooterPadding, headerArea0.getBottom() - headerFooterPadding));
-  footerArea1 = juce::Rectangle<int>(juce::Point<int>((footerArea0.getX() + headerFooterPadding), footerArea0.getY() + headerFooterPadding), juce::Point<int>(footerArea0.getRight() - headerFooterPadding, footerArea0.getBottom() - headerFooterPadding));
+  headerArea1 = juce::Rectangle<int>(juce::Point<int>(headerArea0.getX() + headerFooterPadding, headerArea0.getY() + headerFooterPadding), juce::Point<int>(headerArea0.getRight() - headerFooterPadding, headerArea0.getBottom() - headerFooterPadding));
+  footerArea1 = juce::Rectangle<int>(juce::Point<int>(footerArea0.getX() + headerFooterPadding, footerArea0.getY() + headerFooterPadding), juce::Point<int>(footerArea0.getRight() - headerFooterPadding, footerArea0.getBottom() - headerFooterPadding));
   // define upper plugin area
   auto pluginTopHeight = 80 * editorScale;
   mainArea0 = area.removeFromTop(pluginTopHeight);
@@ -270,14 +268,14 @@ void SG323AudioProcessorEditor::resized()
   // define lower plugin area
   labelArea0 = area.removeFromTop(labelAreaHeight);
   mainArea1 = area;
+  // place control elements
   // place header elements
-  auto textButtonWidth = 64 * editorScale;
-  resizeButton.setBounds(headerArea1.removeFromLeft(textButtonWidth));
-  auto toggleButtonWidth = 72 * editorScale;
-  vintageButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth));
-  noiseButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth));
-  reverbClearButton.setBounds(headerArea1.removeFromLeft(textButtonWidth));
-  auto urlButtonWidth = 192 * editorScale;
+  auto buttonWidth = 85 * editorScale;
+  resizeButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
+  resizeButton.changeWidthToFitText();
+  vintageButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
+  noiseButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
+  auto urlButtonWidth = 200 * editorScale;
   urlButton.setBounds(headerArea1.removeFromLeft(urlButtonWidth));
   // place combobox
   programBox.setBounds(comboBoxArea1);
@@ -289,6 +287,9 @@ void SG323AudioProcessorEditor::resized()
   mixSlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   predelaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   decaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
+  // place footer elements
+  reverbClearButton.setBounds(footerArea1.removeFromRight(sliderWidth-headerFooterPadding));
+  reverbClearButton.changeWidthToFitText();
 }
 
 void SG323AudioProcessorEditor::buttonClicked(juce::Button *button)
