@@ -21,13 +21,11 @@ juce::String url = "https://store.greyboxaudio.com/releasenotes.html#sg323-" + v
 juce::String urlButtonText = "greyboxaudio.com";
 juce::String bodyText1 = "LEO MINOR";
 juce::String bodyText2 = "SG-323 DIGITAL REVERBERATOR";
-float urlButtonScale[2]{0.7f, 0.25f};
 #else
 juce::String url = "https://store.greyboxaudio.com/products/sg-323-reverb";
 juce::String urlButtonText = "BUY NOW!";
 juce::String bodyText1 = "SG-323 DEMO";
 juce::String bodyText2 = "ALL KNOBS ARE DISABLED";
-float urlButtonScale[2]{0.7f, 0.25f};
 #endif
 
 //==============================================================================
@@ -222,28 +220,6 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.setColour(footerColour);
   g.fillRect(footerArea0);
 
-#ifndef DEVBUILD
-#else
-  // draw rectangles for visual debugging
-  g.setColour(juce::Colours::blue);
-  g.drawRect(headerArea0, 2);
-  g.setColour(juce::Colours::purple);
-  g.drawRect(mainArea0, 2);
-  g.setColour(juce::Colours::green);
-  g.drawRect(mainArea1, 2);
-  g.setColour(juce::Colours::red);
-  g.drawRect(labelArea0, 2);
-  g.setColour(juce::Colours::orange);
-  g.drawRect(textArea0, 2);
-  g.drawRect(textArea1, 2);
-  g.drawRect(textArea2, 2);
-  g.setColour(juce::Colours::yellow);
-  g.drawRect(comboBoxArea0, 2);
-  g.drawRect(comboBoxArea1, 2);
-  g.setColour(juce::Colours::blue);
-  g.drawRect(footerArea0, 2);
-#endif
-
   // draw text & graphic elements
   g.setColour(juce::Colours::white);
   g.setFont(static_cast<float>(fontSizeRegular * editorScale));
@@ -279,28 +255,28 @@ void SG323AudioProcessorEditor::resized()
   // define image area
   auto imageWidth = 120 * editorScale;
   imageArea0 = mainArea0.removeFromLeft(imageWidth);
-  // define text area
+  // define text areas
   auto textAreaWidth = 400 * editorScale;
   textArea0 = mainArea0.removeFromLeft(textAreaWidth);
   auto textAreaPadding = 8 * editorScale;
   textArea1 = juce::Rectangle<int>(juce::Point<int>(textArea0.getX() + textAreaPadding, textArea0.getY() + textAreaPadding), juce::Point<int>(textArea0.getRight() - textAreaPadding, static_cast<int>(textArea0.getBottom() - (pluginTopHeight * 0.5))));
   textArea2 = juce::Rectangle<int>(juce::Point<int>(textArea0.getX() + textAreaPadding, static_cast<int>(textArea0.getBottom() - (pluginTopHeight * 0.5))), juce::Point<int>(textArea0.getRight() - textAreaPadding, textArea0.getBottom() - textAreaPadding));
-  // define combobox area
+  // define combobox areas
   comboBoxArea0 = mainArea0;
   auto comboBoxAreaPadding = 16 * editorScale;
   comboBoxArea1 = juce::Rectangle<int>(juce::Point<int>(comboBoxArea0.getX() + comboBoxAreaPadding, comboBoxArea0.getY() + comboBoxAreaPadding), juce::Point<int>(comboBoxArea0.getRight() - comboBoxAreaPadding, comboBoxArea0.getBottom() - comboBoxAreaPadding));
-  // remove some space for the labels
+  // remove some space for the slider labels
   auto labelAreaHeight = 32 * editorScale;
   // define lower plugin area
   labelArea0 = area.removeFromTop(labelAreaHeight);
   mainArea1 = area;
   // place header elements
-  auto textButtonWidth1 = 64 * editorScale;
-  resizeButton.setBounds(headerArea1.removeFromLeft(textButtonWidth1));
-  auto toggleButtonWidth1 = 72 * editorScale;
-  vintageButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth1));
-  noiseButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth1));
-  reverbClearButton.setBounds(headerArea1.removeFromLeft(textButtonWidth1));
+  auto textButtonWidth = 64 * editorScale;
+  resizeButton.setBounds(headerArea1.removeFromLeft(textButtonWidth));
+  auto toggleButtonWidth = 72 * editorScale;
+  vintageButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth));
+  noiseButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth));
+  reverbClearButton.setBounds(headerArea1.removeFromLeft(textButtonWidth));
   auto urlButtonWidth = 192 * editorScale;
   urlButton.setBounds(headerArea1.removeFromLeft(urlButtonWidth));
   // place combobox

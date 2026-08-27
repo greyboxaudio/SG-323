@@ -106,7 +106,7 @@ target_compile_definitions(SG323
     PRIVATE
         PLUGIN_VERSION="${CMAKE_PROJECT_VERSION}"
         #IS_DEMO
-        #DEVBUILD
+        DEVBUILD
     )
 
 # If your target needs extra binary assets, you can add them here. The first argument is the name of

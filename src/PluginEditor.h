@@ -26,7 +26,7 @@ public:
   void paint(juce::Graphics &) override;
   void resized() override;
 
-  void buttonClicked(juce::Button* button) override;
+  void buttonClicked(juce::Button *button) override;
 
 private:
   // This reference is provided as a quick way for your editor to
@@ -64,7 +64,7 @@ private:
   juce::Colour stargateRed = juce::Colour(179, 26, 26);
   juce::Colour stargateBeige = juce::Colour(179, 148, 118);
   juce::Colour stargateBlue = juce::Colour(0, 102, 179);
-  juce::Colour stargateDark = juce::Colour(35,39,35);
+  juce::Colour stargateDark = juce::Colour(35, 39, 35);
 
   juce::Image companyLogo;
   CustomTextButton customTextButton;
