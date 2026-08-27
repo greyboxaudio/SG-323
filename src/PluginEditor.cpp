@@ -247,7 +247,7 @@ void SG323AudioProcessorEditor::resized()
   auto variableScalingFactor = area.getWidth() / defaultWidth;
   auto headerFooterHeight = area.getHeight() * 0.1;
   auto headerFooterPadding = headerFooterHeight * 0.1;
-  auto pluginTopHeight = area.getHeight() * 0.3;
+  auto pluginTopHeight = area.getHeight() * 0.25;
   auto imageWidth = area.getWidth() / 6;
   auto textAreaWidth = area.getWidth() * 0.55;
   auto sliderWidth = area.getWidth() / 6;
