@@ -217,7 +217,6 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
   g.fillAll(backgroundColour);
   g.setColour(headerColour);
   g.fillRect(headerArea0);
-
   // draw text & graphic elements
   g.setColour(juce::Colours::white);
   g.setFont(static_cast<float>(fontSizeRegular * editorScale));
@@ -246,29 +245,29 @@ void SG323AudioProcessorEditor::resized()
   // define size variables
   auto variableScalingFactor = area.getWidth() / defaultWidth;
   auto headerFooterHeight = area.getHeight() * 0.1;
-  auto headerFooterPadding = headerFooterHeight * 0.1;
+  auto headerFooterMargin = headerFooterHeight * 0.1;
   auto pluginTopHeight = area.getHeight() * 0.25;
   auto imageWidth = area.getWidth() / 6;
   auto textAreaWidth = area.getWidth() * 0.55;
   auto sliderWidth = area.getWidth() / 6;
-  auto comboBoxAreaPadding = pluginTopHeight * 0.25;
-  auto textAreaPadding = area.getHeight() * 0.025;
+  auto comboBoxAreaMargin = pluginTopHeight * 0.25;
+  auto textAreaMargin = area.getHeight() * 0.025;
   auto labelAreaHeight = area.getHeight() * 0.1;
   auto buttonWidth = area.getWidth() * 0.12;
   auto urlButtonWidth = area.getWidth() * 0.3;
   // define header & footer
   headerArea0 = area.removeFromTop(headerFooterHeight);
   footerArea0 = area.removeFromBottom(headerFooterHeight);
-  // add padding to header & footer
-  headerArea1 = headerArea0;
+  // add Margin to header & footer
+  headerArea1 = headerArea0.reduced(headerFooterMargin);
   // define upper plugin area
   mainArea0 = area.removeFromTop(pluginTopHeight);
   // define image area
   imageArea0 = mainArea0.removeFromLeft(imageWidth);
   // define text areas
   textArea0 = mainArea0.removeFromLeft(textAreaWidth);
-  textArea1 = juce::Rectangle<int>(juce::Point<int>(textArea0.getX() + textAreaPadding, textArea0.getY() + textAreaPadding), juce::Point<int>(textArea0.getRight() - textAreaPadding, static_cast<int>(textArea0.getBottom() - (pluginTopHeight * 0.5))));
-  textArea2 = juce::Rectangle<int>(juce::Point<int>(textArea0.getX() + textAreaPadding, static_cast<int>(textArea0.getBottom() - (pluginTopHeight * 0.5))), juce::Point<int>(textArea0.getRight() - textAreaPadding, textArea0.getBottom() - textAreaPadding));
+  textArea1 = textArea0.reduced(textAreaMargin);
+  textArea2 = textArea1.removeFromBottom(textArea1.getHeight()*0.5);
   // define combobox area
   comboBoxArea0 = mainArea0;
   // remove some space for the slider labels
@@ -277,13 +276,13 @@ void SG323AudioProcessorEditor::resized()
   mainArea1 = area;
   // place control elements
   // place header elements
-  resizeButton.setBounds(headerArea1.removeFromLeft(buttonWidth).reduced(headerFooterPadding));
+  resizeButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
   resizeButton.changeWidthToFitText();
-  vintageButton.setBounds(headerArea1.removeFromLeft(buttonWidth).reduced(headerFooterPadding));
-  noiseButton.setBounds(headerArea1.removeFromLeft(buttonWidth).reduced(headerFooterPadding));
-  urlButton.setBounds(headerArea1.removeFromLeft(urlButtonWidth).reduced(headerFooterPadding));
+  vintageButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
+  noiseButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
+  urlButton.setBounds(headerArea1.removeFromLeft(urlButtonWidth));
   // place combobox
-  programBox.setBounds(comboBoxArea0.reduced(comboBoxAreaPadding));
+  programBox.setBounds(comboBoxArea0.reduced(comboBoxAreaMargin));
   // place sliders
   inputGainSlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   lfdecaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
@@ -292,7 +291,7 @@ void SG323AudioProcessorEditor::resized()
   predelaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   decaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   // place footer elements
-  reverbClearButton.setBounds(footerArea0.removeFromRight(sliderWidth).reduced(headerFooterPadding));
+  reverbClearButton.setBounds(footerArea0.removeFromRight(sliderWidth).reduced(headerFooterMargin));
   reverbClearButton.changeWidthToFitText();
 }
 
