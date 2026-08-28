@@ -243,7 +243,6 @@ void SG323AudioProcessorEditor::resized()
   }
   auto area = getLocalBounds();
   // define size variables
-  auto variableScalingFactor = area.getWidth() / defaultWidth;
   auto headerFooterHeight = area.getHeight() * 0.1;
   auto headerFooterMargin = headerFooterHeight * 0.1;
   auto pluginTopHeight = area.getHeight() * 0.25;
@@ -253,7 +252,8 @@ void SG323AudioProcessorEditor::resized()
   auto comboBoxAreaMargin = pluginTopHeight * 0.25;
   auto textAreaMargin = area.getHeight() * 0.025;
   auto labelAreaHeight = area.getHeight() * 0.1;
-  auto buttonWidth = area.getWidth() * 0.12;
+  auto textButtonWidth = area.getWidth() * 0.12;
+  auto toggleButtonWidth = area.getWidth() * 0.12;
   auto urlButtonWidth = area.getWidth() * 0.3;
   // define header & footer
   headerArea0 = area.removeFromTop(headerFooterHeight);
@@ -276,11 +276,13 @@ void SG323AudioProcessorEditor::resized()
   mainArea1 = area;
   // place control elements
   // place header elements
-  resizeButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
+  resizeButton.setBounds(headerArea1.removeFromLeft(textButtonWidth));
   resizeButton.changeWidthToFitText();
-  vintageButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
-  noiseButton.setBounds(headerArea1.removeFromLeft(buttonWidth));
-  urlButton.setBounds(headerArea1.removeFromLeft(urlButtonWidth));
+  vintageButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth));
+  noiseButton.setBounds(headerArea1.removeFromLeft(toggleButtonWidth));
+  urlButton.setSize(urlButtonWidth,headerFooterHeight);
+  urlButton.changeWidthToFitText();
+  urlButton.setBoundsToFit(headerArea0.reduced(headerFooterMargin), 36, true);
   // place combobox
   programBox.setBounds(comboBoxArea0.reduced(comboBoxAreaMargin));
   // place sliders
@@ -291,8 +293,8 @@ void SG323AudioProcessorEditor::resized()
   predelaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   decaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   // place footer elements
-  reverbClearButton.setBounds(footerArea0.removeFromRight(sliderWidth).reduced(headerFooterMargin));
-  reverbClearButton.changeWidthToFitText();
+  reverbClearButton.setSize(textButtonWidth, headerFooterHeight);
+  reverbClearButton.setBoundsToFit(footerArea0.removeFromRight(sliderWidth).reduced(headerFooterMargin), 36, true);
 }
 
 void SG323AudioProcessorEditor::buttonClicked(juce::Button *button)
