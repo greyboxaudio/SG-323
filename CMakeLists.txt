@@ -16,7 +16,7 @@ set(HARDENED_RUNTIME_ENABLED)
 # The top-level CMakeLists.txt file for a project must contain a literal, direct call to the
 # `project()` command. `project()` sets up some helpful variables that describe source/binary
 # directories, and the current project version. This is a standard CMake command.
-project(SG323 VERSION 1.1.2)
+project(SG323 VERSION 1.2.0)
 
 # If you've installed JUCE somehow (via a package manager, or directly using the CMake install
 # target), you'll need to tell this project that it depends on the installed copy of JUCE. If you've
@@ -106,7 +106,7 @@ target_compile_definitions(SG323
     PRIVATE
         PLUGIN_VERSION="${CMAKE_PROJECT_VERSION}"
         #IS_DEMO
-        DEVBUILD
+        #DEVBUILD
     )
 
 # If your target needs extra binary assets, you can add them here. The first argument is the name of
