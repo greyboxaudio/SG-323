@@ -46,7 +46,6 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   fontSizeLargeScaled = static_cast<float>(fontSizeLarge * editorScale);
   textBoxWidthScaled = static_cast<int>(textBoxWidth * editorScale);
   textBoxHeightScaled = static_cast<int>(textBoxHeight * editorScale);
-
   if (editorScale == 1.0)
   {
     resizeButton.setButtonText("100%");
@@ -115,7 +114,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   inputGainSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   inputGainSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   inputGainSlider.setTextBoxIsEditable(true);
-  inputGainSlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  inputGainSlider.setColour(juce::Slider::textBoxOutlineColourId, stargateBgDark);
   inputGainSlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   inputGainSlider.setLookAndFeel(&blueKnob);
   addAndMakeVisible(inputGainSlider);
@@ -129,7 +128,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   lfdecaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   lfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   lfdecaySlider.setTextBoxIsEditable(true);
-  lfdecaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  lfdecaySlider.setColour(juce::Slider::textBoxOutlineColourId, stargateBgDark);
   lfdecaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   lfdecaySlider.setLookAndFeel(&whiteKnob);
   addAndMakeVisible(lfdecaySlider);
@@ -143,7 +142,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   hfdecaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   hfdecaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   hfdecaySlider.setTextBoxIsEditable(true);
-  hfdecaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  hfdecaySlider.setColour(juce::Slider::textBoxOutlineColourId, stargateBgDark);
   hfdecaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   hfdecaySlider.setLookAndFeel(&whiteKnob);
   addAndMakeVisible(hfdecaySlider);
@@ -157,7 +156,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   mixSlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   mixSlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   mixSlider.setTextBoxIsEditable(true);
-  mixSlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  mixSlider.setColour(juce::Slider::textBoxOutlineColourId, stargateBgDark);
   mixSlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   mixSlider.setLookAndFeel(&blueKnob);
   addAndMakeVisible(mixSlider);
@@ -171,7 +170,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   predelaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   predelaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   predelaySlider.setTextBoxIsEditable(true);
-  predelaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  predelaySlider.setColour(juce::Slider::textBoxOutlineColourId, stargateBgDark);
   predelaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   predelaySlider.setLookAndFeel(&redKnob);
   addAndMakeVisible(predelaySlider);
@@ -185,7 +184,7 @@ SG323AudioProcessorEditor::SG323AudioProcessorEditor(SG323AudioProcessor &p)
   decaySlider.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
   decaySlider.setTextBoxStyle(juce::Slider::TextEntryBoxPosition::TextBoxAbove, false, textBoxWidthScaled, textBoxHeightScaled);
   decaySlider.setTextBoxIsEditable(true);
-  decaySlider.setColour(juce::Slider::textBoxOutlineColourId, backgroundColour);
+  decaySlider.setColour(juce::Slider::textBoxOutlineColourId, stargateBgDark);
   decaySlider.setColour(juce::Slider::textBoxBackgroundColourId, stargateDark);
   decaySlider.setLookAndFeel(&redKnob);
   addAndMakeVisible(decaySlider);
@@ -214,18 +213,20 @@ void SG323AudioProcessorEditor::paint(juce::Graphics &g)
 {
   // paint the UI
   // (Our component is opaque, so we must completely fill the background with a solid colour)
-  g.fillAll(backgroundColour);
-  g.setColour(headerColour);
+  g.fillAll(stargateBgDark);
+  g.setColour(stargateHeader);
   g.fillRect(headerArea0);
-  // draw text & graphic elements
-  g.setColour(juce::Colours::white);
-  g.setFont(static_cast<float>(fontSizeRegular * editorScale));
-  g.drawFittedText(pluginVersionText, headerArea1, juce::Justification::centredRight, 1);
+  // paint graphic elements
+  g.setColour(stargateGraphicsLight);
   companyLogo = juce::ImageCache::getFromMemory(BinaryData::greyboxaudiocat_white_png, BinaryData::greyboxaudiocat_white_pngSize);
   g.drawImageWithin(companyLogo, imageArea0.getX(), imageArea0.getY(), imageArea0.getWidth(), imageArea0.getHeight(), 36, false);
-  g.setFont(static_cast<float>(fontSizeLarge * editorScale));
-  g.drawText(bodyText1, textArea1, Justification::bottomLeft);
-  g.drawText(bodyText2, textArea2, Justification::topLeft);
+  // paint static text elements
+  g.setColour(stargateTextLight);
+  g.setFont(fontSizeRegularScaled);
+  g.drawFittedText(pluginVersionText, headerArea1, juce::Justification::centredRight, 1);
+  g.setFont(fontSizeLargeScaled);
+  g.drawFittedText(bodyText1, textArea1, Justification::bottomLeft,1);
+  g.drawFittedText(bodyText2, textArea2, Justification::topLeft,1);
 }
 
 void SG323AudioProcessorEditor::resized()
@@ -247,9 +248,10 @@ void SG323AudioProcessorEditor::resized()
   auto headerFooterMargin = headerFooterHeight * 0.1;
   auto pluginTopHeight = area.getHeight() * 0.25;
   auto imageWidth = area.getWidth() / 6;
-  auto textAreaWidth = area.getWidth() * 0.55;
+  auto textAreaWidth = area.getWidth() * 0.5;
   auto sliderWidth = area.getWidth() / 6;
-  auto comboBoxAreaMargin = pluginTopHeight * 0.25;
+  auto comboBoxWidth = area.getWidth() / 4;
+  auto comboBoxHeight = area.getHeight() * 0.15;
   auto textAreaMargin = area.getHeight() * 0.025;
   auto labelAreaHeight = area.getHeight() * 0.1;
   auto textButtonWidth = area.getWidth() * 0.12;
@@ -284,7 +286,8 @@ void SG323AudioProcessorEditor::resized()
   urlButton.changeWidthToFitText();
   urlButton.setBoundsToFit(headerArea0.reduced(headerFooterMargin), 36, true);
   // place combobox
-  programBox.setBounds(comboBoxArea0.reduced(comboBoxAreaMargin));
+  programBox.setSize(comboBoxWidth,comboBoxHeight);
+  programBox.setBoundsToFit(comboBoxArea0.reduced(textAreaMargin), 36, true);
   // place sliders
   inputGainSlider.setBounds(mainArea1.removeFromLeft(sliderWidth));
   lfdecaySlider.setBounds(mainArea1.removeFromLeft(sliderWidth));

@@ -55,16 +55,15 @@ private:
   juce::Rectangle<int> textArea1;
   juce::Rectangle<int> textArea2;
   juce::Rectangle<int> comboBoxArea0;
-  juce::Rectangle<int> comboBoxArea1;
 
-  juce::Colour backgroundColour = juce::Colour(70, 74, 70);
-  juce::Colour headerColour = juce::Colour(25, 25, 25);
-  juce::Colour footerColour = juce::Colour(25, 25, 25);
-  juce::Colour textColour = juce::Colour(255, 255, 255);
+  juce::Colour stargateBgDark = juce::Colour(70, 74, 70);
+  juce::Colour stargateHeader = juce::Colour(25, 25, 25);
+  juce::Colour stargateGraphicsLight = juce::Colour(255, 255, 255);
+  juce::Colour stargateTextLight = juce::Colour(255, 255, 255);
   juce::Colour stargateRed = juce::Colour(179, 26, 26);
   juce::Colour stargateBeige = juce::Colour(179, 148, 118);
   juce::Colour stargateBlue = juce::Colour(0, 102, 179);
-  juce::Colour stargateDark = juce::Colour(35, 39, 35);
+  juce::Colour stargateDark = juce::Colour(35, 37, 35);
 
   juce::Image companyLogo;
   CustomTextButton customTextButton;
