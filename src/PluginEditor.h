@@ -26,27 +26,44 @@ public:
   void paint(juce::Graphics &) override;
   void resized() override;
 
-  void buttonClicked(juce::Button* button) override;
+  void buttonClicked(juce::Button *button) override;
 
 private:
   // This reference is provided as a quick way for your editor to
   // access the processor object that created it.
-  float menuBarHeight = 0.1f;
   double editorScale = 1.0;
-  int defaultHeight = 280;
   int defaultWidth = 720;
+  int defaultHeight = 320;
   float fontSizeLarge = 24.0f;
   float fontSizeRegular = 16.0f;
+  float fontSizeLargeScaled{};
+  float fontSizeRegularScaled{};
   int textBoxWidth = 100;
   int textBoxHeight = 20;
+  int textBoxWidthScaled{};
+  int textBoxHeightScaled{};
 
-  juce::Colour backgroundColour = juce::Colour(70, 74, 70);
-  juce::Colour headerColour = juce::Colour(25, 25, 25);
-  juce::Colour textColour = juce::Colour(255, 255, 255);
+  juce::Rectangle<int> headerArea0;
+  juce::Rectangle<int> headerArea1;
+  juce::Rectangle<int> footerArea0;
+  juce::Rectangle<int> footerArea1;
+  juce::Rectangle<int> mainArea0;
+  juce::Rectangle<int> mainArea1;
+  juce::Rectangle<int> labelArea0;
+  juce::Rectangle<int> imageArea0;
+  juce::Rectangle<int> textArea0;
+  juce::Rectangle<int> textArea1;
+  juce::Rectangle<int> textArea2;
+  juce::Rectangle<int> comboBoxArea0;
+
+  juce::Colour stargateBgDark = juce::Colour(70, 74, 70);
+  juce::Colour stargateHeader = juce::Colour(25, 25, 25);
+  juce::Colour stargateGraphicsLight = juce::Colour(255, 255, 255);
+  juce::Colour stargateTextLight = juce::Colour(255, 255, 255);
   juce::Colour stargateRed = juce::Colour(179, 26, 26);
   juce::Colour stargateBeige = juce::Colour(179, 148, 118);
   juce::Colour stargateBlue = juce::Colour(0, 102, 179);
-  juce::Colour stargateDark = juce::Colour(35,39,35);
+  juce::Colour stargateDark = juce::Colour(35, 37, 35);
 
   juce::Image companyLogo;
   CustomTextButton customTextButton;
@@ -68,7 +85,6 @@ private:
   juce::TextButton reverbClearButton;
   juce::ToggleButton vintageButton;
   juce::ToggleButton noiseButton;
-  //juce::ToggleButton mixLockButton;
   juce::HyperlinkButton urlButton;
 
   juce::Label predelayLabel;
